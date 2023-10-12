@@ -5,7 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { theme } from "../theme";
 import { useNavigation } from "@react-navigation/native";
 import { ArrowLeftIcon } from "react-native-heroicons/solid";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../config";
 
 export default function SignupScreen() {
@@ -16,12 +16,14 @@ export default function SignupScreen() {
     const [confPassword, setConfPassword] = useState("");
 
     const handleSubmit = async () => {
-        if (email && password) {
+        if (email && password === confPassword) {
             try {
-                await signInWithEmailAndPassword(auth, email, password);
+                await createUserWithEmailAndPassword(auth, email, password);
             } catch (err) {
                 console.log("got error: ", err.message);
             }
+        } else {
+            alert("Email address incorrect or Password not equal Password again");
         }
     };
 
