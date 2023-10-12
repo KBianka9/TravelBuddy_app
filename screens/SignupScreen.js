@@ -29,22 +29,20 @@ export default function SignupScreen() {
 
     return (
       <View className="flex-1 bg-white" style={{ backgroundColor: theme.background }}>
-          <SafeAreaView className="flex">
-              <View className="flex-row justify-start">
-                  <TouchableOpacity
-                    onPress={() => navigation.goBack()}
-                    className="p-2 rounded-tr-2xl rounded-bl-2xl ml-4 mt-4"
-                    style={{ backgroundColor: theme.button }}>
-                      <ArrowLeftIcon size="20" color="white" />
-                  </TouchableOpacity>
-              </View>
-              <View className="flex-row justify-center">
-                  <Image source={require("../src/assets/signup.png")}
-                         style={{ width: 380, height: 330 }} />
-              </View>
+          <Image source={require("../src/assets/signup.jpg")}
+                 style={{ height: 310 }}
+                 className="w-full absolute"
+          />
+          <SafeAreaView className="flex-row justify-between items-center mr-2 mt-3">
+              <TouchableOpacity
+                onPress={() => navigation.goBack()}
+                className="p-2 rounded-tr-2xl rounded-bl-2xl ml-4"
+                style={{ backgroundColor: theme.button }}>
+                  <ArrowLeftIcon size="20" color="white" />
+              </TouchableOpacity>
           </SafeAreaView>
           <ScrollView className="flex-1 bg-white px-8 pt-4"
-                      style={{ borderTopRightRadius: 50, borderTopLeftRadius: 50 }}>
+                      style={{ borderTopRightRadius: 50, borderTopLeftRadius: 50, marginTop: 225 }}>
               <View className="form space-y-2">
                   <Text className="text-gray-700 ml-4">Email address</Text>
                   <TextInput
