@@ -5,38 +5,26 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { theme } from "../theme";
 import { useNavigation } from "@react-navigation/native";
 import { ArrowLeftIcon } from "react-native-heroicons/solid";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth, firebase } from "../config";
-import { Formik } from "formik";
-import * as Yup from "yup";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-
-const validationSchema = Yup.object().shape({
-    password: Yup.string()
-      .min(8, "Password must be at least 8 characters")
-      .required("Required"),
-    email: Yup.string()
-      .email("Provide a valid email")
-      .required("Required"),
-});
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../config";
 
 export default function SignupScreen() {
     const navigation = useNavigation();
-    const [loader, setLoader] = useState(false);
-    const [responseData, setResponseData] = useState(null);
-    const [obsecureText, setObsecureText] = useState(false);
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [pswVisible, setPswVisible] = useState(true);
+    const [confPassword, setConfPassword] = useState("");
 
     const handleSubmit = async () => {
-        if (email && password === confPassword) {
+        if (email && password) {
             try {
-                await createUserWithEmailAndPassword(auth, email, password);
+                await signInWithEmailAndPassword(auth, email, password);
             } catch (err) {
                 console.log("got error: ", err.message);
             }
-        } else {
-            alert("Email address incorrect or Password not equal Password again");
         }
     };
+
     return (
       <View className="flex-1 bg-white" style={{ backgroundColor: theme.background }}>
           <SafeAreaView className="flex">
@@ -55,111 +43,44 @@ export default function SignupScreen() {
           </SafeAreaView>
           <ScrollView className="flex-1 bg-white px-8 pt-4"
                       style={{ borderTopRightRadius: 50, borderTopLeftRadius: 50 }}>
-              <View className="flex-1 p-20">
-                  <Formik
-                    initialValues={{ email: "", password: "" }}
-                    validationSchema={validationSchema}
-                    onSubmit={(value) => {
-                        console.log(value);
-                    }}
-                  >
-                      {({
-                            handleChange,
-                            touched,
-                            values,
-                            errors,
-                            isValid,
-                            setFieldTouched,
-                        }) => (
-                        <View>
-                            <View style={{ marginBottom: 20 }}>
-                                <Text className="text-gray-700 ml-4 mb-5">Email address</Text>
-                                <View>
-                                    <View style={{
-                                        borderColor: theme.iconOnG, backgroundColor: theme.iconOn,
-                                        borderWidth: 1, height: 50, borderRadius: 12,
-                                        flexDirection: "row", paddingHorizontal: 15, alignItems: "center",
-                                    }}>
-                                        <MaterialCommunityIcons
-                                          name="email-outline"
-                                          size={20}
-                                          color={theme.iconOnG}
-                                        />
-                                        <TextInput
-                                          style={{ flex: 1 }}
-                                          autoCorrect={false}
-                                          autoCapitalize="none"
-                                          value={values.email}
-                                          keyboardType={"email-address"}
-                                          placeholder="Enter your Email address"
-                                          onChange={handleChange("email")}
-                                          onFocus={() => setFieldTouched("email")}
-                                          onBlur={() => setFieldTouched("email", "")}
-                                        />
-                                    </View>
-                                    {touched.email && errors.email && (
-                                      <Text style={{
-                                          color: "red",
-                                          fontSize: 12,
-                                          marginBottom: 5,
-                                          marginLeft: 5,
-                                      }}>{errors.email}</Text>
-                                    )}
-                                </View>
-                            </View>
-                            <View style={{ marginBottom: 20 }}>
-                                <Text className="text-gray-700 ml-4">Password</Text>
-                                <View>
-                                    <View style={{
-                                        borderColor: theme.iconOnG, backgroundColor: theme.iconOn,
-                                        borderWidth: 1, height: 50, borderRadius: 12,
-                                        flexDirection: "row", paddingHorizontal: 15, alignItems: "center",
-                                    }}>
-                                        <MaterialCommunityIcons
-                                          name="lock-outline"
-                                          size={20}
-                                          color={theme.iconOnG}
-                                        />
-                                        <TextInput
-                                          style={{ flex: 1 }}
-                                          autoCorrect={false}
-                                          autoCapitalize="none"
-                                          secureTextEntry={obsecureText}
-                                          value={values.password}
-                                          placeholder="Enter your Password"
-                                          onChange={handleChange("password")}
-                                          onFocus={() => setFieldTouched("password")}
-                                          onBlur={() => setFieldTouched("password", "")}
-                                        />
-                                        <TouchableOpacity onPress={() => {
-                                            setObsecureText(!obsecureText);
-                                        }}>
-                                            <MaterialCommunityIcons
-                                              name={obsecureText ? "eye-outline" : "eye-off-outline"}
-                                              size={18}
-                                            />
-                                        </TouchableOpacity>
-                                    </View>
-                                    {touched.password && errors.password && (
-                                      <Text style={{
-                                          color: "red",
-                                          fontSize: 12,
-                                          marginBottom: 5,
-                                          marginLeft: 5,
-                                      }}>{errors.password}</Text>
-                                    )}
-                                </View>
-                            </View>
-                        </View>
-                      )}
-                  </Formik>
+              <View className="form space-y-2">
+                  <Text className="text-gray-700 ml-4">Email address</Text>
+                  <TextInput
+                    className="bg-gray-100 text-gray-700 rounded-2xl mb-3"
+                    value={email}
+                    onChangeText={value => setEmail(value)}
+                    keyboardType={"email-address"}
+                    placeholder="Enter your Email address"
+                    require={true}
+                  />
+                  <Text className="text-gray-700 ml-4">Password</Text>
+                  <TextInput className="bg-gray-100 text-gray-700 rounded-2xl"
+                             secureTextEntry={pswVisible}
+                             autoCorrect={false}
+                             value={password}
+                             onChangeText={value => setPassword(value)}
+                             placeholder="Enter your Password"
+                             right={
+                                 <TextInput.Icon
+                                   icon={pswVisible ? "eye" : "eye-off"}
+                                   onPress={() => setPswVisible(!pswVisible)}
+                                 />
+                             }
+                  />
                   <Text className="text-gray-700 ml-4">Confirm password</Text>
                   <TextInput
                     className="bg-gray-100 text-gray-700 rounded-2xl mb-7"
-                    secureTextEntry
+                    secureTextEntry={pswVisible}
                     autoCorrect={false}
-                    value={{}}
+                    value={confPassword}
+                    onChangeText={value => setConfPassword(value)}
                     placeholder="Enter your Password again"
+                    right={
+                        <TextInput.Icon
+                          icon={pswVisible ? "eye" : "eye-off"}
+                          onPress={() => setPswVisible(!pswVisible)}
+                        />
+                    }
                   />
                   <TouchableOpacity className="py-3 rounded-xl" style={{ backgroundColor: theme.button }}
                                     onPress={handleSubmit}

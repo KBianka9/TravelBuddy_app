@@ -7,17 +7,6 @@ import { useNavigation } from "@react-navigation/native";
 import { ArrowLeftIcon } from "react-native-heroicons/solid";
 import { signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "../config";
-import { Formik } from "formik";
-import * as Yup from "yup";
-
-const validationSchema = Yup.object().shape({
-    password: Yup.string()
-      .min(8, "Password must be at least 8 characters")
-      .required("Required"),
-    email: Yup.string()
-      .email("Provide a valid email")
-      .required("Required"),
-});
 
 export default function LoginScreen() {
     const navigation = useNavigation();
@@ -32,7 +21,6 @@ export default function LoginScreen() {
                   alert("Password reset email has been sent successfully!");
               })
               .catch((error) => {
-                  const errorCode = error.code;
                   const errorMessage = error.message;
                   alert(errorMessage);
               });
@@ -71,25 +59,6 @@ export default function LoginScreen() {
                       style={{ borderTopRightRadius: 50, borderTopLeftRadius: 50 }}>
               <View className="form space-y-2">
                   <Text className="text-gray-700 ml-4">Email address</Text>
-                  <Formik
-                    initialValues={{ email: "", password: "" }}
-                    validationSchema={validationSchema}
-                    onSubmit={(value) => {
-                    }}
-                  >
-                      {({
-                            handleChange,
-                            touched,
-                            values,
-                            errors,
-                            isValid,
-                            setFieldTouched,
-                        }) => (
-                        <View>
-
-                        </View>
-                      )}
-                  </Formik>
                   <TextInput
                     className="bg-gray-100 text-gray-700 rounded-2xl mb-3"
                     value={email}
