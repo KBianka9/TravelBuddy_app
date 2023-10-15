@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, Image, TouchableOpacity, ScrollView, TextInput } from "react-native";
+import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { theme } from "../theme";
 import { ArrowLeftIcon, PlusIcon } from "react-native-heroicons/solid";
@@ -23,8 +23,8 @@ export default function BucketListScreen() {
 
   return (
     <View className="flex-1 bg-white" style={{ backgroundColor: theme.background }}>
-      <Image source={require("../src/assets/st-james-s-park-london.jpg")}
-             style={{ height: 310 }}
+      <Image source={require("../src/assets/bucket_list.jpg")}
+             style={{ height: 385 }}
              className="w-full absolute"
       />
       <SafeAreaView className="flex-row justify-start">
@@ -37,7 +37,7 @@ export default function BucketListScreen() {
         <Text style={{ fontSize: 18, paddingTop: 20, paddingLeft: 100, fontWeight: "bold" }}>Bucket list</Text>
       </SafeAreaView>
       <ScrollView className="flex-1 bg-white px-8 pt-4"
-                  style={{ borderTopRightRadius: 20, borderTopLeftRadius: 20, marginTop: 225 }}>
+                  style={{ borderTopRightRadius: 20, borderTopLeftRadius: 20, marginTop: 300 }}>
         <View style={{ marginTop: 15 }}>
           <View style={{ flexDirection: "row", marginBottom: 25 }}>
             <TouchableOpacity className="ml-2">

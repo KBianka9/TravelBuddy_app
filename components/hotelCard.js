@@ -1,7 +1,7 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import { theme } from "../theme";
-import { StarIcon, MapPinIcon, PlusIcon } from "react-native-heroicons/solid";
+import { StarIcon, MapPinIcon, EyeIcon } from "react-native-heroicons/solid";
 import { useNavigation } from "@react-navigation/native";
 import * as Animatable from "react-native-animatable";
 
@@ -43,10 +43,9 @@ export default function HotelCard({ item }) {
           <View>
             <TouchableOpacity style={{ shadowOpacity: 1, end: -50 }}
                               onPress={() => navigation.navigate("Hotel", { ...item })}>
-              <Animatable.View animation={"pulse"} easing={"ease-in-out"} iterationCount={"infinite"} duration={1000}
-                               style={{ borderWidth: 0 }}>
-                <PlusIcon size="5" strokeWidth={2} color={theme.iconOn}
-                          style={{ backgroundColor: theme.button, borderRadius: 20, padding: 20, marginTop: -20 }} />
+              <Animatable.View animation={"pulse"} easing={"ease-in-out"} iterationCount={"infinite"} duration={1000}>
+                <EyeIcon strokeWidth={1} color={theme.iconOn}
+                         style={{ marginTop: -20, backgroundColor: theme.button, borderRadius: 25, padding: 20 }} />
               </Animatable.View>
             </TouchableOpacity>
           </View>

@@ -38,38 +38,38 @@ export default function HotelScreen(props) {
                   </TouchableOpacity>
               </View>
           </SafeAreaView>
-          <ScrollView className="flex-1 bg-white px-8"
-                      style={{ borderTopRightRadius: 50, borderTopLeftRadius: 50, marginTop: 200 }}>
-              <View style={{
-                  backgroundColor: theme.button, flexDirection: "row", alignItems: "center", borderRadius: 20,
-                  marginTop: 10, width: 80, padding: 10,
-              }}>
-                  <StarIcon style={{ alignItems: "center", padding: 8, marginLeft: 2 }} size="19" color="white" />
-                  <Text style={{ fontSize: 17, color: "white", fontWeight: "bold", marginLeft: 6 }}>{item.stars}</Text>
-              </View>
-              <View className="ml-2 space-y-3">
-                  <Text style={{ fontSize: 24, marginTop: 5, color: "black", fontWeight: "bold" }}>
-                      {item.name}
-                  </Text>
-                  <View style={{ flexDirection: "row", marginLeft: -4 }}>
-                      <MapPinIcon style={{ marginLeft: 20 }} size="25" color="black" />
-                      <Text style={{ fontSize: 18, marginTop: 2, color: "black" }}>
-                          {item.city}, {item.country}
-                      </Text>
-                  </View>
-                  <View style={{ marginTop: 8, alignItems: "flex-end" }}>
-                      <Text style={{ fontSize: 24, color: theme.iconOff, fontWeight: "bold" }}>$ {item.price}</Text>
-                  </View>
-                <View style={{ marginTop: 10 }}>
-                  <Text style={{ fontSize: 20, marginTop: 5, color: "black", fontWeight: "bold" }}>About Hotel and
-                    around</Text>
-                  <Text style={{ fontSize: 15, marginTop: 5, color: "black" }}>{item.description}</Text>
-                </View>
+        <ScrollView className="flex-1 bg-white px-8"
+                    style={{ borderTopRightRadius: 50, borderTopLeftRadius: 50, marginTop: 200 }}>
+          <View style={{
+            backgroundColor: theme.button, flexDirection: "row", alignItems: "center", borderRadius: 20,
+            marginTop: 10, width: 80, padding: 10, marginVertical: 8,
+          }}>
+            <StarIcon style={{ alignItems: "center", padding: 8, marginLeft: 2 }} size="19" color="white" />
+            <Text style={{ fontSize: 17, color: "white", fontWeight: "bold", marginLeft: 6 }}>{item.stars}</Text>
+          </View>
+          <View className="ml-2 space-y-3">
+            <Text style={{ fontSize: 24, marginTop: 5, color: "black", fontWeight: "bold" }}>
+              {item.name}
+            </Text>
+            <View style={{ flexDirection: "row", marginLeft: -4 }}>
+              <MapPinIcon style={{ marginLeft: 20 }} size="25" color="black" />
+              <Text style={{ fontSize: 18, marginTop: 2, color: "black" }}>
+                {item.city}, {item.country}
+              </Text>
+            </View>
+            <View style={{ marginTop: 8, alignItems: "flex-end" }}>
+              <Text style={{ fontSize: 24, color: theme.iconOff, fontWeight: "bold" }}>$ {item.price}</Text>
+            </View>
+            <View style={{ marginTop: 10 }}>
+              <Text style={{ fontSize: 20, marginTop: 5, color: "black", fontWeight: "bold" }}>About Hotel and
+                around</Text>
+              <Text style={{ fontSize: 15, marginTop: 5, color: "black" }}>{item.description}</Text>
+            </View>
                 <View style={{ marginTop: 10, paddingBottom: 90 }}>
                   <Text
                     style={{ fontSize: 20, marginVertical: 15, color: "black", fontWeight: "bold" }}>Location</Text>
                   <Image source={item.map}
-                         style={{ width: 320, height: 160 }} />
+                         style={{ width: 320, height: 160, borderRadius: 10 }} />
                 </View>
               </View>
           </ScrollView>
