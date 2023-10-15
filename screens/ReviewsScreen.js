@@ -6,6 +6,7 @@ import { MagnifyingGlassIcon } from "react-native-heroicons/outline";
 import { useNavigation } from "@react-navigation/native";
 import { MapPinIcon } from "react-native-heroicons/solid";
 import * as Animatable from "react-native-animatable";
+import FloatingButton from "../components/FloatingButton";
 
 export default function ReviewsScreen() {
     const navigation = useNavigation();
@@ -32,21 +33,6 @@ export default function ReviewsScreen() {
                       <MagnifyingGlassIcon size="25" strokeWidth={2} color="white"></MagnifyingGlassIcon>
                   </TouchableOpacity>
               </View>
-              <TouchableOpacity className="rounded-xl mx-2 my-2"
-                                onPress={() => navigation.navigate("NewReview")}>
-                  <Animatable.View animation={"pulse"} easing={"ease-in-out"} iterationCount={"infinite"}
-                                   duration={1000} style={{ borderWidth: 0 }}>
-                      <Text style={{
-                          backgroundColor: theme.iconOff,
-                          color: "white",
-                          borderRadius: 50,
-                          padding: 5,
-                          fontWeight: "bold",
-                          marginLeft: 250,
-                          marginRight: 30,
-                      }}>+ Add review</Text>
-                  </Animatable.View>
-              </TouchableOpacity>
           </SafeAreaView>
           <ScrollView>
               <View style={{ borderRadius: 50, backgroundColor: "white", margin: 20, padding: 15 }}>
@@ -78,27 +64,32 @@ export default function ReviewsScreen() {
                              style={{ width: 50, height: 50, marginTop: 5, padding: 5 }} />
                   </View>
                   <View className="flex-row pt-6 pb-2 ml-6">
-                      <Text className="pt-3">Useful?</Text>
+                      <Text className="pt-3 mr-2">Useful?</Text>
                       <TouchableOpacity className="py-3 rounded-3xl mx-2"
                                         style={{ backgroundColor: theme.iconOnG }}
                                         onPress={() => usefulCounter}>
                           <Text className="font-xl text-center text-white px-2">Yes - {yesButton}</Text>
                       </TouchableOpacity>
                       <TouchableOpacity className="py-3 rounded-3xl mx-2"
-                                        style={{ backgroundColor: theme.button }}
+                                        style={{ backgroundColor: theme.iconOff }}
                                         onPress={() => usefulCounter()}>
                           <Text className="font-l text-center text-white px-2">No - {noButton}</Text>
                       </TouchableOpacity>
-                      <TouchableOpacity className="py-3 rounded-3xl ml-8"
-                                        style={{ backgroundColor: theme.decrementButton }}
-                                        onPress={() => {
-                                        }}>
-                          <Text className="font-l text-center text-white px-2">Report</Text>
-                      </TouchableOpacity>
                   </View>
               </View>
-              <View>
-              </View>
+              <Animatable.View animation={"pulse"} easing={"ease-in-out"} iterationCount={"infinite"}
+                               duration={1000} style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderWidth: 0,
+                  overflow: "visible",
+              }}>
+                  <FloatingButton
+                    style={{ position: "absolute", bottom: -20, right: 30 }}
+                    onPress={() => navigation.navigate("NewReview")}
+                  />
+              </Animatable.View>
               <View style={{ borderRadius: 50, backgroundColor: "white", margin: 20, padding: 15 }}>
                   <View style={{ flexDirection: "row" }}>
                       <Image source={require("../src/assets/profile.png")}
@@ -122,7 +113,7 @@ export default function ReviewsScreen() {
                              style={{ width: 50, height: 50, marginLeft: 20, marginRight: 5, marginTop: 5 }} />
                   </View>
                   <View className="flex-row pt-6 pb-2 ml-6">
-                      <Text className="pt-3">Useful?</Text>
+                      <Text className="pt-3 mr-2">Useful?</Text>
                       <TouchableOpacity className="py-3 rounded-3xl mx-2"
                                         style={{ backgroundColor: theme.iconOnG }}
                                         onPress={() => {
@@ -130,16 +121,10 @@ export default function ReviewsScreen() {
                           <Text className="font-xl text-center text-white px-2">Yes - 0</Text>
                       </TouchableOpacity>
                       <TouchableOpacity className="py-3 rounded-3xl mx-2"
-                                        style={{ backgroundColor: theme.button }}
+                                        style={{ backgroundColor: theme.iconOff }}
                                         onPress={() => {
                                         }}>
                           <Text className="font-l text-center text-white px-2">No - 0</Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity className="py-3 rounded-3xl ml-8"
-                                        style={{ backgroundColor: theme.decrementButton }}
-                                        onPress={() => {
-                                        }}>
-                          <Text className="font-l text-center text-white px-2">Report</Text>
                       </TouchableOpacity>
                   </View>
               </View>
@@ -169,7 +154,7 @@ export default function ReviewsScreen() {
                              style={{ width: 50, height: 50, marginTop: 5, marginRight: 5, padding: 5 }} />
                   </View>
                   <View className="flex-row pt-6 pb-2 ml-6">
-                      <Text className="pt-3">Useful?</Text>
+                      <Text className="pt-3 mr-2">Useful?</Text>
                       <TouchableOpacity className="py-3 rounded-3xl mx-2"
                                         style={{ backgroundColor: theme.iconOnG }}
                                         onPress={() => {
@@ -177,16 +162,10 @@ export default function ReviewsScreen() {
                           <Text className="font-xl text-center text-white px-2">Yes - 0</Text>
                       </TouchableOpacity>
                       <TouchableOpacity className="py-3 rounded-3xl mx-2"
-                                        style={{ backgroundColor: theme.button }}
+                                        style={{ backgroundColor: theme.iconOff }}
                                         onPress={() => {
                                         }}>
                           <Text className="font-l text-center text-white px-2">No - 0</Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity className="py-3 rounded-3xl ml-8"
-                                        style={{ backgroundColor: theme.decrementButton }}
-                                        onPress={() => {
-                                        }}>
-                          <Text className="font-l text-center text-white px-2">Report</Text>
                       </TouchableOpacity>
                   </View>
               </View>

@@ -1,6 +1,6 @@
 import React from "react";
 import { Image, TouchableOpacity, View, ScrollView, Text } from "react-native";
-import { ArrowLeftIcon, MapPinIcon, StarIcon, HomeModernIcon } from "react-native-heroicons/solid";
+import { ArrowLeftIcon, MapPinIcon, StarIcon } from "react-native-heroicons/solid";
 import { HomeModernIcon as HomeModernIconOutline } from "react-native-heroicons/outline";
 import { theme } from "../theme";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -60,17 +60,17 @@ export default function HotelScreen(props) {
                   <View style={{ marginTop: 8, alignItems: "flex-end" }}>
                       <Text style={{ fontSize: 24, color: theme.iconOff, fontWeight: "bold" }}>$ {item.price}</Text>
                   </View>
-                  <View style={{ marginTop: 10 }}>
-                      <Text style={{ fontSize: 20, marginTop: 5, color: "black", fontWeight: "bold" }}>About Hotel and
-                          around</Text>
-                      <Text style={{ fontSize: 15, marginTop: 5, color: "black" }}>{item.description}</Text>
-                  </View>
-                  <View style={{ marginTop: 10, paddingBottom: 90 }}>
-                      <Text
-                        style={{ fontSize: 20, marginVertical: 15, color: "black", fontWeight: "bold" }}>Location</Text>
-                      <Image source={require("../src/assets/map.png")}
-                             style={{ width: 320, height: 160 }} />
-                  </View>
+                <View style={{ marginTop: 10 }}>
+                  <Text style={{ fontSize: 20, marginTop: 5, color: "black", fontWeight: "bold" }}>About Hotel and
+                    around</Text>
+                  <Text style={{ fontSize: 15, marginTop: 5, color: "black" }}>{item.description}</Text>
+                </View>
+                <View style={{ marginTop: 10, paddingBottom: 90 }}>
+                  <Text
+                    style={{ fontSize: 20, marginVertical: 15, color: "black", fontWeight: "bold" }}>Location</Text>
+                  <Image source={item.map}
+                         style={{ width: 320, height: 160 }} />
+                </View>
               </View>
           </ScrollView>
       </View>
