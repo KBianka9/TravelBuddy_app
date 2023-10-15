@@ -33,6 +33,8 @@ import AddTripScreen from "../screens/AddTripScreen";
 import RecentTripScreen from "../screens/RecentTripScreen";
 import BucketListScreen from "../screens/BucketListScreen";
 import MemoriesScreen from "../screens/MemoriesScreen";
+import LookAtTheMapScreen from "../screens/LookAtTheMapScreen";
+import EditingOnTheMapScreen from "../screens/EditingOnTheMapScreen";
 
 
 const Stack = createNativeStackNavigator();
@@ -48,7 +50,9 @@ export default function AppNavigation() {
           <Stack.Screen name="Hotel" options={{ headerShown: false }} component={HotelScreen} />
           <Stack.Screen name="RoutePlanner" options={{ headerShown: false }} component={RoutePlannerScreen} />
           <Stack.Screen name="RecentTrip" options={{ headerShown: false }} component={RecentTripScreen} />
+          <Stack.Screen name="LookAtTheMap" options={{ headerShown: false }} component={LookAtTheMapScreen} />
           <Stack.Screen name="AddTrip" options={{ headerShown: false }} component={AddTripScreen} />
+          <Stack.Screen name="EditingOnTheMap" options={{ headerShown: false }} component={EditingOnTheMapScreen} />
           <Stack.Screen name="Reviews" options={{ headerShown: false }} component={ReviewsScreen} />
           <Stack.Screen name="NewReview" options={{ headerShown: false }} component={NewReviewScreen} />
           <Stack.Screen name="Profile" options={{ headerShown: false }} component={ProfileScreen} />

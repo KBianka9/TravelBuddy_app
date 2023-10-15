@@ -105,8 +105,7 @@ export default function AddTripScreen() {
           </TouchableOpacity>
         </View>
         <View style={{ paddingLeft: 40, paddingRight: 180 }}>
-          <TouchableOpacity onPress={() => {
-          }}>
+          <TouchableOpacity onPress={() => navigation.navigate("EditingOnTheMap")}>
             <Text style={{
               backgroundColor: theme.button,
               color: "white",

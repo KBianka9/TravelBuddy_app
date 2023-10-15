@@ -1,6 +1,6 @@
 import React from "react";
-import { Image, TouchableOpacity, View, ScrollView, Text, TextInput } from "react-native";
-import { ArrowLeftIcon, MapPinIcon, PlusIcon } from "react-native-heroicons/solid";
+import { Image, TouchableOpacity, View, ScrollView, Text } from "react-native";
+import { ArrowLeftIcon, MapPinIcon } from "react-native-heroicons/solid";
 import { theme } from "../theme";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
@@ -101,8 +101,7 @@ export default function RecentTripScreen(props) {
             <Text style={{ color: theme.iconOff, marginLeft: 16, fontSize: 17 }}>{item.destinationT}</Text>
           </View>
           <View style={{ marginRight: 197 }}>
-            <TouchableOpacity onPress={() => {
-            }}>
+            <TouchableOpacity onPress={() => navigation.navigate("LookAtTheMap")}>
               <Text style={{
                 backgroundColor: theme.background,
                 borderRadius: 50,
