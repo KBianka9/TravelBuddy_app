@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Image, TouchableOpacity, Alert, ScrollView } from "react-native";
+import { View, Text, Image, TouchableOpacity, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { theme } from "../theme";
 import { signOut, deleteUser } from "firebase/auth";
@@ -71,10 +71,9 @@ export default function ProfileScreen() {
                    borderColor: "white",
                  }}
           />
-          <Text style={{ fontWeight: "bold", fontSize: 20, paddingTop: 10, textAlign: "center" }}>Bianka Kiss</Text>
-          <Text style={{ fontSize: 15, paddingTop: 10, textAlign: "center" }}>kiss.bianka19995@gmail.com</Text>
+          <Text style={{ fontWeight: "bold", fontSize: 20, paddingTop: 5, textAlign: "center" }}>Bianka Kiss</Text>
         </View>
-        <ScrollView style={{ marginTop: 20 }}>
+        <View>
           <TouchableOpacity onPress={() => navigation.navigate("EditProfile")}>
             <View style={{
               flexDirection: "row",
@@ -164,7 +163,7 @@ export default function ProfileScreen() {
               <Text style={{ color: theme.iconOff, marginLeft: 16, fontSize: 16 }}>Log out</Text>
             </View>
           </TouchableOpacity>
-        </ScrollView>
+        </View>
       </View>
     </View>
   );
