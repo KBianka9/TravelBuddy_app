@@ -86,7 +86,7 @@ export default function ReviewsScreen() {
                   overflow: "visible",
               }}>
                   <FloatingButton
-                    style={{ position: "absolute", bottom: -20, right: 30 }}
+                    style={{ position: "absolute", bottom: 40, right: 40 }}
                     onPress={() => navigation.navigate("NewReview")}
                   />
               </Animatable.View>
