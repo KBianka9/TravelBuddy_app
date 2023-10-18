@@ -82,16 +82,18 @@ function NavBar() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
+        tabBarActiveTintColor: theme.iconOn,
         headerShown: false,
-        tabBarShowLabel: false,
         tabBarIcon: ({ focused }) => menuIcons(route, focused),
         tabBarStyle: {
           height: 70,
           backgroundColor: theme.navBarC,
+          paddingBottom: 10,
+          paddingTop: 10,
         },
       })}>
-      <Tab.Screen name="PlaceSearcher" component={PlaceSearcherScreen} />
-      <Tab.Screen name="RoutePlanner" component={RoutePlannerScreen} />
+      <Tab.Screen name="Hotels" component={PlaceSearcherScreen} />
+      <Tab.Screen name="Route Planner" component={RoutePlannerScreen} />
       <Tab.Screen name="Reviews" component={ReviewsScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
@@ -100,10 +102,10 @@ function NavBar() {
 
 const menuIcons = (route, focused) => {
   let icon;
-  if (route.name === "PlaceSearcher") {
+  if (route.name === "Hotels") {
     icon = focused ? <HomeSolid size="30" color={theme.iconOn} /> :
       <HomeOutline size="30" strokeWidth={2} color={theme.iconOff} />;
-  } else if (route.name === "RoutePlanner") {
+  } else if (route.name === "Route Planner") {
     icon = focused ? <MapSolid size="30" color={theme.iconOn} /> :
       <MapOutline size="30" strokeWidth={2} color={theme.iconOff} />;
   } else if (route.name === "Reviews") {

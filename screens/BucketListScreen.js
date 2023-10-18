@@ -8,6 +8,25 @@ import CheckBox from "react-native-check-box";
 import OptionsMenu from "react-native-options-menu";
 import * as Animatable from "react-native-animatable";
 
+const bucketListItems = [
+  {
+    name: "Big Ben, England",
+    checked: true,
+  },
+  {
+    name: "Eiffel Tower, France",
+    checked: false,
+  },
+  {
+    name: "Machu Picchu, Peru",
+    checked: true,
+  },
+  {
+    name: "Colosseum, Italy",
+    checked: false,
+  },
+];
+
 export default function BucketListScreen() {
   const navigation = useNavigation();
   const [isChecked, setChecked] = useState({

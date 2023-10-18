@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Image, TouchableOpacity, ScrollView, TextInput } from "react-native";
+import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { theme } from "../theme";
 import { ArrowLeftIcon, PlusIcon, MinusIcon } from "react-native-heroicons/solid";
@@ -138,7 +138,7 @@ export default function PackingListScreen() {
   const decrement = (itemName) => {
     setFullPackingList(prevList =>
       prevList.map(item =>
-        item.name === itemName
+        item.name === itemName && item.packed !== 0
           ? { ...item, packed: item.packed - 1 }
           : item,
       ),
