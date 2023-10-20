@@ -5,6 +5,7 @@ import EmptyList from "../components/emptyList";
 import { useNavigation } from "@react-navigation/native";
 import Video from "react-native-video";
 import * as Animatable from "react-native-animatable";
+import FloatingButton from "../components/FloatingButton";
 
 const trip = [
   {
@@ -65,20 +66,10 @@ export default function RoutePlannerScreen() {
       <View className="flex-1 bg-white pt-6"
             style={{ borderTopRightRadius: 50, borderTopLeftRadius: 50, marginTop: -78, paddingBottom: 120 }}>
         <View className="px-4 space-y-4">
-          <View className="flex-row justify-between items-center px-4 pb-4">
+          <View className="flex-row justify-between items-center px-4">
             <Text style={{ color: "black", fontWeight: "bold", fontSize: 24 }}>Recent Trips</Text>
-            <TouchableOpacity onPress={() => navigation.navigate("AddTrip")}>
-              <Animatable.Text animation={"pulse"} easing={"ease-in-out"} iterationCount={"infinite"} duration={1000}
-                               style={{
-                                 backgroundColor: theme.background,
-                                 borderRadius: 50,
-                                 padding: 5,
-                                 fontWeight: "bold",
-                                 borderWidth: 0,
-                               }}>+ Add trip</Animatable.Text>
-            </TouchableOpacity>
           </View>
-          <ScrollView style={{ height: 390 }}>
+          <ScrollView style={{ height: 400 }}>
             <FlatList data={trip}
                       numColumns={2}
                       ListEmptyComponent={<EmptyList message={"You haven't recorded any trips yet"} />}
@@ -104,6 +95,16 @@ export default function RoutePlannerScreen() {
                         );
                       }}
             />
+            <Animatable.View animation={"pulse"} easing={"ease-in-out"} iterationCount={"infinite"}
+                             duration={1000} style={{
+              flex: 1,
+              borderWidth: 0,
+            }}>
+              <FloatingButton
+                style={{ position: "absolute", bottom: 70, right: 15 }}
+                onPress={() => navigation.navigate("AddTrip")}
+              />
+            </Animatable.View>
           </ScrollView>
         </View>
       </View>
