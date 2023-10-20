@@ -8,52 +8,52 @@ import SelectDropdown from "react-native-select-dropdown";
 
 /*TODO: idointervallumbol jojjon*/
 const filterOptions = [
-  "09.09",
-  "10.09",
-  "11.09",
-  "12.09",
+  "09.09.",
+  "10.09.",
+  "11.09.",
+  "12.09.",
 ];
 
 const spectacleItems = [
   {
     spectacleName: "Uluwatu Temple",
-    tags: ["09.09"],
+    tags: ["09.09."],
   },
   {
     spectacleName: "Pura Ulun Danu Beratan",
-    tags: ["09.09"],
+    tags: ["09.09."],
   },
   {
     spectacleName: "Tanah Lot",
-    tags: ["09.09"],
+    tags: ["09.09."],
   },
   {
     spectacleName: "Phool Bagh Park",
-    tags: ["10.09"],
+    tags: ["10.09."],
   },
   {
     spectacleName: "Atal Ghat",
-    tags: ["10.09"],
+    tags: ["10.09."],
   },
   {
     spectacleName: "Nana Rao Restaurant",
-    tags: ["10.09"],
+    tags: ["10.09."],
   },
   {
     spectacleName: "Brahmavart Ghat",
-    tags: ["10.09"],
+    tags: ["10.09."],
   },
   {
     spectacleName: "Moti Jheel",
-    tags: ["11.09"],
+    tags: ["11.09."],
   },
   {
     spectacleName: "Jk Temple",
-    tags: ["11.09"],
+    tags: ["11.09."],
   },
   {
     spectacleName: "Allen Forest Zoo",
-    tags: ["12.09"],
+    tags: ["12.09."],
   },
 ];
 

@@ -15,7 +15,7 @@ export default function AddTripScreen() {
   const [date, setDate] = useState("");
   const [destination, setDestination] = useState([""]);
 
-  const day = ["1. day", "2. day", "3. day", "4. day"];
+  const day = ["27.11.", "28.11.", "29.11.", "30.11."];
   const handleAddTrip = () => {
     if (place && date) {
       navigation.navigate("RoutePlanner");
@@ -60,7 +60,7 @@ export default function AddTripScreen() {
             markText={"Date picker"}
             selectedBgColor={theme.iconOnG}
             allowFontScaling={false} // optional
-            placeholder={"Apr 27, 2018 → Jul 10, 2018"}
+            placeholder={"Nov 27, 2023 → Nov 30, 2023"}
             mode={"range"}
           />
         </View>
@@ -75,7 +75,7 @@ export default function AddTripScreen() {
             selectedRowStyle={{ backgroundColor: "white" }}
             buttonStyle={{ borderRadius: 30, backgroundColor: theme.searchInput }}
             dropdownIconPosition="right"
-            defaultButtonText={"1. day"}
+            defaultButtonText={"27.11."}
             data={day}
             onSelect={(selectedItem, index) => {
               console.log(selectedItem, index);
@@ -94,17 +94,6 @@ export default function AddTripScreen() {
               <PlusIcon size="5" strokeWidth={2} color={theme.iconOn}
                         style={{ backgroundColor: theme.iconOnG, borderRadius: 20, padding: 15 }}
               />
-            </Animatable.View>
-          </TouchableOpacity>
-        </View>
-        <View className="flex-row justify-center items-center rounded-full p-1 bg-gray-200 ml-4 mr-20 mb-4">
-          <TextInput value={destination} onChangeText={value => setDestination(value)} placeholder="Destination"
-                     className="p-4 flex-1 font-semibold text-gray-700" />
-          <TouchableOpacity style={{ shadowOpacity: 1, end: -60 }}>
-            <Animatable.View animation={"pulse"} easing={"ease-in-out"} iterationCount={"infinite"} duration={1000}
-                             style={{ borderWidth: 0 }}>
-              <MinusIcon size="5" strokeWidth={2} color={theme.iconOn}
-                         style={{ backgroundColor: theme.decrementButton, borderRadius: 20, padding: 15 }} />
             </Animatable.View>
           </TouchableOpacity>
         </View>
