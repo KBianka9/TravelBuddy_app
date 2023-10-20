@@ -6,7 +6,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import SelectDropdown from "react-native-select-dropdown";
 
-/*TODO:idointervallumbol jojjon*/
+/*TODO: idointervallumbol jojjon*/
 const filterOptions = [
   "09.09",
   "10.09",

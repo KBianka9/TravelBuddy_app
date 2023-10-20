@@ -25,7 +25,7 @@ export default function ReviewCard({ item }) {
       <View style={{ flexDirection: "row", marginLeft: -4 }}>
         <MapPinIcon style={{ marginLeft: 20, color: theme.text }} size="22" />
         <Text style={{ fontSize: 16, marginTop: 2, color: theme.text }}>
-          Raha, Indonesia
+          {item.cityCountry}
         </Text>
       </View>
       <Text style={{ paddingHorizontal: 15, paddingVertical: 5 }} numberOfLines={9}>{item.text}</Text>
@@ -35,11 +35,11 @@ export default function ReviewCard({ item }) {
       </TouchableOpacity>
       <View className="py-3 rounded-3xl mx-2 mb-2"
             style={{ backgroundColor: theme.iconOnG }}>
-        <Text className="font-xl text-center text-white px-2">useful for {item.usefulSum}</Text>
+        <Text className="font-xl text-center text-white px-2 font-bold">useful for {item.usefulSum} people</Text>
       </View>
       <View className="py-3 rounded-3xl mx-2"
             style={{ backgroundColor: theme.iconOff }}>
-        <Text className="font-l text-center text-white px-2">useless for {item.uselessSum}</Text>
+        <Text className="font-l text-center text-white px-2 font-bold">useless for {item.uselessSum} people</Text>
       </View>
     </View>
   );

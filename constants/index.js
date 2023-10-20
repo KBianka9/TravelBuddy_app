@@ -81,6 +81,7 @@ export const reviewItems = [
     reviewId: 1,
     user: "Arthur Smith",
     postDate: "09.09.2020.",
+    cityCountry: "Raha, Indonesia",
     text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce efficitur" +
       "lacinia sapien rhoncus elementum. Integer commodo scelerisque lectus. Mauris venenatis interdum" +
       "magna. In quis ornare tellus. Sed in odio et enim vehicula viverra.",
@@ -97,6 +98,7 @@ export const reviewItems = [
     reviewId: 2,
     user: "Jenny Miller",
     postDate: "08.09.2019.",
+    cityCountry: "Raha, Indonesia",
     text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce efficitur" +
       "lacinia sapien rhoncus elementum. Integer commodo scelerisque lectus. Mauris venenatis interdum" +
       "magna. In quis ornare tellus. Sed in odio et enim vehicula viverra.",
@@ -113,6 +115,7 @@ export const reviewItems = [
     reviewId: 3,
     user: "Sarah Mars",
     postDate: "09.09.2020.",
+    cityCountry: "Raha, Indonesia",
     text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce efficitur" +
       "lacinia sapien rhoncus elementum. Integer commodo scelerisque lectus. Mauris venenatis interdum" +
       "magna. In quis ornare tellus. Sed in odio et enim vehicula viverra.",
@@ -129,6 +132,7 @@ export const reviewItems = [
     reviewId: 4,
     user: "Antonio Banderas",
     postDate: "09.09.2020.",
+    cityCountry: "Raha, Indonesia",
     text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce efficitur Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce efficitur" +
       "lacinia sapien rhoncus elementum. Integer commodo scelerisque lectus. Mauris venenatis interdum Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce efficitur" +
       "magna. In quis ornare tellus. Sed in odio et enim vehicula viverra.",
@@ -148,6 +152,7 @@ export const reviewItems = [
     reviewId: 5,
     user: "Mike Smith",
     postDate: "09.09.2020.",
+    cityCountry: "Raha, Indonesia",
     text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce efficitur" +
       "lacinia sapien rhoncus elementum. Integer commodo scelerisque lectus. Mauris venenatis interdum" +
       "magna. In quis ornare tellus. Sed in odio et enim vehicula viverra. vmfjkduhig dfnkrg fgri rgnri grgojr",
