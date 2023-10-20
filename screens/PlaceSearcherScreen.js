@@ -51,16 +51,8 @@ export default function PlaceSearcherScreen() {
                     onSelect={(selectedItem, index) => {
                         console.log(selectedItem, index);
                     }}
-                    buttonTextAfterSelection={(selectedItem, index) => {
-                        // text represented after item is selected
-                        // if data array is an array of objects then return selectedItem.property to render after item is selected
-                        return selectedItem;
-                    }}
-                    rowTextForSelection={(item, index) => {
-                        // text represented for each item in dropdown
-                        // if data array is an array of objects then return item.property to represent item in dropdown
-                        return item;
-                    }}
+                    buttonTextAfterSelection={(selectedItem, index) => selectedItem}
+                    rowTextForSelection={(item, index) => item}
                   />
               </View>
               <Text className="text-black text-3xl my-3 ml-4">Recommendations</Text>

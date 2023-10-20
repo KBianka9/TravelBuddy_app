@@ -35,6 +35,7 @@ import BucketListScreen from "../screens/BucketListScreen";
 import MemoriesScreen from "../screens/MemoriesScreen";
 import LookAtTheMapScreen from "../screens/LookAtTheMapScreen";
 import EditingOnTheMapScreen from "../screens/EditingOnTheMapScreen";
+import ReviewScreen from "../screens/ReviewScreen";
 
 
 const Stack = createNativeStackNavigator();
@@ -55,6 +56,7 @@ export default function AppNavigation() {
           <Stack.Screen name="EditingOnTheMap" options={{ headerShown: false }} component={EditingOnTheMapScreen} />
           <Stack.Screen name="Reviews" options={{ headerShown: false }} component={ReviewsScreen} />
           <Stack.Screen name="NewReview" options={{ headerShown: false }} component={NewReviewScreen} />
+          <Stack.Screen name="Review" options={{ headerShown: false }} component={ReviewScreen} />
           <Stack.Screen name="Profile" options={{ headerShown: false }} component={ProfileScreen} />
           <Stack.Screen name="EditProfile" options={{ headerShown: false }} component={EditProfileScreen} />
           <Stack.Screen name="BucketList" options={{ headerShown: false }} component={BucketListScreen} />

@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity, TextInput, Image, ScrollView } from "reac
 import React, { useState } from "react";
 import { theme } from "../theme";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ArrowLeftIcon, PlusIcon } from "react-native-heroicons/solid";
+import { ArrowLeftIcon, MinusIcon, PlusIcon } from "react-native-heroicons/solid";
 import { useNavigation } from "@react-navigation/native";
 import SelectDropdown from "react-native-select-dropdown";
 import DatePicker from "react-native-date-ranges";
@@ -13,7 +13,7 @@ export default function AddTripScreen() {
   const navigation = useNavigation();
   const [place, setPlace] = useState("");
   const [date, setDate] = useState("");
-  const [destination, setDestination] = useState("");
+  const [destination, setDestination] = useState([""]);
 
   const day = ["1. day", "2. day", "3. day", "4. day"];
   const handleAddTrip = () => {
@@ -80,16 +80,8 @@ export default function AddTripScreen() {
             onSelect={(selectedItem, index) => {
               console.log(selectedItem, index);
             }}
-            buttonTextAfterSelection={(selectedItem, index) => {
-              // text represented after item is selected
-              // if data array is an array of objects then return selectedItem.property to render after item is selected
-              return selectedItem;
-            }}
-            rowTextForSelection={(item, index) => {
-              // text represented for each item in dropdown
-              // if data array is an array of objects then return item.property to represent item in dropdown
-              return item;
-            }}
+            buttonTextAfterSelection={(selectedItem, index) => selectedItem}
+            rowTextForSelection={(item, index) => item}
           />
           <Text style={{ fontSize: 24, color: theme.text, marginTop: 10 }}> ?</Text>
         </View>
@@ -100,7 +92,30 @@ export default function AddTripScreen() {
             <Animatable.View animation={"pulse"} easing={"ease-in-out"} iterationCount={"infinite"} duration={1000}
                              style={{ borderWidth: 0 }}>
               <PlusIcon size="5" strokeWidth={2} color={theme.iconOn}
-                        style={{ backgroundColor: theme.button, borderRadius: 20, padding: 20 }} />
+                        style={{ backgroundColor: theme.iconOnG, borderRadius: 20, padding: 15 }}
+              />
+            </Animatable.View>
+          </TouchableOpacity>
+        </View>
+        <View className="flex-row justify-center items-center rounded-full p-1 bg-gray-200 ml-4 mr-20 mb-4">
+          <TextInput value={destination} onChangeText={value => setDestination(value)} placeholder="Destination"
+                     className="p-4 flex-1 font-semibold text-gray-700" />
+          <TouchableOpacity style={{ shadowOpacity: 1, end: -60 }}>
+            <Animatable.View animation={"pulse"} easing={"ease-in-out"} iterationCount={"infinite"} duration={1000}
+                             style={{ borderWidth: 0 }}>
+              <MinusIcon size="5" strokeWidth={2} color={theme.iconOn}
+                         style={{ backgroundColor: theme.decrementButton, borderRadius: 20, padding: 15 }} />
+            </Animatable.View>
+          </TouchableOpacity>
+        </View>
+        <View className="flex-row justify-center items-center rounded-full p-1 bg-gray-200 ml-4 mr-20 mb-4">
+          <TextInput value={destination} onChangeText={value => setDestination(value)} placeholder="Destination"
+                     className="p-4 flex-1 font-semibold text-gray-700" />
+          <TouchableOpacity style={{ shadowOpacity: 1, end: -60 }}>
+            <Animatable.View animation={"pulse"} easing={"ease-in-out"} iterationCount={"infinite"} duration={1000}
+                             style={{ borderWidth: 0 }}>
+              <MinusIcon size="5" strokeWidth={2} color={theme.iconOn}
+                         style={{ backgroundColor: theme.decrementButton, borderRadius: 20, padding: 15 }} />
             </Animatable.View>
           </TouchableOpacity>
         </View>

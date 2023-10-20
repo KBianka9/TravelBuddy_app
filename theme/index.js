@@ -3,7 +3,7 @@ export const theme = {
   text: "#6d7177",
   button: "#9f9e9e",
   iconOn: "#e3f3ef",
-  iconOnG: "#009a84",
+  iconOnG: "#7bbeb6",
   iconOff: "#6d7177",
   searchInput: "#e4e6ea",
   navBarC: "#b9b9b9",

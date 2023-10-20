@@ -1,31 +1,44 @@
-import React, { useState } from "react";
-import { Image, TouchableOpacity, View, ScrollView, Text, TextInput, Alert } from "react-native";
+import React from "react";
+import { TouchableOpacity, View, ScrollView, Text, TextInput } from "react-native";
 import { ArrowLeftIcon, PlusIcon } from "react-native-heroicons/solid";
 import { theme } from "../theme";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import * as Animatable from "react-native-animatable";
+import { SliderBox } from "react-native-image-slider-box";
 
 export default function MemoriesScreen() {
   const navigation = useNavigation();
 
+  const memoriesPic = [
+    require("../src/assets/indonesia-cover-1.jpg"),
+    require("../src/assets/indonesia-cover-3.jpg"),
+    require("../src/assets/bucket_list.jpg"),
+  ];
+
   /*TODO:kép feltöltés*/
   return (
-    <View className="flex-1 bg-white" style={{ backgroundColor: theme.background }}>
-      <Image source={require("../src/assets/indonesia-cover-1.jpg")}
-             style={{ height: 310 }}
-             className="w-full absolute"
-      />
-      <SafeAreaView className="flex-row justify-between items-center mr-2 mt-3">
+    <View className="flex-1">
+      <View className="flex-row justify-between items-center mr-2 mt-3">
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           className="p-2 rounded-tr-2xl rounded-bl-2xl ml-4"
-          style={{ backgroundColor: theme.button }}>
+          style={{ backgroundColor: theme.button, zIndex: 1 }}>
           <ArrowLeftIcon size="20" color="white" />
         </TouchableOpacity>
-      </SafeAreaView>
+      </View>
+      <View style={{ marginTop: -50 }}>
+        <SliderBox images={memoriesPic}
+                   dotStyle={{ marginBottom: 20, height: 15, width: 15, borderRadius: 50 }}
+                   sliderBoxHeight={360}
+                   dotColor={theme.iconOnG}
+                   imageLoadingColor={theme.iconOnG}
+                   autoplay={true}
+                   autoplayInterval={5000}
+                   loop={true}
+        />
+      </View>
       <ScrollView className="flex-col flex-1 bg-white px-8 pt-6"
-                  style={{ borderTopRightRadius: 20, borderTopLeftRadius: 20, marginTop: 225 }}>
+                  style={{ borderTopRightRadius: 20, borderTopLeftRadius: 20, marginTop: -15 }}>
         {/*Review box*/}
         <Text style={{ fontStyle: "italic", fontWeight: "bold", fontSize: 26, textAlign: "center", marginBottom: 10 }}>My
           memories</Text>
@@ -46,7 +59,7 @@ export default function MemoriesScreen() {
             </Animatable.View>
           </TouchableOpacity>
         </View>
-        <View style={{ marginTop: 60 }}>
+        <View style={{ marginTop: 38 }}>
           <TouchableOpacity className="py-3 rounded-xl"
                             style={{ backgroundColor: theme.button }}
                             onPress={() => {
