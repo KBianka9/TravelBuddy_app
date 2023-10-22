@@ -30,16 +30,23 @@ export default function ReviewCard({ item }) {
       </View>
       <Text style={{ paddingHorizontal: 15, paddingVertical: 5 }} numberOfLines={9}>{item.text}</Text>
       <TouchableOpacity onPress={() => navigation.navigate("Review", { ...item })}>
-        <Text style={{ paddingHorizontal: 25, paddingVertical: 5, color: theme.iconOnG, marginBottom: 10 }}>Read
+        <Text style={{
+          paddingHorizontal: 25,
+          paddingVertical: 5,
+          color: theme.iconOnG,
+          marginBottom: 10,
+          fontWeight: "bold",
+          fontSize: 16,
+        }}>Read
           more</Text>
       </TouchableOpacity>
       <View className="py-3 rounded-3xl mx-2 mb-2"
             style={{ backgroundColor: theme.iconOnG }}>
-        <Text className="font-xl text-center text-white px-2 font-bold">useful for {item.usefulSum} people</Text>
+        <Text className="font-xl text-center text-white px-2 font-bold">useful for {item.usefulSum} user(s)</Text>
       </View>
       <View className="py-3 rounded-3xl mx-2"
             style={{ backgroundColor: theme.iconOff }}>
-        <Text className="font-l text-center text-white px-2 font-bold">useless for {item.uselessSum} people</Text>
+        <Text className="font-l text-center text-white px-2 font-bold">useless for {item.uselessSum} user(s)</Text>
       </View>
     </View>
   );

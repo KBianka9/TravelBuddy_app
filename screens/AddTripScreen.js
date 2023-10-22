@@ -13,7 +13,7 @@ export default function AddTripScreen() {
   const navigation = useNavigation();
   const [place, setPlace] = useState("");
   const [date, setDate] = useState("");
-  const [destination, setDestination] = useState([""]);
+  const [destinationList, setDestinationList] = useState([{ destination: "" }]);
 
   const day = ["27.11.", "28.11.", "29.11.", "30.11."];
   const handleAddTrip = () => {
@@ -23,6 +23,23 @@ export default function AddTripScreen() {
 
     }
   };
+
+  const handleDestinationAdd = () => {
+    setDestinationList([...destinationList, { destination: "" }]);
+  };
+
+  const handleDestinationRemove = (index) => {
+    const list = [...destinationList];
+    list.splice(index, 1);
+    setDestinationList(list);
+  };
+
+  /*const handleDestinationChange = (e, index) => {
+    const {name, value} = e.target;
+    const list = [...destinationList];
+    list[index][name] = value;
+    setDestinationList(list);
+  };*/
 
   return (
     <View className="flex-1 bg-white" style={{ backgroundColor: theme.background }}>
@@ -85,30 +102,43 @@ export default function AddTripScreen() {
           />
           <Text style={{ fontSize: 24, color: theme.text, marginTop: 10 }}> ?</Text>
         </View>
-        <View className="flex-row justify-center items-center rounded-full p-1 bg-gray-200 ml-4 mr-20 mb-4 mt-6">
-          <TextInput value={destination} onChangeText={value => setDestination(value)} placeholder="Destination"
-                     className="p-4 flex-1 font-semibold text-gray-700" />
-          <TouchableOpacity style={{ shadowOpacity: 1, end: -60 }}>
-            <Animatable.View animation={"pulse"} easing={"ease-in-out"} iterationCount={"infinite"} duration={1000}
-                             style={{ borderWidth: 0 }}>
-              <PlusIcon size="5" strokeWidth={2} color={theme.iconOn}
-                        style={{ backgroundColor: theme.iconOnG, borderRadius: 20, padding: 15 }}
-              />
-            </Animatable.View>
-          </TouchableOpacity>
-        </View>
-        <View className="flex-row justify-center items-center rounded-full p-1 bg-gray-200 ml-4 mr-20 mb-4">
-          <TextInput value={destination} onChangeText={value => setDestination(value)} placeholder="Destination"
-                     className="p-4 flex-1 font-semibold text-gray-700" />
-          <TouchableOpacity style={{ shadowOpacity: 1, end: -60 }}>
-            <Animatable.View animation={"pulse"} easing={"ease-in-out"} iterationCount={"infinite"} duration={1000}
-                             style={{ borderWidth: 0 }}>
-              <MinusIcon size="5" strokeWidth={2} color={theme.iconOn}
-                         style={{ backgroundColor: theme.decrementButton, borderRadius: 20, padding: 15 }} />
-            </Animatable.View>
-          </TouchableOpacity>
-        </View>
-        <View style={{ paddingLeft: 40, paddingRight: 180 }}>
+        {destinationList.map((singleDestination, index) => (
+          <View key={index}>
+            <View className="flex-row justify-center items-center rounded-full p-1 bg-gray-200 ml-4 mr-20 mt-4">
+              <TextInput value={singleDestination.destination} placeholder="Destination"
+                         className="p-4 flex-1 font-semibold text-gray-700" />
+              {destinationList.length > 1 &&
+                (<TouchableOpacity style={{ shadowOpacity: 1, end: -60 }}
+                                   onPress={() => handleDestinationRemove(index)}>
+                    <Animatable.View animation={"pulse"} easing={"ease-in-out"} iterationCount={"infinite"}
+                                     duration={1000}
+                                     style={{ borderWidth: 0 }}>
+                      <MinusIcon size="5" strokeWidth={2} color={theme.iconOn}
+                                 style={{ backgroundColor: theme.decrementButton, borderRadius: 20, padding: 18 }} />
+                    </Animatable.View>
+                  </TouchableOpacity>
+                )}
+            </View>
+            {destinationList.length - 1 === index && destinationList.length < 10 &&
+              (<TouchableOpacity style={{ shadowOpacity: 10 }} onPress={handleDestinationAdd}>
+                  <Animatable.View animation={"pulse"} easing={"ease-in-out"} iterationCount={"infinite"}
+                                   duration={1000}
+                                   style={{ borderWidth: 0 }}>
+                    <PlusIcon size="5" strokeWidth={2} color={theme.iconOn}
+                              style={{
+                                backgroundColor: theme.iconOnG,
+                                borderRadius: 20,
+                                padding: 20,
+                                marginLeft: 297,
+                                marginTop: 20,
+                              }}
+                    />
+                  </Animatable.View>
+                </TouchableOpacity>
+              )}
+          </View>
+        ))}
+        <View style={{ paddingLeft: 40, paddingRight: 180, marginTop: 10 }}>
           <TouchableOpacity onPress={() => navigation.navigate("EditingOnTheMap")}>
             <Text style={{
               backgroundColor: theme.button,
