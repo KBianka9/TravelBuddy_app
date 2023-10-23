@@ -11,7 +11,7 @@ export default function ReviewScreen(props) {
   const [yesButton, setYesButton] = useState(0);
   const [noButton, setNoButton] = useState(0);
 
-  /*TODO:useful countert megcsinalni*/
+  /*TODO: useful countert megcsinalni*/
   const usefulCounter = () => {
     if (onclick(yesButton) === true) {
       setYesButton(item.usefulSum + 1);

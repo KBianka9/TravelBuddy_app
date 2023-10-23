@@ -34,12 +34,12 @@ export default function AddTripScreen() {
     setDestinationList(list);
   };
 
-  /*const handleDestinationChange = (e, index) => {
-    const {name, value} = e.target;
+  const handleDestinationChange = (e, index) => {
+    const { name, value } = e.target;
     const list = [...destinationList];
     list[index][name] = value;
     setDestinationList(list);
-  };*/
+  };
 
   return (
     <View className="flex-1 bg-white" style={{ backgroundColor: theme.background }}>
@@ -105,7 +105,8 @@ export default function AddTripScreen() {
         {destinationList.map((singleDestination, index) => (
           <View key={index}>
             <View className="flex-row justify-center items-center rounded-full p-1 bg-gray-200 ml-4 mr-20 mt-4">
-              <TextInput value={singleDestination.destination} placeholder="Destination"
+              <TextInput value={singleDestination.destination} onChange={(e) => handleDestinationChange(e, index)}
+                         placeholder="Destination"
                          className="p-4 flex-1 font-semibold text-gray-700" />
               {destinationList.length > 1 &&
                 (<TouchableOpacity style={{ shadowOpacity: 1, end: -60 }}
