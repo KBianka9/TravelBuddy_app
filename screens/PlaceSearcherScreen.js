@@ -16,8 +16,16 @@ export default function PlaceSearcherScreen() {
       <ScrollView className="flex-1">
           <SafeAreaView>
               <Image source={require("../src/assets/walkway-tropical-jungle.jpg")}
-                     style={{ height: 650, width: 400 }} />
-              <Text style={{ marginTop: -400, textAlign: "center", fontSize: 40, color: "white" }}>Welcome!</Text>
+                     style={{ height: 610, width: 400 }} />
+              <Text style={{
+                  marginTop: -390,
+                  textAlign: "center",
+                  fontSize: 40,
+                  color: "white",
+                  marginBottom: 10,
+              }}>Welcome!</Text>
+              <Text style={{ fontSize: 15, color: "white", paddingLeft: 50, paddingRight: 15 }}>"Do not follow where the
+                  path may lead, go instead where there is no path and leave a trail."</Text>
               <Animatable.View animation="slideInDown" iterationCount={"infinite"} direction="alternate">
                   <ArrowUpIcon size={20} color={theme.iconOn} style={{
                       padding: 20,
@@ -25,12 +33,11 @@ export default function PlaceSearcherScreen() {
                       borderRadius: 50,
                       position: "relative",
                       marginTop: 210,
-                      marginBottom: 20,
                       marginLeft: 180,
                   }} />
               </Animatable.View>
           </SafeAreaView>
-          <View className="bg-white" style={{ borderTopRightRadius: 50, borderTopLeftRadius: 50 }}>
+          <View className="bg-white" style={{ borderTopRightRadius: 25, borderTopLeftRadius: 25, marginTop: 5 }}>
               <View className="flex-1 px-8 pt-8">
                   {/*Destination searcher*/}
                   <View className="flex-row justify-center items-center rounded-full p-1 bg-gray-200 mb-4">

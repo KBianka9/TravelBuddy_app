@@ -80,7 +80,7 @@ export default function MemoriesScreen() {
       </View>
       <View style={{ marginTop: -50 }}>
         <SliderBox images={memoriesPic}
-                   dotStyle={{ marginBottom: 20, height: 15, width: 15, borderRadius: 50 }}
+                   dotStyle={{ marginBottom: 20, height: 10, width: 10, borderRadius: 50 }}
                    sliderBoxHeight={360}
                    dotColor={theme.iconOnG}
                    imageLoadingColor={theme.iconOnG}
