@@ -4,21 +4,18 @@ import { ArrowLeftIcon, MapPinIcon } from "react-native-heroicons/solid";
 import { theme } from "../theme";
 import { useNavigation } from "@react-navigation/native";
 import { SliderBox } from "react-native-image-slider-box";
-import { ButtonGroup } from "@mui/joy";
 
 export default function ReviewScreen(props) {
   const item = props.route.params;
   const navigation = useNavigation();
-  const [yesButton, setYesButton] = useState(0);
-  const [noButton, setNoButton] = useState(0);
 
   /*TODO: useful countert megcsinalni*/
-  const usefulCounter = () => {
-    if (onclick(yesButton) === true) {
-      setYesButton(item.usefulSum + 1);
+  const usefulCounter = (item) => {
+    if (onclick(item.usefulSum)) {
+      item.usefulSum += 1;
     }
-    if (onclick(noButton) === true) {
-      setNoButton(item.uselessSum + 1);
+    if (onclick(item.uselessSum)) {
+      item.uselessSum += 1;
     }
   };
 
@@ -74,17 +71,15 @@ export default function ReviewScreen(props) {
           <Text style={{ padding: 15, marginTop: 6 }}>{item.text}</Text>
           <View className="flex-row pb-2 my-4 ml-6">
             <Text className="pt-3 mr-2">Useful?</Text>
-            <ButtonGroup>
 
-            </ButtonGroup>
             <TouchableOpacity className="py-3 rounded-3xl mx-2"
                               style={{ backgroundColor: theme.iconOnG }}
-                              onPress={() => usefulCounter}>
+                              onPress={() => usefulCounter(item.usefulSum)}>
               <Text className="font-xl text-center text-white px-2">Yes - {item.usefulSum}</Text>
             </TouchableOpacity>
             <TouchableOpacity className="py-3 rounded-3xl mx-2"
                               style={{ backgroundColor: theme.iconOff }}
-                              onPress={() => usefulCounter()}>
+                              onPress={() => usefulCounter(item.uselessSum)}>
               <Text className="font-l text-center text-white px-2">No - {item.uselessSum}</Text>
             </TouchableOpacity>
           </View>
