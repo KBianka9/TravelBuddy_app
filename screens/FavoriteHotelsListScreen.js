@@ -1,55 +1,76 @@
 import React, { useState } from "react";
-import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, Image, TouchableOpacity, ScrollView, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { theme } from "../theme";
+import { styles, theme } from "../theme";
 import { ArrowLeftIcon } from "react-native-heroicons/solid";
 import { useNavigation } from "@react-navigation/native";
 import CheckBox from "react-native-check-box";
 import OptionsMenu from "react-native-options-menu";
 
-export default function FavoriteHotelsListScreen() {
-  const navigation = useNavigation();
-  /*const favHotels = [
-    {
-      id: 1,
-      hotel: "Honolulu Hotel",
-      country: "Hawaii",
-      checked: true
-    },
-    {
-      id: 2,
-      hotel: "Raha Hotel",
-      country: "Indonesia",
-      checked: true
-    },
-    {
-      id: 3,
-      hotel: "Inu Hotel",
-      country: "Philippines",
-      checked: false
-    },
-    {
-      id: 4,
-      hotel: "Pizza Hotel",
-      country: "Italy",
-      checked: false
-    },
-    {
-      id: 5,
-      hotel: "Inka Hotel",
-      country: "Peru",
-      checked: true
-    }
-  ]*/
+const favHotels = [
+  {
+    id: 1,
+    hotel: "Honolulu Hotel",
+    country: "Hawaii",
+    status: "checked",
+    checked: true,
+  },
+  {
+    id: 2,
+    hotel: "Raha Hotel",
+    country: "Indonesia",
+    status: "checked",
+    checked: true,
+  },
+  {
+    id: 3,
+    hotel: "Inu Hotel",
+    country: "Philippines",
+    status: "unchecked",
+    checked: false,
+  },
+  {
+    id: 4,
+    hotel: "Pizza Hotel",
+    country: "Italy",
+    status: "unchecked",
+    checked: false,
+  },
+  {
+    id: 5,
+    hotel: "Inka Hotel",
+    country: "Peru",
+    status: "checked",
+    checked: true,
+  },
+];
 
-  const [isChecked, setChecked] = useState({
-    Hawaii: false,
-    Indonesia: true,
-    Philippines: false,
-    Italy: false,
-    Peru: true,
-  });
-  const [favHotelList, setFavHotelList] = useState([{ favHotel: "" }, { favHotel: "" }, { favHotel: "" }, { favHotel: "" }]);
+const listTab = [
+  {
+    status: "All",
+  },
+  {
+    status: "checked",
+  },
+  {
+    status: "unchecked",
+  },
+];
+
+export default function FavoriteHotelsListScreen() {
+
+  const navigation = useNavigation();
+  const [favHotelList, setFavHotelList] = useState(favHotels);
+  const [status, setStatus] = useState("All");
+
+  const setStatusFilter = (status) => {
+    if (status !== "All") {
+      setFavHotelList([...favHotels.filter(e => e.status === status)]);
+    } else {
+      setFavHotelList(favHotels);
+    }
+    setStatus(status);
+  };
 
   const handleFavHotelRemove = (index) => {
     const list = [...favHotelList];
@@ -59,6 +80,33 @@ export default function FavoriteHotelsListScreen() {
 
   const addTrip = () => {
     navigation.navigate("AddTrip");
+  };
+
+  const renderItem = ({ item, index }) => {
+    return (
+      <View key={index} style={{ borderBottomWidth: 1, borderColor: theme.button, paddingBottom: 15, paddingTop: 20 }}>
+        <CheckBox isChecked={favHotelList.checked}
+                  onClick={() => setFavHotelList({ ...favHotelList, checked: !favHotelList.checked })}
+                  checkedCheckBoxColor={theme.iconOnG}
+                  uncheckedCheckBoxColor={theme.iconOff}
+                  leftText={item.hotel}
+                  leftTextStyle={{
+                    marginLeft: 30,
+                    color: favHotelList.checked ? theme.iconOnG : theme.iconOff,
+                    fontSize: 17,
+                    fontWeight: "bold",
+                  }}
+                  style={{ paddingRight: 40 }}
+        />
+        <OptionsMenu
+          button={require("../src/assets/three-dots.png")}
+          buttonStyle={{ width: 32, height: 17, resizeMode: "contain", marginTop: -20, marginLeft: 290 }}
+          destructiveIndex={1}
+          options={["Plan trip", "Delete", "Cancel"]}
+          actions={[addTrip, handleFavHotelRemove, null]}
+        />
+      </View>
+    );
   };
 
   return (
@@ -80,59 +128,23 @@ export default function FavoriteHotelsListScreen() {
                   style={{ borderTopRightRadius: 20, borderTopLeftRadius: 20, marginTop: 225 }}>
         <View style={{ marginTop: 15 }}>
           <View style={{ flexDirection: "row", marginBottom: 25 }}>
-            <TouchableOpacity className="ml-2">
-              <Text style={{
-                backgroundColor: theme.background,
-                borderRadius: 25,
-                paddingHorizontal: 15,
-                paddingVertical: 8,
-                fontWeight: "bold",
-              }}>All</Text>
-            </TouchableOpacity>
-            <TouchableOpacity className="ml-4">
-              <Text style={{
-                backgroundColor: theme.background,
-                borderRadius: 25,
-                paddingHorizontal: 15,
-                paddingVertical: 8,
-                fontWeight: "bold",
-              }}>checked</Text>
-            </TouchableOpacity>
-            <TouchableOpacity className="ml-4">
-              <Text style={{
-                backgroundColor: theme.background,
-                borderRadius: 25,
-                paddingHorizontal: 15,
-                paddingVertical: 8,
-                fontWeight: "bold",
-              }}>unchecked</Text>
-            </TouchableOpacity>
+            {listTab.map(e => (
+              <TouchableOpacity className="ml-3"
+                                onPress={() => setStatusFilter(e.status)}
+                                style={[styles.backgroundButton, status === e.status && styles.backgroundActiveButton]}
+              >
+                <Text style={{
+                  fontWeight: "bold", textAlign: "center", paddingHorizontal: 22,
+                  paddingVertical: 10,
+                }}>{e.status}</Text>
+              </TouchableOpacity>
+            ))}
           </View>
-          {favHotelList.map((singleFavHotel, index) => (
-            <View style={{ borderBottomWidth: 1, borderColor: theme.button, paddingBottom: 15, marginBottom: 15 }}
-                  key={index}>
-              <CheckBox isChecked={isChecked.Hawaii}
-                        onClick={() => setChecked({ ...isChecked, Hawaii: !isChecked.Hawaii })}
-                        checkedCheckBoxColor={theme.iconOnG}
-                        uncheckedCheckBoxColor={theme.iconOff}
-                        leftText="Hawaii, Honolulu Hotel"
-                        leftTextStyle={{
-                          marginLeft: 30,
-                          color: isChecked.Hawaii ? theme.iconOnG : theme.iconOff,
-                          fontSize: 17,
-                          fontWeight: "bold",
-                        }}
-                        style={{ paddingRight: 40 }}
-              />
-              <OptionsMenu
-                button={require("../src/assets/three-dots.png")}
-                buttonStyle={{ width: 32, height: 17, resizeMode: "contain", marginTop: -20, marginLeft: 290 }}
-                destructiveIndex={1}
-                options={["Plan trip", "Delete", "Cancel"]}
-                actions={[addTrip, handleFavHotelRemove, null]}
-              />
-            </View>
-          ))}
+          <FlatList
+            data={favHotelList}
+            keyExtractor={(e, i) => i.toString()}
+            renderItem={renderItem}
+          />
         </View>
       </ScrollView>
     </View>

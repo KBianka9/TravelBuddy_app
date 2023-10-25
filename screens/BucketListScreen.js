@@ -1,41 +1,96 @@
 import React, { useState } from "react";
-import { View, Text, Image, TouchableOpacity, ScrollView, Modal, TextInput } from "react-native";
+import { View, Text, Image, TouchableOpacity, ScrollView, Modal, TextInput, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { theme } from "../theme";
+import { styles, theme } from "../theme";
 import { ArrowLeftIcon, PlusIcon } from "react-native-heroicons/solid";
 import { useNavigation } from "@react-navigation/native";
 import CheckBox from "react-native-check-box";
 import OptionsMenu from "react-native-options-menu";
 import * as Animatable from "react-native-animatable";
 
-const bucketListItems = [
+const bucketListItem = [
   {
     name: "Big Ben, England",
+    status: "checked",
     checked: true,
   },
   {
     name: "Eiffel Tower, France",
+    status: "unchecked",
     checked: false,
   },
   {
     name: "Machu Picchu, Peru",
+    status: "checked",
     checked: true,
   },
   {
     name: "Colosseum, Italy",
+    status: "unchecked",
     checked: false,
   },
 ];
 
+const listTab = [
+  {
+    status: "All",
+  },
+  {
+    status: "checked",
+  },
+  {
+    status: "unchecked",
+  },
+];
+
 export default function BucketListScreen() {
+
   const navigation = useNavigation();
   const [modal, setModal] = useState(false);
-  const [isChecked, setChecked] = useState({
-    BigBen: true,
-    EiffelTower: false,
-    MachuPicchu: true,
-    Colosseum: false,
-  });
+  const [status, setStatus] = useState("All");
+  const [bucketList, setBucketList] = useState(bucketListItem);
+
+  const setStatusFilter = (status) => {
+    if (status !== "All") {
+      setBucketList([...bucketListItem.filter(e => e.status === status)]);
+    } else {
+      setBucketList(bucketListItem);
+    }
+    setStatus(status);
+  };
+  /*TODO: nem a megfelelo indexu elemet torli ki, a tobbi oldalon nem frissul a valtozas*/
+  const handleItemRemove = (index) => {
+    const list = [...bucketList];
+    list.splice(index, 1);
+    setBucketList(list);
+  };
+
+  const renderItem = ({ item, index }) => {
+    return (
+      <View key={index} style={{ borderBottomWidth: 1, borderColor: theme.button, paddingBottom: 15, paddingTop: 20 }}>
+        <CheckBox isChecked={bucketList.checked}
+                  onClick={() => setBucketList({ ...bucketList, checked: !bucketList.checked })}
+                  checkedCheckBoxColor={theme.iconOnG}
+                  uncheckedCheckBoxColor={theme.iconOff}
+                  leftText={item.name}
+                  leftTextStyle={{
+                    marginLeft: 30,
+                    color: bucketList.checked ? theme.iconOnG : theme.iconOff,
+                    fontSize: 17,
+                    fontWeight: "bold",
+                  }}
+                  style={{ paddingRight: 40 }}
+        />
+        <OptionsMenu
+          button={require("../src/assets/three-dots.png")}
+          buttonStyle={{ width: 32, height: 17, resizeMode: "contain", marginTop: -20, marginLeft: 290 }}
+          destructiveIndex={1}
+          options={["Memories", "Delete", "Cancel"]}
+          actions={[memories, handleItemRemove, null]}
+        />
+      </View>
+    );
+  };
 
   const memories = () => {
     navigation.navigate("Memories");
@@ -86,137 +141,38 @@ export default function BucketListScreen() {
           <ArrowLeftIcon size="20" color="white" />
         </TouchableOpacity>
         <Text style={{ fontSize: 18, paddingTop: 20, paddingLeft: 100, fontWeight: "bold" }}>Bucket list</Text>
+        <TouchableOpacity style={{ shadowOpacity: 1, paddingBottom: 5, marginLeft: 15 }}
+                          onPress={() => setModal(true)}
+        >
+          <Animatable.View animation={"pulse"} easing={"ease-in-out"} iterationCount={"infinite"} duration={1000}
+                           className="ml-20 my-2 pt-2">
+            <PlusIcon size="5" strokeWidth={2} color={theme.iconOn}
+                      style={{ backgroundColor: theme.button, borderRadius: 20, padding: 20 }} />
+          </Animatable.View>
+        </TouchableOpacity>
       </SafeAreaView>
       <ScrollView className="flex-1 bg-white px-8 pt-4"
                   style={{ borderTopRightRadius: 20, borderTopLeftRadius: 20, marginTop: 300 }}>
         <View style={{ marginTop: 15 }}>
           <View style={{ flexDirection: "row", marginBottom: 25 }}>
-            <TouchableOpacity className="ml-2">
-              <Text style={{
-                backgroundColor: theme.background,
-                borderRadius: 25,
-                paddingHorizontal: 15,
-                paddingVertical: 8,
-                fontWeight: "bold",
-              }}>All</Text>
-            </TouchableOpacity>
-            <TouchableOpacity className="ml-4">
-              <Text style={{
-                backgroundColor: theme.background,
-                borderRadius: 25,
-                paddingHorizontal: 15,
-                paddingVertical: 8,
-                fontWeight: "bold",
-              }}>checked</Text>
-            </TouchableOpacity>
-            <TouchableOpacity className="ml-4">
-              <Text style={{
-                backgroundColor: theme.background,
-                borderRadius: 25,
-                paddingHorizontal: 15,
-                paddingVertical: 8,
-                fontWeight: "bold",
-              }}>unchecked</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={{ shadowOpacity: 1, paddingBottom: 5, marginLeft: 15 }}
-                              onPress={() => setModal(true)}
-            >
-              <Animatable.View animation={"pulse"} easing={"ease-in-out"} iterationCount={"infinite"} duration={1000}
-                               style={{ borderWidth: 0 }}>
-                <PlusIcon size="5" strokeWidth={2} color={theme.iconOn}
-                          style={{ backgroundColor: theme.button, borderRadius: 20, padding: 20 }} />
-              </Animatable.View>
-            </TouchableOpacity>
+            {listTab.map(e => (
+              <TouchableOpacity className="ml-3"
+                                onPress={() => setStatusFilter(e.status)}
+                                style={[styles.backgroundButton, status === e.status && styles.backgroundActiveButton]}
+              >
+                <Text style={{
+                  fontWeight: "bold", textAlign: "center", paddingHorizontal: 22,
+                  paddingVertical: 10,
+                }}>{e.status}</Text>
+              </TouchableOpacity>
+            ))}
             {renderModal()}
           </View>
-          <View style={{ borderBottomWidth: 1, borderColor: theme.button, paddingBottom: 15 }}>
-            <CheckBox isChecked={isChecked.BigBen}
-                      onClick={() => setChecked({ ...isChecked, BigBen: !isChecked.BigBen })}
-                      checkedCheckBoxColor={theme.iconOnG}
-                      uncheckedCheckBoxColor={theme.iconOff}
-                      leftText="Big Ben, England"
-                      leftTextStyle={{
-                        marginLeft: 30,
-                        color: isChecked.BigBen ? theme.iconOnG : theme.iconOff,
-                        fontSize: 17,
-                        fontWeight: "bold",
-                      }}
-                      style={{ paddingRight: 40 }}
-            />
-            <OptionsMenu
-              button={require("../src/assets/three-dots.png")}
-              buttonStyle={{ width: 32, height: 17, resizeMode: "contain", marginTop: -20, marginLeft: 290 }}
-              destructiveIndex={1}
-              options={["Memories", "Delete", "Cancel"]}
-              actions={[memories, null, null]}
-            />
-          </View>
-          <View style={{ borderBottomWidth: 1, borderColor: theme.button, paddingBottom: 15, paddingTop: 20 }}>
-            <CheckBox isChecked={isChecked.EiffelTower}
-                      onClick={() => setChecked({ ...isChecked, EiffelTower: !isChecked.EiffelTower })}
-                      checkedCheckBoxColor={theme.iconOnG}
-                      uncheckedCheckBoxColor={theme.iconOff}
-                      leftText="Eiffel Tower, France"
-                      leftTextStyle={{
-                        marginLeft: 30,
-                        color: isChecked.EiffelTower ? theme.iconOnG : theme.iconOff,
-                        fontSize: 17,
-                        fontWeight: "bold",
-                      }}
-                      style={{ paddingRight: 40 }}
-            />
-            <OptionsMenu
-              button={require("../src/assets/three-dots.png")}
-              buttonStyle={{ width: 32, height: 17, resizeMode: "contain", marginTop: -20, marginLeft: 290 }}
-              destructiveIndex={1}
-              options={["Memories", "Delete", "Cancel"]}
-              actions={[memories, null, null]}
-            />
-          </View>
-          <View style={{ borderBottomWidth: 1, borderColor: theme.button, paddingBottom: 15, paddingTop: 20 }}>
-            <CheckBox isChecked={isChecked.MachuPicchu}
-                      onClick={() => setChecked({ ...isChecked, MachuPicchu: !isChecked.MachuPicchu })}
-                      checkedCheckBoxColor={theme.iconOnG}
-                      uncheckedCheckBoxColor={theme.iconOff}
-                      leftText="Machu Picchu, Peru"
-                      leftTextStyle={{
-                        marginLeft: 30,
-                        color: isChecked.MachuPicchu ? theme.iconOnG : theme.iconOff,
-                        fontSize: 17,
-                        fontWeight: "bold",
-                      }}
-                      style={{ paddingRight: 40 }}
-            />
-            <OptionsMenu
-              button={require("../src/assets/three-dots.png")}
-              buttonStyle={{ width: 32, height: 17, resizeMode: "contain", marginTop: -20, marginLeft: 290 }}
-              destructiveIndex={1}
-              options={["Memories", "Delete", "Cancel"]}
-              actions={[memories, null, null]}
-            />
-          </View>
-          <View style={{ borderBottomWidth: 1, borderColor: theme.button, paddingBottom: 15, paddingTop: 20 }}>
-            <CheckBox isChecked={isChecked.Colosseum}
-                      onClick={() => setChecked({ ...isChecked, Colosseum: !isChecked.Colosseum })}
-                      checkedCheckBoxColor={theme.iconOnG}
-                      uncheckedCheckBoxColor={theme.iconOff}
-                      leftText="Colosseum, Italy"
-                      leftTextStyle={{
-                        marginLeft: 30,
-                        color: isChecked.Colosseum ? theme.iconOnG : theme.iconOff,
-                        fontSize: 17,
-                        fontWeight: "bold",
-                      }}
-                      style={{ paddingRight: 40 }}
-            />
-            <OptionsMenu
-              button={require("../src/assets/three-dots.png")}
-              buttonStyle={{ width: 32, height: 17, resizeMode: "contain", marginTop: -20, marginLeft: 290 }}
-              destructiveIndex={1}
-              options={["Memories", "Delete", "Cancel"]}
-              actions={[memories, null, null]}
-            />
-          </View>
+          <FlatList
+            data={bucketList}
+            keyExtractor={(e, i) => i.toString()}
+            renderItem={renderItem}
+          />
         </View>
       </ScrollView>
     </View>

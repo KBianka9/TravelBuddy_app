@@ -13,6 +13,8 @@ export const theme = {
 export const styles = {
   text: { color: theme.text },
   background: { backgroundColor: theme.background },
+  backgroundButton: { backgroundColor: theme.background, borderRadius: 25 },
+  backgroundActiveButton: { backgroundColor: theme.iconOnG },
   button: { backgroundColor: theme.button },
   navBarC: { backgroundColor: theme.navBarC },
   iconOnG: { color: theme.iconOnG },

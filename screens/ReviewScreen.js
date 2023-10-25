@@ -4,6 +4,7 @@ import { ArrowLeftIcon, MapPinIcon } from "react-native-heroicons/solid";
 import { theme } from "../theme";
 import { useNavigation } from "@react-navigation/native";
 import { SliderBox } from "react-native-image-slider-box";
+import { ButtonGroup } from "@mui/joy";
 
 export default function ReviewScreen(props) {
   const item = props.route.params;
@@ -73,6 +74,9 @@ export default function ReviewScreen(props) {
           <Text style={{ padding: 15, marginTop: 6 }}>{item.text}</Text>
           <View className="flex-row pb-2 my-4 ml-6">
             <Text className="pt-3 mr-2">Useful?</Text>
+            <ButtonGroup>
+
+            </ButtonGroup>
             <TouchableOpacity className="py-3 rounded-3xl mx-2"
                               style={{ backgroundColor: theme.iconOnG }}
                               onPress={() => usefulCounter}>
