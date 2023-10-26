@@ -120,9 +120,9 @@ export default function FavoriteHotelsListScreen() {
           onPress={() => navigation.goBack()}
           className="p-2 rounded-tr-2xl rounded-bl-2xl ml-4 my-4"
           style={{ backgroundColor: theme.button }}>
-          <ArrowLeftIcon size="20" color="white" />
+          <ArrowLeftIcon size="25" color="white" />
         </TouchableOpacity>
-        <Text style={{ fontSize: 18, paddingTop: 20, paddingLeft: 70, fontWeight: "bold" }}>Favorite hotel list</Text>
+        <Text style={{ fontSize: 18, paddingTop: 25, paddingLeft: 70, fontWeight: "bold" }}>Favorite hotel list</Text>
       </SafeAreaView>
       <ScrollView className="flex-1 bg-white px-8 pt-4"
                   style={{ borderTopRightRadius: 20, borderTopLeftRadius: 20, marginTop: 225 }}>

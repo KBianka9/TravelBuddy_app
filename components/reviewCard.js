@@ -11,8 +11,8 @@ export default function ReviewCard({ item }) {
   return (
     <View style={{ borderRadius: 50, backgroundColor: "white", margin: 20, padding: 15, height: 490 }}>
       <View style={{ flexDirection: "row" }}>
-        <Image source={require("../src/assets/profile.png")}
-               style={{ width: 90, height: 90, marginLeft: 10 }} />
+        <Image source={item.profilePic}
+               style={{ width: 90, height: 90, marginLeft: 10, borderRadius: 50 }} />
         <Text style={{ paddingTop: 10, paddingLeft: 90 }}>{item.postDate}</Text>
       </View>
       <Text style={{

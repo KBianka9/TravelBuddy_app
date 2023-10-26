@@ -50,7 +50,7 @@ export default function LoginScreen() {
             onPress={() => navigation.goBack()}
             className="p-2 rounded-tr-2xl rounded-bl-2xl ml-4"
             style={{ backgroundColor: theme.button }}>
-            <ArrowLeftIcon size="20" color="white" />
+            <ArrowLeftIcon size="25" color="white" />
           </TouchableOpacity>
         </SafeAreaView>
         <ScrollView className="flex-1 bg-white px-8 pt-4"

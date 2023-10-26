@@ -15,7 +15,7 @@ export default function LookAtTheMapScreen() {
           onPress={() => navigation.goBack()}
           className="p-2 rounded-tr-2xl rounded-bl-2xl ml-6 mt-8"
           style={{ backgroundColor: theme.button, marginRight: 330 }}>
-          <ArrowLeftIcon size="20" color="white" />
+          <ArrowLeftIcon size="25" color="white" />
         </TouchableOpacity>
         <View className="flex-row justify-center items-center rounded-full p-1 bg-gray-200 mb-2 ml-20 mr-4"
               style={{ marginTop: -50 }}

@@ -138,22 +138,30 @@ export default function BucketListScreen() {
           onPress={() => navigation.goBack()}
           className="p-2 rounded-tr-2xl rounded-bl-2xl ml-4 my-4"
           style={{ backgroundColor: theme.button }}>
-          <ArrowLeftIcon size="20" color="white" />
+          <ArrowLeftIcon size="25" color="white" />
         </TouchableOpacity>
         <Text style={{ fontSize: 18, paddingTop: 20, paddingLeft: 100, fontWeight: "bold" }}>Bucket list</Text>
-        <TouchableOpacity style={{ shadowOpacity: 1, paddingBottom: 5, marginLeft: 15 }}
-                          onPress={() => setModal(true)}
-        >
-          <Animatable.View animation={"pulse"} easing={"ease-in-out"} iterationCount={"infinite"} duration={1000}
-                           className="ml-20 my-2 pt-2">
-            <PlusIcon size="5" strokeWidth={2} color={theme.iconOn}
-                      style={{ backgroundColor: theme.button, borderRadius: 20, padding: 20 }} />
-          </Animatable.View>
-        </TouchableOpacity>
       </SafeAreaView>
-      <ScrollView className="flex-1 bg-white px-8 pt-4"
-                  style={{ borderTopRightRadius: 20, borderTopLeftRadius: 20, marginTop: 300 }}>
-        <View style={{ marginTop: 15 }}>
+      <View className="flex-1 bg-white px-8 pt-4"
+            style={{ borderTopRightRadius: 20, borderTopLeftRadius: 20, marginTop: 300 }}>
+        <View style={{ flexDirection: "row" }}>
+          <TouchableOpacity style={{ shadowOpacity: 1 }}
+                            onPress={() => setModal(true)}
+          >
+            <Animatable.View animation={"pulse"} easing={"ease-in-out"} iterationCount={"infinite"} duration={1000}
+                             style={{
+                               marginTop: -45,
+                               backgroundColor: theme.button,
+                               borderRadius: 50,
+                               padding: 10,
+                               start: 260,
+                             }}
+            >
+              <PlusIcon size={40} strokeWidth={1} color={theme.iconOn} />
+            </Animatable.View>
+          </TouchableOpacity>
+        </View>
+        <ScrollView style={{ marginTop: 15 }}>
           <View style={{ flexDirection: "row", marginBottom: 25 }}>
             {listTab.map(e => (
               <TouchableOpacity className="ml-3"
@@ -173,8 +181,8 @@ export default function BucketListScreen() {
             keyExtractor={(e, i) => i.toString()}
             renderItem={renderItem}
           />
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </View>
     </View>
   );
 }

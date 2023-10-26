@@ -43,20 +43,24 @@ export default function AddTripScreen() {
 
   return (
     <View className="flex-1 bg-white" style={{ backgroundColor: theme.background }}>
-      <Image source={require("../src/assets/flat-lay-hands-holding-photos.jpg")}
-             style={{ height: 310 }}
-             className="w-full absolute"
-      />
+      <TouchableOpacity onPress={() => {
+      }}>
+        <Image source={require("../src/assets/flat-lay-hands-holding-photos.jpg")}
+               style={{ height: 310 }}
+               className="w-full absolute"
+        />
+      </TouchableOpacity>
       <SafeAreaView className="flex-row justify-between items-center mr-2 mt-3">
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           className="p-2 rounded-tr-2xl rounded-bl-2xl ml-4"
           style={{ backgroundColor: theme.button }}>
-          <ArrowLeftIcon size="20" color="white" />
+          <ArrowLeftIcon size="25" color="white" />
         </TouchableOpacity>
       </SafeAreaView>
       <ScrollView className="flex-col flex-1 bg-white px-4 pt-6"
                   style={{ borderTopRightRadius: 50, borderTopLeftRadius: 50, marginTop: 215 }}>
+        <Text style={{ marginBottom: 10, textAlign: "center" }}>You can change cover image, if you click on it.</Text>
         <View className="flex-row justify-center items-center rounded-full p-1 bg-gray-200 mb-4">
           <TextInput placeholder="Add a name of your trip" className="p-4 flex-1 font-semibold text-gray-700" />
         </View>

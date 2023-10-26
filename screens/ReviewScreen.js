@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Image, TouchableOpacity, View, ScrollView, Text } from "react-native";
 import { ArrowLeftIcon, MapPinIcon } from "react-native-heroicons/solid";
 import { theme } from "../theme";
@@ -26,10 +26,10 @@ export default function ReviewScreen(props) {
           onPress={() => navigation.goBack()}
           className="p-2 rounded-tr-2xl rounded-bl-2xl ml-4"
           style={{ backgroundColor: theme.button, zIndex: 1 }}>
-          <ArrowLeftIcon size="20" color="white" />
+          <ArrowLeftIcon size="25" color="white" />
         </TouchableOpacity>
       </View>
-      <View style={{ marginTop: -50 }}>
+      <View style={{ marginTop: -55 }}>
         <SliderBox images={item.images}
                    dotStyle={{ marginBottom: 20, height: 10, width: 10, borderRadius: 50 }}
                    sliderBoxHeight={380}
@@ -51,8 +51,8 @@ export default function ReviewScreen(props) {
           height: 490,
         }}>
           <View style={{ flexDirection: "row" }}>
-            <Image source={require("../src/assets/profile.png")}
-                   style={{ width: 90, height: 90, marginLeft: 10 }} />
+            <Image source={item.profilePic}
+                   style={{ width: 90, height: 90, marginLeft: 10, borderRadius: 50 }} />
             <Text style={{ paddingTop: 10, paddingLeft: 90 }}>{item.postDate}</Text>
           </View>
           <Text style={{
@@ -68,7 +68,7 @@ export default function ReviewScreen(props) {
               Raha, Indonesia
             </Text>
           </View>
-          <Text style={{ padding: 15, marginTop: 6 }}>{item.text}</Text>
+          <Text style={{ padding: 10 }}>{item.text}</Text>
           <View className="flex-row pb-2 my-4 ml-6">
             <Text className="pt-3 mr-2">Useful?</Text>
 

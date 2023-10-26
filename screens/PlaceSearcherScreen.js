@@ -42,7 +42,9 @@ export default function PlaceSearcherScreen() {
                   {/*Destination searcher*/}
                   <View className="flex-row justify-center items-center rounded-full p-1 bg-gray-200 mb-4">
                       <TextInput placeholder="Search your destination"
-                                 className="p-4 flex-1 font-semibold text-gray-700" />
+                                 className="p-4 flex-1"
+                                 style={{ fontSize: 15, fontWeight: "600", color: theme.text }}
+                      />
                       <TouchableOpacity className="rounded-full p-2 mr-2"
                                         style={{ backgroundColor: theme.background }}>
                           <MagnifyingGlassIcon size="25" strokeWidth={2} color="white"></MagnifyingGlassIcon>
@@ -54,6 +56,7 @@ export default function PlaceSearcherScreen() {
                     selectedRowStyle={{ justifyContent: "center", backgroundColor: "white" }}
                     buttonStyle={{ justifyContent: "center", borderRadius: 30, backgroundColor: theme.searchInput }}
                     defaultButtonText={"$price/night"}
+                    buttonTextStyle={{ fontSize: 15, fontWeight: "700", color: theme.text }}
                     data={prices}
                     onSelect={(selectedItem, index) => {
                         console.log(selectedItem, index);

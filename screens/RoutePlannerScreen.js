@@ -5,7 +5,7 @@ import EmptyList from "../components/emptyList";
 import { useNavigation } from "@react-navigation/native";
 import Video from "react-native-video";
 import * as Animatable from "react-native-animatable";
-import FloatingButton from "../components/FloatingButton";
+import { PlusIcon } from "react-native-heroicons/solid";
 
 const trip = [
   {
@@ -57,6 +57,23 @@ export default function RoutePlannerScreen() {
       />
       <View className="flex-1 bg-white pt-6"
             style={{ borderTopRightRadius: 50, borderTopLeftRadius: 50, marginTop: -78, paddingBottom: 120 }}>
+        <View style={{ flexDirection: "row" }}>
+          <TouchableOpacity style={{ shadowOpacity: 1 }}
+                            onPress={() => navigation.navigate("AddTrip")}
+          >
+            <Animatable.View animation={"pulse"} easing={"ease-in-out"} iterationCount={"infinite"} duration={1000}
+                             style={{
+                               marginTop: -55,
+                               backgroundColor: theme.button,
+                               borderRadius: 50,
+                               padding: 10,
+                               start: 280,
+                             }}
+            >
+              <PlusIcon size={40} strokeWidth={1} color={theme.iconOn} />
+            </Animatable.View>
+          </TouchableOpacity>
+        </View>
         <View className="px-4 space-y-4">
           <View className="flex-row justify-between items-center px-4">
             <Text style={{ color: "black", fontWeight: "bold", fontSize: 24 }}>Recent Trips</Text>
@@ -87,16 +104,6 @@ export default function RoutePlannerScreen() {
                         );
                       }}
             />
-            <Animatable.View animation={"pulse"} easing={"ease-in-out"} iterationCount={"infinite"}
-                             duration={1000} style={{
-              flex: 1,
-              borderWidth: 0,
-            }}>
-              <FloatingButton
-                style={{ position: "absolute", bottom: 70, right: 15 }}
-                onPress={() => navigation.navigate("AddTrip")}
-              />
-            </Animatable.View>
           </ScrollView>
         </View>
       </View>

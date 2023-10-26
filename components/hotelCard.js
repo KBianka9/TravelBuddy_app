@@ -41,11 +41,12 @@ export default function HotelCard({ item }) {
         <View style={{ marginLeft: 20, flexDirection: "row" }}>
           <Text style={{ fontSize: 20, color: "black", fontWeight: "bold" }}>$ {item.price}</Text>
           <View>
-            <TouchableOpacity style={{ shadowOpacity: 1, end: -50 }}
+            <TouchableOpacity style={{ shadowOpacity: 1, end: -40 }}
                               onPress={() => navigation.navigate("Hotel", { ...item })}>
-              <Animatable.View animation={"pulse"} easing={"ease-in-out"} iterationCount={"infinite"} duration={1000}>
-                <EyeIcon strokeWidth={1} color={theme.iconOn}
-                         style={{ marginTop: -20, backgroundColor: theme.button, borderRadius: 25, padding: 20 }} />
+              <Animatable.View animation={"pulse"} easing={"ease-in-out"} iterationCount={"infinite"} duration={1000}
+                               style={{ marginTop: -30, backgroundColor: theme.button, borderRadius: 25, padding: 10 }}
+              >
+                <EyeIcon size={30} strokeWidth={1} color={theme.iconOn} />
               </Animatable.View>
             </TouchableOpacity>
           </View>

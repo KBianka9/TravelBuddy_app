@@ -36,9 +36,9 @@ export default function EditProfileScreen() {
           onPress={() => navigation.goBack()}
           className="p-2 rounded-tr-2xl rounded-bl-2xl ml-4 my-4"
           style={{ backgroundColor: theme.button }}>
-          <ArrowLeftIcon size="20" color="white" />
+          <ArrowLeftIcon size="25" color="white" />
         </TouchableOpacity>
-        <Text style={{ fontSize: 18, paddingTop: 40, paddingLeft: 100, fontWeight: "bold", color: "white" }}>Edit
+        <Text style={{ fontSize: 18, paddingTop: 30, paddingLeft: 100, fontWeight: "bold", color: "white" }}>Edit
           profile</Text>
       </SafeAreaView>
       {/*Change profile picture, full name, email address, password*/}

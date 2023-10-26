@@ -9,18 +9,19 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../config";
 
 export default function SignupScreen() {
-    const navigation = useNavigation();
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [pswVisible, setPswVisible] = useState(true);
-    const [confPassword, setConfPassword] = useState("");
+  const navigation = useNavigation();
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [pswVisible, setPswVisible] = useState(true);
+  const [confPassword, setConfPassword] = useState("");
 
-    const handleSubmit = async () => {
-        if (email && password === confPassword) {
-            try {
-                await createUserWithEmailAndPassword(auth, email, password);
-            } catch (err) {
-                console.log("got error: ", err.message);
+  const handleSubmit = async () => {
+    if (email && password === confPassword) {
+      try {
+        await createUserWithEmailAndPassword(auth, email, password);
+      } catch (err) {
+        console.log("got error: ", err.message);
             }
         } else {
             alert("Email address incorrect or Password not equal Password again");
@@ -33,37 +34,45 @@ export default function SignupScreen() {
                  style={{ height: 310 }}
                  className="w-full absolute"
           />
-          <SafeAreaView className="flex-row justify-between items-center mr-2 mt-3">
-              <TouchableOpacity
-                onPress={() => navigation.goBack()}
-                className="p-2 rounded-tr-2xl rounded-bl-2xl ml-4"
-                style={{ backgroundColor: theme.button }}>
-                  <ArrowLeftIcon size="20" color="white" />
-              </TouchableOpacity>
-          </SafeAreaView>
-          <ScrollView className="flex-1 bg-white px-8 pt-4"
-                      style={{ borderTopRightRadius: 50, borderTopLeftRadius: 50, marginTop: 225 }}>
-              <View className="form space-y-2">
-                  <Text className="text-gray-700 ml-4">Email address</Text>
-                  <TextInput
-                    className="bg-gray-100 text-gray-700 rounded-2xl mb-3"
-                    value={email}
-                    onChangeText={value => setEmail(value)}
-                    keyboardType={"email-address"}
-                    placeholder="Enter your Email address"
-                    require={true}
-                  />
-                  <Text className="text-gray-700 ml-4">Password</Text>
-                  <TextInput className="bg-gray-100 text-gray-700 rounded-2xl"
-                             secureTextEntry={pswVisible}
-                             autoCorrect={false}
-                             value={password}
-                             onChangeText={value => setPassword(value)}
-                             placeholder="Enter your Password"
-                             right={
-                                 <TextInput.Icon
-                                   icon={pswVisible ? "eye" : "eye-off"}
-                                   onPress={() => setPswVisible(!pswVisible)}
+        <SafeAreaView className="flex-row justify-between items-center mr-2 mt-3">
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            className="p-2 rounded-tr-2xl rounded-bl-2xl ml-4"
+            style={{ backgroundColor: theme.button }}>
+            <ArrowLeftIcon size="25" color="white" />
+          </TouchableOpacity>
+        </SafeAreaView>
+        <ScrollView className="flex-1 bg-white px-8 pt-4"
+                    style={{ borderTopRightRadius: 50, borderTopLeftRadius: 50, marginTop: 225 }}>
+          <View className="form space-y-2">
+            <Text className="text-gray-700 ml-4">Full name</Text>
+            <TextInput
+              className="bg-gray-100 text-gray-700 rounded-2xl mb-3"
+              value={username}
+              onChangeText={value => setUsername(value)}
+              placeholder="Enter your Full name"
+              require={true}
+            />
+            <Text className="text-gray-700 ml-4">Email address</Text>
+            <TextInput
+              className="bg-gray-100 text-gray-700 rounded-2xl mb-3"
+              value={email}
+              onChangeText={value => setEmail(value)}
+              keyboardType={"email-address"}
+              placeholder="Enter your Email address"
+              require={true}
+            />
+            <Text className="text-gray-700 ml-4">Password</Text>
+            <TextInput className="bg-gray-100 text-gray-700 rounded-2xl"
+                       secureTextEntry={pswVisible}
+                       autoCorrect={false}
+                       value={password}
+                       onChangeText={value => setPassword(value)}
+                       placeholder="Enter your Password"
+                       right={
+                         <TextInput.Icon
+                           icon={pswVisible ? "eye" : "eye-off"}
+                           onPress={() => setPswVisible(!pswVisible)}
                                  />
                              }
                   />

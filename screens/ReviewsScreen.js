@@ -6,9 +6,9 @@ import ReviewCard from "../components/reviewCard";
 import { MagnifyingGlassIcon } from "react-native-heroicons/outline";
 import { useNavigation } from "@react-navigation/native";
 import * as Animatable from "react-native-animatable";
-import FloatingButton from "../components/FloatingButton";
 import Carousel from "react-native-snap-carousel";
 import { reviewItems } from "../constants";
+import { PlusIcon } from "react-native-heroicons/solid";
 
 export default function ReviewsScreen() {
   const navigation = useNavigation();
@@ -38,19 +38,24 @@ export default function ReviewsScreen() {
                   slideStyle={{ display: "flex", alignItems: "center" }}
         />
       </View>
-      <Animatable.View animation={"pulse"} easing={"ease-in-out"} iterationCount={"infinite"}
-                       duration={1000} style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        borderWidth: 0,
-        overflow: "visible",
-      }}>
-        <FloatingButton
-          style={{ position: "absolute", bottom: 10, right: 25 }}
-          onPress={() => navigation.navigate("NewReview")}
-        />
-      </Animatable.View>
+      <View style={{ flexDirection: "row" }}>
+        <TouchableOpacity style={{ shadowOpacity: 1 }}
+                          onPress={() => navigation.navigate("NewReview")}
+        >
+          <Animatable.View animation={"pulse"} easing={"ease-in-out"} iterationCount={"infinite"} duration={1000}
+                           style={{
+                             backgroundColor: theme.button,
+                             borderRadius: 50,
+                             padding: 10,
+                             start: 310,
+                             marginTop: -30,
+                           }}
+          >
+            <PlusIcon size={40} strokeWidth={1} color={theme.iconOn} />
+          </Animatable.View>
+        </TouchableOpacity>
+      </View>
+
     </View>
   );
 }
