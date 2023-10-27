@@ -43,7 +43,7 @@ export default function NewReviewScreen() {
         </View>
         <ScrollView>
           <View className="rounded-full p-1 bg-gray-200 mb-2 mt-4">
-            <TextInput placeholder="city name" className="p-4 flex-1 font-semibold text-gray-700" />
+            <TextInput placeholder="city, country name" className="p-4 flex-1 font-semibold text-gray-700" />
           </View>
           {/*Review box*/}
           <View className="p-1 bg-gray-200 mt-4 mb-8" style={{ height: 200, borderRadius: 25 }}>
