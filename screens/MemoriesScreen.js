@@ -77,7 +77,7 @@ export default function MemoriesScreen() {
           <ArrowLeftIcon size="25" color="white" />
         </TouchableOpacity>
       </View>
-      <View style={{ marginTop: -50 }}>
+      <View style={{ marginTop: -55 }}>
         <SliderBox images={memoriesPic}
                    dotStyle={{ marginBottom: 20, height: 10, width: 10, borderRadius: 50 }}
                    sliderBoxHeight={360}
