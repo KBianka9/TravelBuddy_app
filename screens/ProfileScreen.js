@@ -1,9 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
 import { View, Text, Image, TouchableOpacity, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { theme } from "../theme";
-import { signOut, deleteUser } from "firebase/auth";
-import { auth } from "../config";
 import {
   GlobeEuropeAfricaIcon,
   PencilSquareIcon,
@@ -12,7 +10,8 @@ import {
   ArrowRightOnRectangleIcon,
   HomeModernIcon,
 } from "react-native-heroicons/outline";
-import { useNavigation } from "@react-navigation/native";
+import storage from "../storage/storage";
+import { UserIdContext } from "../App";
 
 const user = [
   {
@@ -24,8 +23,9 @@ const user = [
   }];
 
 
-export default function ProfileScreen() {
-  const navigation = useNavigation();
+export default function ProfileScreen({ navigation }) {
+  const { setUserId } = useContext(UserIdContext);
+
   /*TODO: felhasználó törlése->felugró ablak*/
   /*Alert.alert(
       "Delete Account",
@@ -40,17 +40,21 @@ export default function ProfileScreen() {
       ]
   )*/
   const handleDelAccount = () => {
-    const user = auth.currentUser;
+    /*const user = auth.currentUser;
     deleteUser(user).then(() => {
       navigation.navigate("Welcome");
     }).catch((error) => {
       Alert.alert(error);
     });
-    alert("User deleted successfully");
+    alert("User deleted successfully");*/
   };
 
   const handleLogout = async () => {
-    await signOut(auth);
+    await storage.remove({
+      key: "userId",
+    });
+    setUserId(null);
+    navigation.navigate("Login");
   };
   return (
     <View className="flex-1" style={{ backgroundColor: theme.background }}>

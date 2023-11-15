@@ -5,9 +5,6 @@ import { theme } from "../theme";
 import { useNavigation } from "@react-navigation/native";
 import * as Animatable from "react-native-animatable";
 import { SliderBox } from "react-native-image-slider-box";
-import * as ImagePicker from "expo-image-picker";
-import { firebase, storage } from "../config";
-import { getDownloadURL, uploadBytes, ref, deleteObject } from "firebase/storage";
 
 export default function MemoriesScreen() {
   const navigation = useNavigation();
@@ -21,50 +18,13 @@ export default function MemoriesScreen() {
 
   /*TODO:kep kivalasztasa es feltoltese*/
   const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-    if (!result.canceled) {
-      const uploadURL = await uploadMedia(result.assets[0].uri);
-      setMemoryImage(uploadURL);
-    }
   };
 
   const uploadMedia = async (uri) => {
-    const blob = await new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.onload = function() {
-        resolve(xhr.response);
-      };
-      xhr.onerror = function(e) {
-        reject(new TypeError("Network request failed"));
-      };
-      xhr.responseType = "blob";
-      xhr.open("GET", uri, true);
-      xhr.send(null);
-    });
-    try {
-      const storageRef = ref(storage, `MemoryImages/image-${Date.now()}`);
-      const result = await uploadBytes(storageRef, blob);
-      blob.close();
-      return await getDownloadURL(storageRef);
-    } catch (error) {
-      alert(`Error: ${error}`);
-    }
   };
 
   const deleteImage = async () => {
-    const deleteRef = ref(storage, memoryImage);
-    try {
-      deleteObject(deleteRef).then(() => {
-        setMemoryImage(null);
-      });
-    } catch (error) {
-      alert(`Error: ${error}`);
-    }
+
   };
 
   return (

@@ -1,42 +1,40 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 import { TextInput } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { theme } from "../theme";
-import { useNavigation } from "@react-navigation/native";
 import { ArrowLeftIcon } from "react-native-heroicons/solid";
-import { signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
-import { auth } from "../config";
+import { login } from "../contollers/userContoller";
+import axios from "axios";
+import { UserIdContext } from "../App";
+import storage from "../storage/storage";
 
-export default function LoginScreen() {
-    const navigation = useNavigation();
+export default function LoginScreen({ navigation }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [pswVisible, setPswVisible] = useState(true);
-
-    const resetPassword = () => {
-        if (email != null) {
-            sendPasswordResetEmail(auth, email)
-              .then(() => {
-                  alert("Password reset email has been sent successfully!");
-              })
-              .catch((error) => {
-                  const errorMessage = error.message;
-                  alert(errorMessage);
-              });
-        } else {
-            alert("Please enter a valid Email address");
-        }
-    };
+  const { setUserId } = useContext(UserIdContext);
 
     const handleSubmit = async () => {
-        if (email && password) {
-            try {
-                await signInWithEmailAndPassword(auth, email, password);
-            } catch (err) {
-                console.log("got error: ", err.message);
-            }
+      try {
+        const loginResponse = await login(email, password);
+        if (loginResponse.data.userId !== null) {
+          setUserId(loginResponse.data.userId);
+          await storage.save({
+            key: "userId",
+            data: {
+              userId: loginResponse.data.userId,
+            },
+          });
+          navigation.navigate("PlaceSearcher");
         }
+      } catch (err) {
+        if (axios.isAxiosError(err)) {
+          alert(err.response.data.error);
+        } else {
+          alert(err.message);
+        }
+      }
     };
 
     return (
@@ -79,10 +77,6 @@ export default function LoginScreen() {
                                  />
                              }
                   />
-                  <TouchableOpacity className="flex items-end mb-5"
-                                    onPress={() => resetPassword()}>
-                      <Text className="text-gray-700">Forgot Password?</Text>
-                  </TouchableOpacity>
                   <TouchableOpacity className="py-3 rounded-xl"
                                     style={{ backgroundColor: theme.button }}
                                     onPress={handleSubmit}>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -9,7 +9,6 @@ import PlaceSearcherScreen from "../screens/PlaceSearcherScreen";
 import RoutePlannerScreen from "../screens/RoutePlannerScreen";
 import ReviewsScreen from "../screens/ReviewsScreen";
 import ProfileScreen from "../screens/ProfileScreen";
-import useAuth from "../hooks/useAuth";
 import { theme } from "../theme";
 import {
   HomeIcon as HomeOutline,
@@ -36,14 +35,15 @@ import MemoriesScreen from "../screens/MemoriesScreen";
 import LookAtTheMapScreen from "../screens/LookAtTheMapScreen";
 import EditingOnTheMapScreen from "../screens/EditingOnTheMapScreen";
 import ReviewScreen from "../screens/ReviewScreen";
+import { UserIdContext } from "../App";
 
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 export default function AppNavigation() {
-  const { user } = useAuth();
-  if (user) {
+  const { userId } = useContext(UserIdContext);
+  if (userId !== null) {
     return (
       <NavigationContainer>
         <Stack.Navigator initialRouteName="PlaceSearcher">
