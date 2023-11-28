@@ -35,15 +35,18 @@ import MemoriesScreen from "../screens/MemoriesScreen";
 import LookAtTheMapScreen from "../screens/LookAtTheMapScreen";
 import EditingOnTheMapScreen from "../screens/EditingOnTheMapScreen";
 import ReviewScreen from "../screens/ReviewScreen";
-import { UserIdContext } from "../App";
+import { UserContext } from "../App";
+import PostScreen from "../screens/admin_screens/PostScreen";
+import UsersScreen from "../screens/admin_screens/UsersScreen";
+import EditPostScreen from "../screens/admin_screens/EditPostScreen";
 
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 export default function AppNavigation() {
-  const { userId } = useContext(UserIdContext);
-  if (userId !== null) {
+  const { user } = useContext(UserContext);
+  if (user !== null) {
     return (
       <NavigationContainer>
         <Stack.Navigator initialRouteName="PlaceSearcher">
@@ -64,6 +67,9 @@ export default function AppNavigation() {
           <Stack.Screen name="FavoriteHotelsList" options={{ headerShown: false }}
                         component={FavoriteHotelsListScreen} />
           <Stack.Screen name="PackingList" options={{ headerShown: false }} component={PackingListScreen} />
+          <Stack.Screen name="Users" options={{ headerShown: false }} component={UsersScreen} />
+          <Stack.Screen name="Post" options={{ headerShown: false }} component={PostScreen} />
+          <Stack.Screen name="EditPost" options={{ headerShown: false }} component={EditPostScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     );

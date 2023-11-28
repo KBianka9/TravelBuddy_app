@@ -2,18 +2,18 @@ import AppNavigation from "./navigation/appNavigation";
 import storage from "./storage/storage";
 import React, { useState } from "react";
 
-export const UserIdContext = React.createContext(null);
+export const UserContext = React.createContext(null);
 export default function App() {
-  const [userId, setUserId] = useState(null);
+  const [user, setUser] = useState(null);
   storage.load({
-    key: "userId",
+    key: "user",
   }).then(ret => {
-    setUserId(ret.userId);
-  }).catch(_ => setUserId(null));
+    setUser(ret.user);
+  }).catch(_ => setUser(null));
   return (
-    <UserIdContext.Provider value={{ userId, setUserId }}>
+    <UserContext.Provider value={{ user, setUser }}>
       <AppNavigation></AppNavigation>
-    </UserIdContext.Provider>
+    </UserContext.Provider>
   );
 }
 

@@ -19,6 +19,7 @@ export default function SignupScreen() {
   const handleSubmit = async () => {
       try {
         await signup(username, email, password, confPassword);
+        alert("Thanks for registering! \n Your registration has been successful.");
       } catch (err) {
         if (axios.isAxiosError(err)) {
           alert(err.response.data.error);

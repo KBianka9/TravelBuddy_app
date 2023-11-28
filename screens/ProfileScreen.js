@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { View, Text, Image, TouchableOpacity, Alert } from "react-native";
+import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { theme } from "../theme";
 import {
@@ -8,24 +8,16 @@ import {
   ClipboardDocumentListIcon,
   UserMinusIcon,
   ArrowRightOnRectangleIcon,
-  HomeModernIcon,
+  HomeModernIcon, DocumentCheckIcon, IdentificationIcon,
 } from "react-native-heroicons/outline";
 import storage from "../storage/storage";
-import { UserIdContext } from "../App";
-
-const user = [
-  {
-    id: 1,
-    profileImg: require("../src/assets/corgi.webp"),
-    name: "Bianka Kiss",
-    email: "kiss.bianka@gmail.com",
-    password: "123456789",
-  }];
-
+import { UserContext } from "../App";
+import { deleteUser } from "../contollers/userContoller";
+import axios from "axios";
 
 export default function ProfileScreen({ navigation }) {
-  const { setUserId } = useContext(UserIdContext);
-
+  const { setUser, user } = useContext(UserContext);
+  console.log({ user });
   /*TODO: felhasználó törlése->felugró ablak*/
   /*Alert.alert(
       "Delete Account",
@@ -40,20 +32,23 @@ export default function ProfileScreen({ navigation }) {
       ]
   )*/
   const handleDelAccount = () => {
-    /*const user = auth.currentUser;
-    deleteUser(user).then(() => {
-      navigation.navigate("Welcome");
-    }).catch((error) => {
-      Alert.alert(error);
+    deleteUser(user.userId).then(() => {
+      alert("User deleted successfully");
+      setTimeout(() => handleLogout(), 3000);
+    }).catch((err) => {
+      if (axios.isAxiosError(err)) {
+        alert(err.response.data.error);
+      } else {
+        alert(err.message);
+      }
     });
-    alert("User deleted successfully");*/
   };
 
   const handleLogout = async () => {
     await storage.remove({
-      key: "userId",
+      key: "user",
     });
-    setUserId(null);
+    setUser(null);
     navigation.navigate("Login");
   };
   return (
@@ -75,9 +70,9 @@ export default function ProfileScreen({ navigation }) {
                    borderColor: "white",
                  }}
           />
-          <Text style={{ fontWeight: "bold", fontSize: 20, paddingTop: 5, textAlign: "center" }}>Bianka Kiss</Text>
+          <Text style={{ fontWeight: "bold", fontSize: 20, paddingTop: 5, textAlign: "center" }}>{user.name}</Text>
         </View>
-        <View>
+        <ScrollView>
           <TouchableOpacity onPress={() => navigation.navigate("EditProfile")}>
             <View style={{
               flexDirection: "row",
@@ -138,6 +133,40 @@ export default function ProfileScreen({ navigation }) {
               <Text style={{ color: theme.iconOff, marginLeft: 16, fontSize: 16 }}>Packing list</Text>
             </View>
           </TouchableOpacity>
+          {(user.role === "ADMIN") &&
+            <TouchableOpacity onPress={() => navigation.navigate("Users")}>
+              <View style={{
+                flexDirection: "row",
+                paddingVertical: 10,
+                paddingHorizontal: 30,
+                alignItems: "center",
+                borderBottomWidth: 1,
+                borderColor: theme.button,
+                marginHorizontal: 20,
+              }}>
+                <IdentificationIcon size="5" strokeWidth={1}
+                                    style={{ color: theme.text, borderRadius: 50, padding: 16 }} />
+                <Text style={{ color: theme.iconOff, marginLeft: 16, fontSize: 16 }}>Edit user</Text>
+              </View>
+            </TouchableOpacity>
+          }
+          {(user.role === "ADMIN") &&
+            <TouchableOpacity onPress={() => navigation.navigate("Post")}>
+              <View style={{
+                flexDirection: "row",
+                paddingVertical: 10,
+                paddingHorizontal: 30,
+                alignItems: "center",
+                borderBottomWidth: 1,
+                borderColor: theme.button,
+                marginHorizontal: 20,
+              }}>
+                <DocumentCheckIcon size="5" strokeWidth={1}
+                                   style={{ color: theme.text, borderRadius: 50, padding: 16 }} />
+                <Text style={{ color: theme.iconOff, marginLeft: 16, fontSize: 16 }}>Edit post</Text>
+              </View>
+            </TouchableOpacity>
+          }
           <TouchableOpacity onPress={handleDelAccount}>
             <View style={{
               flexDirection: "row",
@@ -167,7 +196,7 @@ export default function ProfileScreen({ navigation }) {
               <Text style={{ color: theme.iconOff, marginLeft: 16, fontSize: 16 }}>Log out</Text>
             </View>
           </TouchableOpacity>
-        </View>
+        </ScrollView>
       </View>
     </View>
   );

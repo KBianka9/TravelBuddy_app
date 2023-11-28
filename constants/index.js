@@ -80,6 +80,7 @@ export const reviewItems = [
   {
     reviewId: 1,
     user: "Arthur Smith",
+    email: "arthursmith@gmail.com",
     profilePic: require("../src/assets/profile.png"),
     postDate: "09.09.2020.",
     cityCountry: "Raha, Indonesia",
@@ -98,6 +99,7 @@ export const reviewItems = [
   {
     reviewId: 2,
     user: "Jenny Miller",
+    email: "jennymiller@gmail.com",
     profilePic: require("../src/assets/corgi.webp"),
     postDate: "08.09.2019.",
     cityCountry: "Raha, Indonesia",
@@ -116,6 +118,7 @@ export const reviewItems = [
   {
     reviewId: 3,
     user: "Sarah Mars",
+    email: "sarahmars@gmail.com",
     profilePic: require("../src/assets/frenchbulldog1.jpg"),
     postDate: "09.09.2020.",
     cityCountry: "Raha, Indonesia",
@@ -134,6 +137,7 @@ export const reviewItems = [
   {
     reviewId: 4,
     user: "Antonio Banderas",
+    email: "antoniobanderas@gmail.com",
     profilePic: require("../src/assets/frenchbulldog2.jpg"),
     postDate: "09.09.2020.",
     cityCountry: "Raha, Indonesia",
@@ -155,6 +159,7 @@ export const reviewItems = [
   {
     reviewId: 5,
     user: "Mike Smith",
+    email: "mikesmith@gmail.com",
     profilePic: require("../src/assets/frenchbulldog.jpg"),
     postDate: "09.09.2020.",
     cityCountry: "Raha, Indonesia",

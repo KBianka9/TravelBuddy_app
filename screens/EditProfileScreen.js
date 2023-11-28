@@ -1,27 +1,35 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { theme } from "../theme";
 import { ArrowLeftIcon } from "react-native-heroicons/solid";
 import { TextInput } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
-
-const user = [
-  {
-    id: 1,
-    profileImg: require("../src/assets/sardinia.jpg"),
-    name: "Arthur Miller",
-    email: "arthur@gmail.com",
-    password: "123456789",
-  }];
-
+import { UserContext } from "../App";
+import { updateUser } from "../contollers/userContoller";
+import axios from "axios";
 
 export default function EditProfileScreen() {
   const navigation = useNavigation();
-  const [name, setName] = useState("Bianka Kiss");
-  const [email, setEmail] = useState("kiss.bianka19995@gmail.com");
-  const [password, setPassword] = useState("123456789");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [pswVisible, setPswVisible] = useState(true);
+  const [confPassword, setConfPassword] = useState("");
+  const { user } = useContext(UserContext);
+
+  const handleUpdate = async () => {
+    try {
+      await updateUser(user);
+      alert("Your data has been successfully saved!");
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        alert(err.response.data.error);
+      } else {
+        alert(err.message);
+      }
+    }
+  };
 
   return (
     <View className="flex-1 bg-white" style={{ backgroundColor: theme.background }}>
@@ -66,23 +74,23 @@ export default function EditProfileScreen() {
             label="Full name"
             className="bg-gray-100 text-gray-700 rounded-2xl mb-3"
             autoCorrect={false}
-            value={name}
+            value={user.name}
             onChangeText={value => setName(value)}
           />
           <TextInput
             label="Email address"
             className="bg-gray-100 text-gray-700 rounded-2xl mb-3"
             autoCorrect={false}
-            value={email}
+            value={user.email}
             onChangeText={value => setEmail(value)}
             keyboardType={"email-address"}
           />
           <TextInput
-            label="Password"
+            label="Current password"
             className="bg-gray-100 text-gray-700 rounded-2xl mb-3"
             secureTextEntry={pswVisible}
             autoCorrect={false}
-            value={password}
+            value={user.password}
             onChangeText={value => setPassword(value)}
             right={
               <TextInput.Icon
@@ -91,10 +99,23 @@ export default function EditProfileScreen() {
               />
             }
           />
-          <View style={{ paddingTop: 20 }}>
+          <TextInput
+            label="New password"
+            className="bg-gray-100 text-gray-700 rounded-2xl mb-3"
+            secureTextEntry={pswVisible}
+            autoCorrect={false}
+            value={user.password}
+            onChangeText={value => setConfPassword(value)}
+            right={
+              <TextInput.Icon
+                icon={pswVisible ? "eye" : "eye-off"}
+                onPress={() => setPswVisible(!pswVisible)}
+              />
+            }
+          />
+          <View style={{ paddingVertical: 20 }}>
             <TouchableOpacity className="py-3 rounded-full" style={{ backgroundColor: theme.button }}
-                              onPress={() => {
-                              }}>
+                              onPress={handleUpdate}>
               <Text className="font-xl font-bold text-center text-white">Save data</Text>
             </TouchableOpacity>
           </View>

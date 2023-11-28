@@ -6,24 +6,24 @@ import { theme } from "../theme";
 import { ArrowLeftIcon } from "react-native-heroicons/solid";
 import { login } from "../contollers/userContoller";
 import axios from "axios";
-import { UserIdContext } from "../App";
+import { UserContext } from "../App";
 import storage from "../storage/storage";
 
 export default function LoginScreen({ navigation }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [pswVisible, setPswVisible] = useState(true);
-  const { setUserId } = useContext(UserIdContext);
+  const { setUser } = useContext(UserContext);
 
     const handleSubmit = async () => {
       try {
         const loginResponse = await login(email, password);
-        if (loginResponse.data.userId !== null) {
-          setUserId(loginResponse.data.userId);
+        if (loginResponse.data !== null) {
+          setUser(loginResponse.data);
           await storage.save({
-            key: "userId",
+            key: "user",
             data: {
-              userId: loginResponse.data.userId,
+              user: loginResponse.data,
             },
           });
           navigation.navigate("PlaceSearcher");

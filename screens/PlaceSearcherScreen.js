@@ -18,11 +18,10 @@ export default function PlaceSearcherScreen() {
               <Image source={require("../src/assets/walkway-tropical-jungle.jpg")}
                      style={{ height: 610, width: 400 }} />
               <Text style={{
-                  marginTop: -390,
+                marginTop: -370,
                   textAlign: "center",
                   fontSize: 40,
-                  color: "white",
-                  marginBottom: 10,
+                color: "white",
               }}>Welcome!</Text>
               <Text style={{ fontSize: 15, color: "white", paddingLeft: 50, paddingRight: 15 }}>"Do not follow where the
                   path may lead, go instead where there is no path and leave a trail."</Text>
@@ -38,7 +37,7 @@ export default function PlaceSearcherScreen() {
               </Animatable.View>
           </SafeAreaView>
           <View className="bg-white" style={{ borderTopRightRadius: 25, borderTopLeftRadius: 25, marginTop: 5 }}>
-              <View className="flex-1 px-8 pt-8">
+            <View className="flex-1 px-8 pt-5">
                   {/*Destination searcher*/}
                   <View className="flex-row justify-center items-center rounded-full p-1 bg-gray-200 mb-4">
                       <TextInput placeholder="Search your destination"
