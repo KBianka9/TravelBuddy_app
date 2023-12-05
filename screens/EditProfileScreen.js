@@ -7,20 +7,73 @@ import { TextInput } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../App";
 import { updateUser } from "../contollers/userContoller";
+import ImagePicker from "react-native-image-picker";
 import axios from "axios";
 
 export default function EditProfileScreen() {
   const navigation = useNavigation();
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [pswVisible, setPswVisible] = useState(true);
-  const [confPassword, setConfPassword] = useState("");
-  const { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
+  const [imageUri, setImageUri] = useState(null);
+  const updateData = { ...user };
+
+  const selectImage = () => {
+    const options = {
+      title: "Select Image",
+      cancelButtonTitle: "Cancel",
+      takePhotoButtonTitle: "Take Photo",
+      chooseFromLibraryButtonTitle: "Choose from Library",
+      mediaType: "photo",
+      quality: 0.8,
+      maxWidth: 800,
+      maxHeight: 600,
+      storageOptions: {
+        skipBackup: true,
+        path: "images",
+      },
+    };
+    ImagePicker.launchImageLibrary(options, (response) => {
+      if (response.didCancel) {
+        console.log("User cancelled image picker");
+      } else if (response.error) {
+        console.log("ImagePicker Error: ", response.error);
+      } else {
+        const source = { uri: response.uri };
+        setImageUri(source.uri);
+        uploadImage(response);
+      }
+    });
+  };
+
+  const uploadImage = async (imageData) => {
+    try {
+      const formData = new FormData();
+      formData.append("image", {
+        uri: imageData.uri,
+        type: imageData.type,
+        name: imageData.fileName,
+      });
+
+      const response = await axios.post("/userPhoto", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      console.log("Image uploaded successfully:", response.data);
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    }
+  };
 
   const handleUpdate = async () => {
     try {
-      await updateUser(user);
+      await updateUser(updateData);
+      setUser({
+        ...user,
+        name: updateData.name,
+        email: updateData.email,
+      });
       alert("Your data has been successfully saved!");
     } catch (err) {
       if (axios.isAxiosError(err)) {
@@ -52,8 +105,7 @@ export default function EditProfileScreen() {
       {/*Change profile picture, full name, email address, password*/}
       <View className="flex-1 bg-white px-8 pt-4"
             style={{ borderTopRightRadius: 50, borderTopLeftRadius: 50, marginTop: 190 }}>
-        <TouchableOpacity onPress={() => {
-        }}>
+        <TouchableOpacity onPress={selectImage}>
           <View style={{ alignItems: "center", flexDirection: "column" }}>
             <Image source={require("../src/assets/corgi.webp")}
                    style={{
@@ -74,15 +126,15 @@ export default function EditProfileScreen() {
             label="Full name"
             className="bg-gray-100 text-gray-700 rounded-2xl mb-3"
             autoCorrect={false}
-            value={user.name}
-            onChangeText={value => setName(value)}
+            defaultValue={updateData.name}
+            onChangeText={newName => updateData.name = newName}
           />
           <TextInput
             label="Email address"
             className="bg-gray-100 text-gray-700 rounded-2xl mb-3"
             autoCorrect={false}
-            value={user.email}
-            onChangeText={value => setEmail(value)}
+            defaultValue={updateData.email}
+            onChangeText={newEmail => updateData.email = newEmail}
             keyboardType={"email-address"}
           />
           <TextInput
@@ -90,8 +142,7 @@ export default function EditProfileScreen() {
             className="bg-gray-100 text-gray-700 rounded-2xl mb-3"
             secureTextEntry={pswVisible}
             autoCorrect={false}
-            value={user.password}
-            onChangeText={value => setPassword(value)}
+            onChangeText={currentPassword => updateData.currentPassword = currentPassword}
             right={
               <TextInput.Icon
                 icon={pswVisible ? "eye" : "eye-off"}
@@ -104,8 +155,7 @@ export default function EditProfileScreen() {
             className="bg-gray-100 text-gray-700 rounded-2xl mb-3"
             secureTextEntry={pswVisible}
             autoCorrect={false}
-            value={user.password}
-            onChangeText={value => setConfPassword(value)}
+            onChangeText={newPassword => updateData.newPassword = newPassword}
             right={
               <TextInput.Icon
                 icon={pswVisible ? "eye" : "eye-off"}

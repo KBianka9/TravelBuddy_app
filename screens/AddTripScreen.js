@@ -65,7 +65,7 @@ export default function AddTripScreen() {
           <TextInput placeholder="Add a name of your trip" className="p-4 flex-1 font-semibold text-gray-700" />
         </View>
         <View className="flex-row justify-center items-center rounded-full p-1 bg-gray-200 mb-4">
-          <TextInput value={place} onChangeText={value => setPlace(value)} placeholder="Accommodation name"
+          <TextInput defaultValue={place} onChangeText={value => setPlace(value)} placeholder="Accommodation name"
                      className="p-4 flex-1 font-semibold text-gray-700" />
         </View>
         <View className="flex-row justify-center items-center rounded-full p-1 bg-gray-200 mb-4">
@@ -109,7 +109,8 @@ export default function AddTripScreen() {
         {destinationList.map((singleDestination, index) => (
           <View key={index}>
             <View className="flex-row justify-center items-center rounded-full p-1 bg-gray-200 ml-4 mr-20 mt-4">
-              <TextInput value={singleDestination.destination} onChange={(e) => handleDestinationChange(e, index)}
+              <TextInput defaultValue={singleDestination.destination}
+                         onChange={(e) => handleDestinationChange(e, index)}
                          placeholder="Destination"
                          className="p-4 flex-1 font-semibold text-gray-700" />
               {destinationList.length > 1 &&

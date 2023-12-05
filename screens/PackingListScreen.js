@@ -24,7 +24,7 @@ const filterOptionsNew = [
 const packingItems = [
   {
     name: "passport",
-    packed: 1,
+    packed: 0,
     tags: ["Essentials"],
   },
   {
@@ -34,99 +34,98 @@ const packingItems = [
   },
   {
     name: "credit card",
-    packed: 1,
+    packed: 0,
     tags: ["Essentials"],
   },
   {
     name: "smart phone and charger",
-    packed: 2,
+    packed: 0,
     tags: ["Essentials"],
   },
   {
     name: "health insurance card",
-    packed: 1,
+    packed: 0,
     tags: ["Essentials"],
   },
   {
     name: "underwear",
-    packed: 5,
+    packed: 0,
     tags: ["Clothes and shoes"],
   },
   {
     name: "pyjamas",
-    packed: 1,
+    packed: 0,
     tags: ["Clothes and shoes"],
   },
   {
     name: "T-shirts",
-    packed: 6,
+    packed: 0,
     tags: ["Clothes and shoes"],
   },
   {
     name: "shorts",
-    packed: 2,
+    packed: 0,
     tags: ["Clothes and shoes"],
   },
   {
     name: "sport shoes",
-    packed: 1,
+    packed: 0,
     tags: ["Clothes and shoes"],
   },
   {
     name: "toothbrush",
-    packed: 1,
+    packed: 0,
     tags: ["Toiletries"],
   },
   {
-    name: "toothpasta",
+    name: "tooth pasta",
     packed: 0,
     tags: ["Toiletries"],
   },
   {
     name: "shower gel",
-    packed: 1,
+    packed: 0,
     tags: ["Toiletries"],
   },
   {
     name: "shampoo and conditioner",
-    packed: 2,
+    packed: 0,
     tags: ["Toiletries"],
   },
   {
     name: "First-aid kit",
-    packed: 1,
+    packed: 0,
     tags: ["Toiletries"],
   },
   {
     name: "painkillers",
-    packed: 6,
+    packed: 0,
     tags: ["Toiletries"],
   },
   {
     name: "sunglasses",
-    packed: 1,
+    packed: 0,
     tags: ["Other"],
   },
   {
-    name: "powerbank",
-    packed: 2,
+    name: "power bank",
+    packed: 0,
     tags: ["Other"],
   },
   {
     name: "books",
-    packed: 1,
+    packed: 0,
     tags: ["Other"],
   },
   {
     name: "tissues",
-    packed: 6,
+    packed: 0,
     tags: ["Other"],
   },
 ];
 
 
-export default function PackingListScreen() {
-  const navigation = useNavigation();
+export default function PackingListScreen({ navigation }) {
   const [modal, setModal] = useState(false);
   const [selectedTag, setSelectedTag] = useState(filterOptions[0]);
   const [fullPackingList, setFullPackingList] = useState(packingItems);
