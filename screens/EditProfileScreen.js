@@ -7,64 +7,16 @@ import { TextInput } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../App";
 import { updateUser } from "../contollers/userContoller";
-import ImagePicker from "react-native-image-picker";
 import axios from "axios";
+import ImagePicker from "react-native-image-crop-picker";
 
 export default function EditProfileScreen() {
   const navigation = useNavigation();
   const [pswVisible, setPswVisible] = useState(true);
   const { user, setUser } = useContext(UserContext);
-  const [imageUri, setImageUri] = useState(null);
   const updateData = { ...user };
-
-  const selectImage = () => {
-    const options = {
-      title: "Select Image",
-      cancelButtonTitle: "Cancel",
-      takePhotoButtonTitle: "Take Photo",
-      chooseFromLibraryButtonTitle: "Choose from Library",
-      mediaType: "photo",
-      quality: 0.8,
-      maxWidth: 800,
-      maxHeight: 600,
-      storageOptions: {
-        skipBackup: true,
-        path: "images",
-      },
-    };
-    ImagePicker.launchImageLibrary(options, (response) => {
-      if (response.didCancel) {
-        console.log("User cancelled image picker");
-      } else if (response.error) {
-        console.log("ImagePicker Error: ", response.error);
-      } else {
-        const source = { uri: response.uri };
-        setImageUri(source.uri);
-        uploadImage(response);
-      }
-    });
-  };
-
-  const uploadImage = async (imageData) => {
-    try {
-      const formData = new FormData();
-      formData.append("image", {
-        uri: imageData.uri,
-        type: imageData.type,
-        name: imageData.fileName,
-      });
-
-      const response = await axios.post("/userPhoto", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      console.log("Image uploaded successfully:", response.data);
-    } catch (error) {
-      console.error("Error uploading image:", error);
-    }
-  };
+  const [selectProfileImage, setSelectProfileImage] = useState("");
+  const [selectCoverImage, setSelectCoverImage] = useState("");
 
   const handleUpdate = async () => {
     try {
@@ -84,12 +36,42 @@ export default function EditProfileScreen() {
     }
   };
 
+  const ProfileImagePicker = async () => {
+    try {
+      await ImagePicker.openPicker({
+        width: 180,
+        height: 180,
+        cropping: true,
+        cropperCircleOverlay: true,
+      }).then(image => {
+        console.log(image, "image");
+        setSelectProfileImage(image);
+      });
+    } catch (error) {
+      console.log(error, "error");
+    }
+  };
+  const CoverImagePicker = async () => {
+    try {
+      await ImagePicker.openPicker({
+        height: 310,
+        cropping: true,
+      }).then(image => {
+        console.log(image, "image");
+        setSelectCoverImage(image);
+      });
+    } catch (error) {
+      console.log(error, "error");
+    }
+  };
+
   return (
     <View className="flex-1 bg-white" style={{ backgroundColor: theme.background }}>
-      <TouchableOpacity>
-        <Image source={require("../src/assets/view-toward-sky-forest.jpg")}
-               style={{ height: 310 }}
-               className="w-full absolute"
+      <TouchableOpacity onPress={() => CoverImagePicker()}>
+        <Image
+          source={!selectCoverImage ? (require("../src/assets/view-toward-sky-forest.jpg")) : { uri: selectCoverImage?.path }}
+          style={{ height: 310 }}
+          className="w-full absolute"
         />
       </TouchableOpacity>
       <SafeAreaView className="flex-row justify-start">
@@ -105,18 +87,19 @@ export default function EditProfileScreen() {
       {/*Change profile picture, full name, email address, password*/}
       <View className="flex-1 bg-white px-8 pt-4"
             style={{ borderTopRightRadius: 50, borderTopLeftRadius: 50, marginTop: 190 }}>
-        <TouchableOpacity onPress={selectImage}>
+        <TouchableOpacity onPress={() => ProfileImagePicker()}>
           <View style={{ alignItems: "center", flexDirection: "column" }}>
-            <Image source={require("../src/assets/corgi.webp")}
-                   style={{
-                     width: 180,
-                     height: 180,
-                     borderRadius: 90,
-                     marginTop: -100,
-                     borderWidth: 3,
-                     borderColor: "white",
-                   }}
-                   className="justify-center" />
+            <Image
+              source={!selectProfileImage ? (require("../src/assets/profile.png")) : { uri: selectProfileImage?.path }}
+              style={{
+                width: 180,
+                height: 180,
+                borderRadius: 90,
+                marginTop: -100,
+                borderWidth: 3,
+                borderColor: "white",
+              }}
+              className="justify-center" />
           </View>
         </TouchableOpacity>
         <Text style={{ paddingTop: 10, marginHorizontal: -16, marginBottom: 10 }}>You can change profile and cover

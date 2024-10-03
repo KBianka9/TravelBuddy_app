@@ -2,9 +2,9 @@ import React, { useContext } from "react";
 import { Image, TouchableOpacity, View, ScrollView, Text } from "react-native";
 import { ArrowLeftIcon, MapPinIcon } from "react-native-heroicons/solid";
 import { theme } from "../../theme";
-import { SliderBox } from "react-native-image-slider-box";
 import { UserContext } from "../../App";
 
+//TODO: item probléma
 export default function EditPostScreen({ navigation }) {
   const { user } = useContext(UserContext);
   if (user.role !== "ADMIN") {
@@ -21,17 +21,6 @@ export default function EditPostScreen({ navigation }) {
           style={{ backgroundColor: theme.button, zIndex: 1 }}>
           <ArrowLeftIcon size="25" color="white" />
         </TouchableOpacity>
-      </View>
-      <View style={{ marginTop: -55 }}>
-        <SliderBox images={item.images}
-                   dotStyle={{ marginBottom: 20, height: 10, width: 10, borderRadius: 50 }}
-                   sliderBoxHeight={380}
-                   dotColor={theme.iconOnG}
-                   imageLoadingColor={theme.iconOnG}
-                   autoplay={true}
-                   autoplayInterval={5000}
-                   loop={true}
-        />
       </View>
       <ScrollView className="flex-1 bg-white px-2"
                   style={{ borderTopRightRadius: 20, borderTopLeftRadius: 20, marginTop: -15 }}>

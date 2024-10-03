@@ -8,14 +8,14 @@ export default function WelcomeScreen() {
   const navigation = useNavigation();
 
   return (
-    <SafeAreaView className="flex-1" style={{ backgroundColor: theme.background }}>
-      <View className="flex-1 flex justify-around my-4">
+    <SafeAreaView className="flex-1">
+      <View className="flex-1 flex justify-around my-8">
         <Text className="text-white font-bold text-4xl text-center ">
           Are you ready to plan your trip?
         </Text>
-        <View className="flex-row justify-center">
-          <Image source={require("../src/assets/welcome.jpg")}
-                 style={{ width: 380, height: 350 }} />
+        <View className="flex-1 justify-center">
+          <Image source={require("../src/assets/view-travel-adventure-essentials.jpg")}
+                 style={{ width: 400, height: 770, zIndex: -1 }} />
         </View>
         <View className="space-y-4">
           <TouchableOpacity

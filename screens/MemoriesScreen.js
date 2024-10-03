@@ -5,26 +5,54 @@ import { theme } from "../theme";
 import { useNavigation } from "@react-navigation/native";
 import * as Animatable from "react-native-animatable";
 import { SliderBox } from "react-native-image-slider-box";
+import ImagePicker from "react-native-image-crop-picker";
+import Carousel from "react-native-snap-carousel";
 
 export default function MemoriesScreen() {
   const navigation = useNavigation();
-  const [memoryImage, setMemoryImage] = useState(null);
-  const [uploading, setUploading] = useState(false);
+  const [memoryImages, setMemoryImages] = useState([]);
   const memoriesPic = [
     require("../src/assets/indonesia-cover-1.jpg"),
     require("../src/assets/indonesia-cover-3.jpg"),
     require("../src/assets/bucket_list.jpg"),
   ];
-
-  /*TODO:kep kivalasztasa es feltoltese*/
-  const pickImage = async () => {
+  const _renderItem = ({ item, index }) => {
+    return (
+      <View key={index}>
+        <Image
+          source={{ uri: item.path }}
+          style={{
+            width: 240,
+            height: 150,
+            borderRadius: 20,
+          }}
+        />
+      </View>
+    );
   };
 
-  const uploadMedia = async (uri) => {
-  };
-
-  const deleteImage = async () => {
-
+  const openGallery = async () => {
+    let imageList = [];
+    ImagePicker.openPicker({
+      multiple: true,
+      waitAnimationEnd: false,
+      includeExif: true,
+      forceJpg: true,
+      compressImageQuality: 0.8,
+      maxFiles: 10,
+      mediaType: "any",
+      includeBase64: true,
+    }).then(response => {
+      console.log("Response: ", response);
+      response.map(image => {
+        imageList.push({
+          filename: image.filename,
+          path: image.path,
+          data: image.data,
+        });
+      });
+      setMemoryImages(imageList);
+    }).catch(error => console.log("Error: ", error.message));
   };
 
   return (
@@ -48,11 +76,11 @@ export default function MemoriesScreen() {
                    loop={true}
         />
       </View>
-      <View className="flex-col flex-1 bg-white px-8 pt-6"
+      <View className="flex-col flex-1 bg-white"
             style={{ borderTopRightRadius: 20, borderTopLeftRadius: 20, marginTop: -15 }}>
-        <View style={{ flexDirection: "row" }}>
+        <View className="flex-row px-8 pt-6">
           <TouchableOpacity style={{ shadowOpacity: 1 }}
-                            onPress={pickImage}
+                            onPress={openGallery}
           >
             <Animatable.View animation={"pulse"} easing={"ease-in-out"} iterationCount={"infinite"} duration={1000}
                              style={{
@@ -69,27 +97,39 @@ export default function MemoriesScreen() {
         </View>
         <ScrollView>
           <Text
-            style={{ fontStyle: "italic", fontWeight: "bold", fontSize: 26, textAlign: "center", marginBottom: 10 }}>My
+            style={{ fontStyle: "italic", fontWeight: "bold", fontSize: 26, textAlign: "center" }}>My
             memories</Text>
           {/*Review box*/}
-          <View className="p-1 bg-gray-200 mb-8" style={{ height: 200, borderRadius: 25 }}>
+          <View className="p-1 bg-gray-200 m-6" style={{ height: 200, borderRadius: 25 }}>
             <TextInput placeholder="Write your expression about 250-300 word" multiline={true} numberoflines={10}
                        className="p-4 flex-1 font-semibold text-gray-700"
             />
           </View>
-          <Text style={{ marginLeft: 15, fontStyle: "italic", fontSize: 15 }}>Uploaded photos:</Text>
-          <View style={{ marginVertical: 30, flexDirection: "row" }}>
-            {memoryImage && <Image source={{ uri: memoryImage }} style={{ width: 200, height: 100 }} />}
-            <Image source={require("../src/assets/hawaii.jpg")} style={{ width: 280, height: 150, borderRadius: 25 }} />
-            <TouchableOpacity onPress={deleteImage}>
-              <Image source={require("../src/assets/bin.png")}
-                     style={{ height: 20, width: 20, marginTop: 70, marginLeft: 20 }} />
-            </TouchableOpacity>
+          <Text style={{ marginLeft: 15, fontStyle: "italic", fontSize: 18, marginBottom: 20 }}>Uploaded photos:</Text>
+          <View>
+            {memoryImages?.length > 0 ? (
+              <Carousel
+                data={memoryImages}
+                renderItem={_renderItem}
+                onSnapToItem={(index) => console.log(index)}
+                slideStyle={{ display: "flex", alignItems: "center" }}
+                inactiveSlideOpacity={0.75}
+                inactiveSlideScale={0.77}
+                containerCustomStyle={{ overflow: "visible", borderRadius: 50 }}
+                loop={true}
+                sliderWidth={380}
+                itemWidth={240}
+              />
+            ) : (
+              <Text style={{ color: theme.decrementButton, fontSize: 15, marginLeft: 65, fontWeight: "bold" }}>You
+                didn't select pictures! Try it again!</Text>
+            )}
           </View>
-          <View style={{ marginVertical: 20 }}>
+          <View style={{ marginVertical: 20, marginHorizontal: 50 }}>
             <TouchableOpacity className="py-3 rounded-xl"
                               style={{ backgroundColor: theme.button }}
-                              onPress={uploadMedia}>
+                              onPress={() => {
+                              }}>
               <Text className="font-xl font-bold text-center text-white">Save memories</Text>
             </TouchableOpacity>
           </View>

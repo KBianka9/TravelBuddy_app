@@ -31,7 +31,7 @@ export default function ReviewScreen(props) {
       </View>
       <View style={{ marginTop: -55 }}>
         <SliderBox images={item.images}
-                   dotStyle={{ marginBottom: 20, height: 10, width: 10, borderRadius: 50 }}
+                   dotStyle={{ marginBottom: 25, height: 10, width: 10, borderRadius: 50 }}
                    sliderBoxHeight={380}
                    dotColor={theme.iconOnG}
                    imageLoadingColor={theme.iconOnG}
@@ -41,7 +41,7 @@ export default function ReviewScreen(props) {
         />
       </View>
       <ScrollView className="flex-1 bg-white px-2"
-                  style={{ borderTopRightRadius: 20, borderTopLeftRadius: 20, marginTop: -15 }}>
+                  style={{ borderTopRightRadius: 20, borderTopLeftRadius: 20, marginTop: -22 }}>
         <View style={{
           borderRadius: 50,
           backgroundColor: "white",
@@ -68,20 +68,27 @@ export default function ReviewScreen(props) {
               Raha, Indonesia
             </Text>
           </View>
-          <Text style={{ padding: 10 }}>{item.text}</Text>
-          <View className="flex-row pb-2 my-4 ml-6">
-            <Text className="pt-3 mr-2">Useful?</Text>
-
-            <TouchableOpacity className="py-3 rounded-3xl mx-2"
-                              style={{ backgroundColor: theme.iconOnG }}
-                              onPress={() => usefulCounter(item.usefulSum)}>
-              <Text className="font-xl text-center text-white px-2">Yes - {item.usefulSum}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity className="py-3 rounded-3xl mx-2"
-                              style={{ backgroundColor: theme.iconOff }}
-                              onPress={() => usefulCounter(item.uselessSum)}>
-              <Text className="font-l text-center text-white px-2">No - {item.uselessSum}</Text>
-            </TouchableOpacity>
+          <Text style={{ padding: 5 }}>{item.text}</Text>
+          <View>
+            <Text className="pt-3 mr-2 font-bold">It was useful for you?</Text>
+            <View className="flex-row pb-2 my-4">
+              <TouchableOpacity className="py-3 rounded-3xl mx-2"
+                                style={{ backgroundColor: theme.iconOnG }}
+                                onPress={() => usefulCounter(item.usefulSum)}>
+                <Text className="font-xl font-bold text-center text-white px-4">Yes - {item.usefulSum}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity className="py-3 rounded-3xl mx-2"
+                                style={{ backgroundColor: theme.iconOff }}
+                                onPress={() => usefulCounter(item.uselessSum)}>
+                <Text className="font-l font-bold text-center text-white px-4">No - {item.uselessSum}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity className="py-3 px-4 rounded-3xl mx-2"
+                                style={{ backgroundColor: theme.decrementButton }}
+                                onPress={() => {
+                                }}>
+                <Text className="font-xl font-bold text-center text-white px-2">Report</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </ScrollView>

@@ -66,7 +66,7 @@ export default function PlaceSearcherScreen() {
               </View>
               <Text className="text-black text-3xl my-3 ml-4">Recommendations</Text>
               {/*Recommendation cards*/}
-              <View className="mt-2 py-2">
+            <View className="mt-2 mb-12 py-2">
                   <Carousel containerCustomStyle={{ overflow: "visible", borderRadius: 50 }}
                             data={hotelItems}
                             loop={true}

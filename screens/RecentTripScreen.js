@@ -5,6 +5,7 @@ import { theme } from "../theme";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import SelectDropdown from "react-native-select-dropdown";
+import openMap from "react-native-open-maps";
 
 /*TODO: idointervallumbol jojjon*/
 const filterOptions = [
@@ -68,6 +69,10 @@ export default function RecentTripScreen(props) {
     setFilteredSpectacleItems(spectacleItems.filter(item => item.tags.includes(selectedTag)));
   };
   useEffect(() => filter(), [spectacleItems, selectedTag]);
+
+  function goToBudapest() {
+    openMap({ latitude: 47.49715361442786, longitude: 19.057183488380094 });
+  }
 
   return (
     <View className="flex-1">
@@ -139,7 +144,7 @@ export default function RecentTripScreen(props) {
             })}
           </View>
           <View style={{ marginRight: 197 }}>
-            <TouchableOpacity onPress={() => navigation.navigate("LookAtTheMap")}>
+            <TouchableOpacity onPress={goToBudapest}>
               <Text style={{
                 backgroundColor: theme.background,
                 borderRadius: 50,

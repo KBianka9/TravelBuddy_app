@@ -14,9 +14,9 @@ export default function ReviewsScreen() {
   const navigation = useNavigation();
 
   return (
-    <View className="flex-1 bg-white" style={{ backgroundColor: theme.background }}>
+    <View className="flex-1" style={{ backgroundColor: theme.background }}>
       <SafeAreaView>
-        <View className="flex-row justify-center items-center rounded-full p-1 bg-gray-200 mt-8 mb-2 mx-4">
+        <View className="flex-row justify-center items-center rounded-full p-1 bg-gray-200 mt-8 mx-4">
           <TextInput placeholder="Search a city" className="p-4 flex-1 font-semibold text-gray-700" />
           <TouchableOpacity className="rounded-full p-2 mr-2"
                             style={{ backgroundColor: theme.background }}>
@@ -55,7 +55,6 @@ export default function ReviewsScreen() {
           </Animatable.View>
         </TouchableOpacity>
       </View>
-
     </View>
   );
 }

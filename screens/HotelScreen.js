@@ -47,7 +47,7 @@ export default function HotelScreen(props) {
           <ScrollView>
             <View style={{
               backgroundColor: theme.button, flexDirection: "row", alignItems: "center", borderRadius: 20,
-              marginTop: 10, width: 80, padding: 10, marginVertical: 8,
+              width: 80, padding: 10, marginVertical: 10,
             }}>
               <StarIcon style={{ alignItems: "center", padding: 8, marginLeft: 2 }} size="19" color="white" />
               <Text style={{ fontSize: 17, color: "white", fontWeight: "bold", marginLeft: 6 }}>{item.stars}</Text>

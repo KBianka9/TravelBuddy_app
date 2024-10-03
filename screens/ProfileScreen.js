@@ -72,7 +72,7 @@ export default function ProfileScreen({ navigation }) {
           />
           <Text style={{ fontWeight: "bold", fontSize: 20, paddingTop: 5, textAlign: "center" }}>{user.name}</Text>
         </View>
-        <ScrollView>
+        <ScrollView className="mb-20">
           <TouchableOpacity onPress={() => navigation.navigate("EditProfile")}>
             <View style={{
               flexDirection: "row",

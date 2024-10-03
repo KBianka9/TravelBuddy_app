@@ -32,8 +32,6 @@ import AddTripScreen from "../screens/AddTripScreen";
 import RecentTripScreen from "../screens/RecentTripScreen";
 import BucketListScreen from "../screens/BucketListScreen";
 import MemoriesScreen from "../screens/MemoriesScreen";
-import LookAtTheMapScreen from "../screens/LookAtTheMapScreen";
-import EditingOnTheMapScreen from "../screens/EditingOnTheMapScreen";
 import ReviewScreen from "../screens/ReviewScreen";
 import { UserContext } from "../App";
 import PostScreen from "../screens/admin_screens/PostScreen";
@@ -54,9 +52,7 @@ export default function AppNavigation() {
           <Stack.Screen name="Hotel" options={{ headerShown: false }} component={HotelScreen} />
           <Stack.Screen name="RoutePlanner" options={{ headerShown: false }} component={RoutePlannerScreen} />
           <Stack.Screen name="RecentTrip" options={{ headerShown: false }} component={RecentTripScreen} />
-          <Stack.Screen name="LookAtTheMap" options={{ headerShown: false }} component={LookAtTheMapScreen} />
           <Stack.Screen name="AddTrip" options={{ headerShown: false }} component={AddTripScreen} />
-          <Stack.Screen name="EditingOnTheMap" options={{ headerShown: false }} component={EditingOnTheMapScreen} />
           <Stack.Screen name="Reviews" options={{ headerShown: false }} component={ReviewsScreen} />
           <Stack.Screen name="NewReview" options={{ headerShown: false }} component={NewReviewScreen} />
           <Stack.Screen name="Review" options={{ headerShown: false }} component={ReviewScreen} />
@@ -94,10 +90,20 @@ function NavBar() {
         headerShown: false,
         tabBarIcon: ({ focused }) => menuIcons(route, focused),
         tabBarStyle: {
-          height: 70,
+          position: "absolute",
+          height: 60,
+          right: 10,
+          left: 10,
+          paddingTop: 5,
+          paddingBottom: 8,
           backgroundColor: theme.navBarC,
-          paddingBottom: 10,
-          paddingTop: 10,
+          bottom: 10,
+          borderRadius: 40,
+          elevation: 0,
+        },
+        tabBarLabelStyle: {
+          fontSize: 12,
+          fontWeight: "bold",
         },
       })}>
       <Tab.Screen name="Hotels" component={PlaceSearcherScreen} />
@@ -112,16 +118,16 @@ const menuIcons = (route, focused) => {
   let icon;
   if (route.name === "Hotels") {
     icon = focused ? <HomeSolid size="30" color={theme.iconOn} /> :
-      <HomeOutline size="30" strokeWidth={2} color={theme.iconOff} />;
+      <HomeOutline size="30" strokeWidth={1.5} color={theme.iconOff} />;
   } else if (route.name === "Route Planner") {
     icon = focused ? <MapSolid size="30" color={theme.iconOn} /> :
-      <MapOutline size="30" strokeWidth={2} color={theme.iconOff} />;
+      <MapOutline size="30" strokeWidth={1.5} color={theme.iconOff} />;
   } else if (route.name === "Reviews") {
     icon = focused ? <ListBulletSolid size="30" color={theme.iconOn} /> :
-      <ListBulletOutline size="30" strokeWidth={2} color={theme.iconOff} />;
+      <ListBulletOutline size="30" strokeWidth={1.5} color={theme.iconOff} />;
   } else if (route.name === "Profile") {
     icon = focused ? <UserSolid size="30" color={theme.iconOn} /> :
-      <UserOutline size="30" strokeWidth={2} color={theme.iconOff} />;
+      <UserOutline size="30" strokeWidth={1.5} color={theme.iconOff} />;
   }
   return (
     <View>

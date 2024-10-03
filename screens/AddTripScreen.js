@@ -5,8 +5,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ArrowLeftIcon, MinusIcon, PlusIcon } from "react-native-heroicons/solid";
 import { useNavigation } from "@react-navigation/native";
 import SelectDropdown from "react-native-select-dropdown";
-import DatePicker from "react-native-date-ranges";
 import * as Animatable from "react-native-animatable";
+import openMap from "react-native-open-maps";
+import CalendarPicker from "react-native-calendar-picker";
+import ImagePicker from "react-native-image-crop-picker";
 
 
 export default function AddTripScreen() {
@@ -14,6 +16,7 @@ export default function AddTripScreen() {
   const [place, setPlace] = useState("");
   const [date, setDate] = useState("");
   const [destinationList, setDestinationList] = useState([{ destination: "" }]);
+  const [selectCoverImage, setSelectCoverImage] = useState("");
 
   const day = ["27.11.", "28.11.", "29.11.", "30.11."];
   const handleAddTrip = () => {
@@ -41,11 +44,29 @@ export default function AddTripScreen() {
     setDestinationList(list);
   };
 
+  function goToBudapest() {
+    openMap({ latitude: 47.49715361442786, longitude: 19.057183488380094 });
+  }
+
+  const CoverImagePicker = async () => {
+    try {
+      await ImagePicker.openPicker({
+        height: 310,
+        cropping: true,
+      }).then(image => {
+        console.log(image, "image");
+        setSelectCoverImage(image);
+      });
+    } catch (error) {
+      console.log(error, "error");
+    }
+  };
+
   return (
     <View className="flex-1 bg-white" style={{ backgroundColor: theme.background }}>
-      <TouchableOpacity onPress={() => {
-      }}>
-        <Image source={require("../src/assets/flat-lay-hands-holding-photos.jpg")}
+      <TouchableOpacity onPress={() => CoverImagePicker()}>
+        <Image
+          source={!selectCoverImage ? (require("../src/assets/flat-lay-hands-holding-photos.jpg")) : { uri: selectCoverImage?.path }}
                style={{ height: 310 }}
                className="w-full absolute"
         />
@@ -68,25 +89,25 @@ export default function AddTripScreen() {
           <TextInput defaultValue={place} onChangeText={value => setPlace(value)} placeholder="Accommodation name"
                      className="p-4 flex-1 font-semibold text-gray-700" />
         </View>
-        <View className="flex-row justify-center items-center rounded-full p-1 bg-gray-200 mb-4">
-          <DatePicker
-            style={{ width: 350, height: 45, margin: 10 }}
-            customStyles={{
-              placeholderText: { fontSize: 20 }, // placeHolder style
-              headerStyle: { backgroundColor: theme.background }, // title container style
-              headerMarkTitle: { fontSize: 25 }, // title mark style
-              borderRadius: 50,
-            }} // optional
-            centerAlign // optional text will align center or not
-            markText={"Date picker"}
-            selectedBgColor={theme.iconOnG}
-            allowFontScaling={false} // optional
-            placeholder={"Nov 27, 2023 → Nov 30, 2023"}
-            mode={"range"}
+        <View className="p-4">
+          <Text className="font-bold text-2xl" style={{ color: theme.text }}>Select date</Text>
+        </View>
+        <View style={{ backgroundColor: theme.background, borderRadius: 20 }}>
+          <CalendarPicker
+            startFromMonday={true}
+            allowRangeSelection={true}
+            width={350}
+            minDate={Date.now()}
+            todayBackgroundColor={theme.iconOff}
+            todayTextColor={theme.iconOn}
+            selectedDayColor={theme.selectedDate}
+            selectedDayTextColor={theme.iconOn}
+            onDateChange={this.onDateChange}
           />
         </View>
         <View>
-          <Text style={{ fontSize: 24, color: theme.text, marginTop: 15, textAlign: "center" }}>What would you like to
+          <Text className="font-bold text-2xl"
+                style={{ fontSize: 24, color: theme.text, marginTop: 15, textAlign: "center" }}>What would you like to
             visit on </Text>
         </View>
         {/*Day selector*/}
@@ -104,7 +125,7 @@ export default function AddTripScreen() {
             buttonTextAfterSelection={(selectedItem, index) => selectedItem}
             rowTextForSelection={(item, index) => item}
           />
-          <Text style={{ fontSize: 24, color: theme.text, marginTop: 10 }}> ?</Text>
+          <Text className="font-bold text-2xl" style={{ fontSize: 24, color: theme.text, marginTop: 10 }}> ?</Text>
         </View>
         {destinationList.map((singleDestination, index) => (
           <View key={index}>
@@ -145,7 +166,7 @@ export default function AddTripScreen() {
           </View>
         ))}
         <View style={{ paddingLeft: 40, paddingRight: 180, marginTop: 10 }}>
-          <TouchableOpacity onPress={() => navigation.navigate("EditingOnTheMap")}>
+          <TouchableOpacity onPress={goToBudapest}>
             <Text style={{
               backgroundColor: theme.button,
               color: "white",
