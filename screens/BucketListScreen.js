@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, Image, TouchableOpacity, ScrollView, Modal, TextInput, FlatList } from "react-native";
+import { View, Text, Image, TouchableOpacity, ScrollView, Modal, TextInput, FlatList, Linking } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { styles, theme } from "../theme";
 import { ArrowLeftIcon, PlusIcon } from "react-native-heroicons/solid";
@@ -11,21 +11,55 @@ import * as Animatable from "react-native-animatable";
 const bucketListItem = [
   {
     name: "Big Ben, England",
+    alfa3: "GBR",
     status: "checked",
     checked: true,
   },
   {
     name: "Eiffel Tower, France",
+    alfa3: "FRA",
     status: "unchecked",
     checked: false,
   },
   {
     name: "Machu Picchu, Peru",
+    alfa3: "PER",
     status: "checked",
     checked: true,
   },
   {
     name: "Colosseum, Italy",
+    alfa3: "ITA",
+    status: "unchecked",
+    checked: false,
+  },
+  {
+    name: "Taj Mahal, India",
+    alfa3: "IND",
+    status: "unchecked",
+    checked: true,
+  },
+  {
+    name: "Pyramids of Giza, Egypt",
+    alfa3: "EGY",
+    status: "unchecked",
+    checked: true,
+  },
+  {
+    name: "Statue of Liberty, USA",
+    alfa3: "USA",
+    status: "unchecked",
+    checked: false,
+  },
+  {
+    name: "Sydney Opera House, Australia",
+    alfa3: "AUS",
+    status: "unchecked",
+    checked: true,
+  },
+  {
+    name: "Great Wall of China, China",
+    alfa3: "CHN",
     status: "unchecked",
     checked: false,
   },
@@ -129,8 +163,8 @@ export default function BucketListScreen() {
 
   return (
     <View className="flex-1 bg-white" style={{ backgroundColor: theme.background }}>
-      <Image source={require("../src/assets/bucket_list.jpg")}
-             style={{ height: 385 }}
+      <Image source={require("../src/assets/MapChart_Map.png")}
+             style={{ height: 390, width: 400 }}
              className="w-full absolute"
       />
       <SafeAreaView className="flex-row justify-start">
@@ -182,6 +216,12 @@ export default function BucketListScreen() {
             renderItem={renderItem}
           />
         </ScrollView>
+        <View style={{ paddingTop: 10 }}>
+          <TouchableOpacity className="py-3 rounded-full mb-5 mx-4" style={{ backgroundColor: theme.button }}
+                            onPress={() => Linking.openURL("https://www.mapchart.net/world.html")}>
+            <Text className="font-xl font-bold text-center text-white">Show as map</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );

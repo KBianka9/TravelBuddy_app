@@ -64,7 +64,7 @@ export default function LoginScreen({ navigation }) {
               require={true}
             />
                   <Text className="text-gray-700 ml-4">Password</Text>
-                  <TextInput className="bg-gray-100 text-gray-700 rounded-2xl"
+            <TextInput className="bg-gray-100 text-gray-700 rounded-2xl mb-7"
                              secureTextEntry={pswVisible}
                              autoCorrect={false}
                              value={password}

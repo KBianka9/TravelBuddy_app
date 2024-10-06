@@ -1,4 +1,4 @@
-import AppNavigation from "./navigation/appNavigation";
+import AppNavigation from "./navigation/AppNavigation";
 import storage from "./storage/storage";
 import React, { useState } from "react";
 

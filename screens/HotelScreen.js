@@ -6,12 +6,13 @@ import { theme } from "../theme";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import * as Animatable from "react-native-animatable";
-
+import { Rating } from "react-native-ratings";
 
 export default function HotelScreen(props) {
     const item = props.route.params;
     const navigation = useNavigation();
-    return (
+
+  return (
       <View className="flex-1">
         <Image source={item.image}
                style={{ height: 310 }}
@@ -66,16 +67,47 @@ export default function HotelScreen(props) {
                 <Text style={{ fontSize: 24, color: theme.iconOff, fontWeight: "bold" }}>$ {item.price}</Text>
               </View>
               <View style={{ marginTop: 10 }}>
-                <Text style={{ fontSize: 20, marginTop: 5, color: "black", fontWeight: "bold" }}>About Hotel and
+                <Text style={{ fontSize: 20, marginTop: 5, color: theme.text, fontWeight: "bold" }}>About Hotel and
                   around</Text>
                 <Text style={{ fontSize: 15, marginTop: 5, color: "black" }}>{item.description}</Text>
               </View>
-              <View style={{ marginTop: 10, paddingBottom: 90 }}>
+              <View style={{ marginTop: 10, paddingBottom: 20 }}>
                 <Text
-                  style={{ fontSize: 20, marginVertical: 15, color: "black", fontWeight: "bold" }}>Location</Text>
+                  style={{ fontSize: 20, marginVertical: 10, color: theme.text, fontWeight: "bold" }}>Location</Text>
                 <Image source={item.map}
                        style={{ width: 320, height: 160, borderRadius: 10 }} />
               </View>
+            </View>
+            <View style={{ marginBottom: 20 }}>
+              <Text style={{ color: theme.text, fontSize: 20, fontWeight: "bold" }}>Ratings for the accommodation</Text>
+              <Text style={{ marginVertical: 15, fontSize: 16 }}>Value for money</Text>
+              <Rating
+                type="star"
+                ratingCount={5}
+                imageSize={30}
+                onFinishRating={this.ratingCompleted}
+              />
+              <Text style={{ marginTop: 15, fontSize: 16 }}>Staff</Text>
+              <Rating
+                type="star"
+                ratingCount={5}
+                imageSize={30}
+                onFinishRating={this.ratingCompleted}
+              />
+              <Text style={{ marginTop: 15, fontSize: 16 }}>Comfort</Text>
+              <Rating
+                type="star"
+                ratingCount={5}
+                imageSize={30}
+                onFinishRating={this.ratingCompleted}
+              />
+              <Text style={{ marginTop: 15, fontSize: 16 }}>Location</Text>
+              <Rating
+                type="star"
+                ratingCount={5}
+                imageSize={30}
+                onFinishRating={this.ratingCompleted}
+              />
             </View>
           </ScrollView>
         </View>

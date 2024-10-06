@@ -49,20 +49,22 @@ export default function PlaceSearcherScreen() {
                           <MagnifyingGlassIcon size="25" strokeWidth={2} color="white"></MagnifyingGlassIcon>
                       </TouchableOpacity>
                   </View>
-                  {/*Price selector*/}
-                  <SelectDropdown
-                    dropdownStyle={{ justifyContent: "center", borderRadius: 30, backgroundColor: theme.searchInput }}
-                    selectedRowStyle={{ justifyContent: "center", backgroundColor: "white" }}
-                    buttonStyle={{ justifyContent: "center", borderRadius: 30, backgroundColor: theme.searchInput }}
-                    defaultButtonText={"$price/night"}
-                    buttonTextStyle={{ fontSize: 15, fontWeight: "700", color: theme.text }}
-                    data={prices}
-                    onSelect={(selectedItem, index) => {
+              <View className="items-center">
+                {/*Price selector*/}
+                <SelectDropdown
+                  dropdownStyle={{ justifyContent: "center", borderRadius: 30, backgroundColor: theme.searchInput }}
+                  selectedRowStyle={{ justifyContent: "center", backgroundColor: "white" }}
+                  buttonStyle={{ justifyContent: "center", borderRadius: 30, backgroundColor: theme.searchInput }}
+                  defaultButtonText={"$price/night"}
+                  buttonTextStyle={{ fontSize: 15, fontWeight: "700", color: theme.text }}
+                  data={prices}
+                  onSelect={(selectedItem, index) => {
                         console.log(selectedItem, index);
-                    }}
-                    buttonTextAfterSelection={(selectedItem, index) => selectedItem}
-                    rowTextForSelection={(item, index) => item}
-                  />
+                  }}
+                  buttonTextAfterSelection={(selectedItem, index) => selectedItem}
+                  rowTextForSelection={(item, index) => item}
+                />
+              </View>
               </View>
               <Text className="text-black text-3xl my-3 ml-4">Recommendations</Text>
               {/*Recommendation cards*/}

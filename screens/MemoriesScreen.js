@@ -100,12 +100,12 @@ export default function MemoriesScreen() {
             style={{ fontStyle: "italic", fontWeight: "bold", fontSize: 26, textAlign: "center" }}>My
             memories</Text>
           {/*Review box*/}
-          <View className="p-1 bg-gray-200 m-6" style={{ height: 200, borderRadius: 25 }}>
+          <View className="p-1 bg-gray-200 mx-6 my-3" style={{ height: 200, borderRadius: 25 }}>
             <TextInput placeholder="Write your expression about 250-300 word" multiline={true} numberoflines={10}
                        className="p-4 flex-1 font-semibold text-gray-700"
             />
           </View>
-          <Text style={{ marginLeft: 15, fontStyle: "italic", fontSize: 18, marginBottom: 20 }}>Uploaded photos:</Text>
+          <Text style={{ marginLeft: 30, fontStyle: "italic", fontSize: 18, marginBottom: 20 }}>Uploaded photos:</Text>
           <View>
             {memoryImages?.length > 0 ? (
               <Carousel

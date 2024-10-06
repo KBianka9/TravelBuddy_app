@@ -104,7 +104,7 @@ export default function EditProfileScreen() {
         </TouchableOpacity>
         <Text style={{ paddingTop: 10, marginHorizontal: -16, marginBottom: 10 }}>You can change profile and cover
           image, if you click on it.</Text>
-        <ScrollView className="form space-y-2 mt-4">
+        <ScrollView className="form space-y-2">
           <TextInput
             label="Full name"
             className="bg-gray-100 text-gray-700 rounded-2xl mb-3"
@@ -135,7 +135,7 @@ export default function EditProfileScreen() {
           />
           <TextInput
             label="New password"
-            className="bg-gray-100 text-gray-700 rounded-2xl mb-3"
+            className="bg-gray-100 text-gray-700 rounded-2xl"
             secureTextEntry={pswVisible}
             autoCorrect={false}
             onChangeText={newPassword => updateData.newPassword = newPassword}
