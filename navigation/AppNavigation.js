@@ -37,6 +37,8 @@ import { UserContext } from "../App";
 import PostScreen from "../screens/admin_screens/PostScreen";
 import UsersScreen from "../screens/admin_screens/UsersScreen";
 import EditPostScreen from "../screens/admin_screens/EditPostScreen";
+import BudgetCalculatorScreen from "../screens/BudgetCalculatorScreen";
+import CategoryDetailScreen from "../screens/CategoryDetailScreen";
 
 
 const Stack = createNativeStackNavigator();
@@ -60,6 +62,8 @@ export default function AppNavigation() {
           <Stack.Screen name="EditProfile" options={{ headerShown: false }} component={EditProfileScreen} />
           <Stack.Screen name="BucketList" options={{ headerShown: false }} component={BucketListScreen} />
           <Stack.Screen name="Memories" options={{ headerShown: false }} component={MemoriesScreen} />
+          <Stack.Screen name="BudgetCalculator" options={{ headerShown: false }} component={BudgetCalculatorScreen} />
+          <Stack.Screen name="CategoryDetail" options={{ headerShown: false }} component={CategoryDetailScreen} />
           <Stack.Screen name="FavoriteHotelsList" options={{ headerShown: false }}
                         component={FavoriteHotelsListScreen} />
           <Stack.Screen name="PackingList" options={{ headerShown: false }} component={PackingListScreen} />

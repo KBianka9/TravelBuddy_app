@@ -1,19 +1,20 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 import { TextInput } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { theme } from "../theme";
-import { ArrowLeftIcon } from "react-native-heroicons/solid";
+import { ArrowLeftcolor } from "react-native-heroicons/solid";
 import { login } from "../contollers/userContoller";
 import axios from "axios";
 import { UserContext } from "../App";
 import storage from "../storage/storage";
+import Toast from "react-native-toast-message";
 
 export default function LoginScreen({ navigation }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [pswVisible, setPswVisible] = useState(true);
-  const { setUser } = useContext(UserContext);
+  const { setUser, user } = useContext(UserContext);
 
     const handleSubmit = async () => {
       try {
@@ -26,13 +27,28 @@ export default function LoginScreen({ navigation }) {
               user: loginResponse.data,
             },
           });
+          Toast.show({
+            type: "success",
+            text1: "Welcome!",
+            visibilityTime: 5000,
+          });
           navigation.navigate("PlaceSearcher");
         }
       } catch (err) {
         if (axios.isAxiosError(err)) {
-          alert(err.response.data.error);
+          Toast.show({
+            type: "error",
+            text1: "Error",
+            text2: err.response.data.error,
+            visibilityTime: 5000,
+          });
         } else {
-          alert(err.message);
+          Toast.show({
+            type: "error",
+            text1: "Error",
+            text2: err.message,
+            visibilityTime: 5000,
+          });
         }
       }
     };

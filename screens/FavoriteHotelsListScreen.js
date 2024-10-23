@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, Image, TouchableOpacity, ScrollView, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { styles, theme } from "../theme";
@@ -6,6 +6,8 @@ import { ArrowLeftIcon } from "react-native-heroicons/solid";
 import { useNavigation } from "@react-navigation/native";
 import CheckBox from "react-native-check-box";
 import OptionsMenu from "react-native-options-menu";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { hotelItems } from "../constants";
 
 const favHotels = [
   {
@@ -62,6 +64,7 @@ export default function FavoriteHotelsListScreen() {
   const navigation = useNavigation();
   const [favHotelList, setFavHotelList] = useState(favHotels);
   const [status, setStatus] = useState("All");
+  const [favItem, setFavItem] = useState([]);
 
   const setStatusFilter = (status) => {
     if (status !== "All") {
@@ -108,6 +111,27 @@ export default function FavoriteHotelsListScreen() {
       </View>
     );
   };
+  /*TODO: kedvencnek jelölt hotelek listázása*/
+  /*useEffect(() => {
+    fetchFavoriteHotel();
+  }, []);
+
+  const fetchFavoriteHotel = async () => {
+    await AsyncStorage.getItem("favorite").then((token) => {
+      const res = JSON.parse(token);
+      let items = [];
+      if (res){
+        //console.log("Favorite hotel result: ", res);
+        res.forEach((element) => {
+          let data = hotelItems.find((val) => val.id === element);
+          items.push(data);
+        });
+        setFavItem(items);
+      }else {
+        setFavItem([]);
+      }
+    })
+  }*/
 
   return (
     <View className="flex-1 bg-white" style={{ backgroundColor: theme.background }}>

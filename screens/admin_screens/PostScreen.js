@@ -8,19 +8,23 @@ import SelectDropdown from "react-native-select-dropdown";
 import { reviewItems } from "../../constants";
 import OptionsMenu from "react-native-options-menu";
 import { UserContext } from "../../App";
+import { useNavigation } from "@react-navigation/native";
+import EditPostScreen from "./EditPostScreen";
 
 const type = ["id", "name"];
 
-export default function PostScreen({ navigation }) {
+export default function PostScreen() {
+  const navigation = useNavigation();
   const { user } = useContext(UserContext);
   if (user.role !== "ADMIN") {
     navigation.navigate("PlaceSearcher");
     return;
   }
-  const editPost = () => {
-    navigation.navigate("EditPost");
-  };
+  /*TODO: post delete*/
+  const deletePost = () => {
 
+  }
+  /*TODO: report értéke true, akkor jelenjen meg*/
   const renderItem = ({ item, index }) => {
     return (
       <View key={index} className="flex-row gap-x-3 items-center"
@@ -39,13 +43,17 @@ export default function PostScreen({ navigation }) {
             <Text style={{ width: 200 }}>{item.text}</Text>
           </View>
         </View>
-        <OptionsMenu
-          button={require("../../src/assets/three-dots.png")}
-          buttonStyle={{ width: 32, height: 20, resizeMode: "contain", marginTop: 10, marginLeft: 20 }}
-          destructiveIndex={1}
-          options={["Edit", "Delete", "Cancel"]}
-          actions={[editPost, null, null]}
-        />
+        <View style={{ flexDirection: "column" }}>
+          <Image source={require("../../src/assets/report.png")} style={{ height: 35, width: 35, marginTop: -130 }} />
+          <OptionsMenu
+            button={require("../../src/assets/three-dots.png")}
+            buttonStyle={{ width: 32, height: 20, resizeMode: "contain", marginTop: 90 }}
+
+            destructiveIndex={1}
+            options={["Edit", "Delete", "Cancel"]}
+            actions={[EditPostScreen, deletePost, null]}
+          />
+        </View>
       </View>
     );
   };

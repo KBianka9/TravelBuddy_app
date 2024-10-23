@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 import { TextInput } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -7,6 +7,7 @@ import { useNavigation } from "@react-navigation/native";
 import { ArrowLeftIcon } from "react-native-heroicons/solid";
 import { signup } from "../contollers/userContoller";
 import axios from "axios";
+import Toast from "react-native-toast-message";
 
 export default function SignupScreen() {
   const navigation = useNavigation();
@@ -19,12 +20,27 @@ export default function SignupScreen() {
   const handleSubmit = async () => {
       try {
         await signup(username, email, password, confPassword);
-        alert("Thanks for registering! \n Your registration has been successful.");
+        Toast.show({
+          type: "success",
+          text1: "Thanks for registering!",
+          text2: "Your registration has been successful.",
+          visibilityTime: 5000,
+        });
       } catch (err) {
         if (axios.isAxiosError(err)) {
-          alert(err.response.data.error);
+          Toast.show({
+            type: "error",
+            text1: "Error",
+            text2: err.response.data.error,
+            visibilityTime: 5000,
+          });
         } else {
-          alert(err.message);
+          Toast.show({
+            type: "error",
+            text1: "Error",
+            text2: err.message,
+            visibilityTime: 5000,
+          });
         }
       }
   };

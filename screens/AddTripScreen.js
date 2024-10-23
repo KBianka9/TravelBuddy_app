@@ -9,18 +9,19 @@ import * as Animatable from "react-native-animatable";
 import openMap from "react-native-open-maps";
 import CalendarPicker from "react-native-calendar-picker";
 import ImagePicker from "react-native-image-crop-picker";
-
+import { destinations, hotelItems } from "../constants";
 
 export default function AddTripScreen() {
   const navigation = useNavigation();
-  const [place, setPlace] = useState("");
+  const [placeList, setPlaceList] = useState([{}]);
   const [date, setDate] = useState("");
-  const [destinationList, setDestinationList] = useState([{ destination: "" }]);
+  const [destinationList, setDestinationList] = useState([{}]);
   const [selectCoverImage, setSelectCoverImage] = useState("");
 
-  const day = ["27.11.", "28.11.", "29.11.", "30.11."];
+  const day = ["1. day", "2. day", "3. day", "4. day"];
+
   const handleAddTrip = () => {
-    if (place && date) {
+    if (placeList && date) {
       navigation.navigate("RoutePlanner");
     } else {
 
@@ -28,7 +29,7 @@ export default function AddTripScreen() {
   };
 
   const handleDestinationAdd = () => {
-    setDestinationList([...destinationList, { destination: "" }]);
+    setDestinationList([...destinationList, {}]);
   };
 
   const handleDestinationRemove = (index) => {
@@ -38,14 +39,34 @@ export default function AddTripScreen() {
   };
 
   const handleDestinationChange = (e, index) => {
-    const { name, value } = e.target;
     const list = [...destinationList];
-    list[index][name] = value;
+    list[index] = e;
     setDestinationList(list);
+    console.log(index, e);
   };
 
-  function goToBudapest() {
-    openMap({ latitude: 47.49715361442786, longitude: 19.057183488380094 });
+  const handleHotel = (e, index) => {
+    const list = [...placeList];
+    list[index] = e;
+    setPlaceList(list);
+    console.log(index, e);
+  };
+
+  function hotelNavigation() {
+    const mapOptions = {};
+    console.log(destinationList);
+    if (Object.keys(destinationList[0]).length !== 0) {
+      mapOptions.start = placeList[placeList.length - 1].latitude + ", " + placeList[placeList.length - 1].longitude;
+      mapOptions.end = destinationList[destinationList.length - 1].latitude + ", " + destinationList[destinationList.length - 1].longitude;
+      mapOptions.waypoints = destinationList.slice(0, -1).map(destination => destination.latitude + ", " + destination.longitude);
+      mapOptions.navigate = true;
+      mapOptions.mapType = "transit";
+      mapOptions.travelType = "drive";
+    } else {
+      mapOptions.latitude = placeList[placeList.length - 1].latitude;
+      mapOptions.longitude = placeList[placeList.length - 1].longitude;
+    }
+    openMap(mapOptions);
   }
 
   const CoverImagePicker = async () => {
@@ -82,13 +103,25 @@ export default function AddTripScreen() {
       <ScrollView className="flex-col flex-1 bg-white px-4 pt-6"
                   style={{ borderTopRightRadius: 50, borderTopLeftRadius: 50, marginTop: 215 }}>
         <Text style={{ marginBottom: 10, textAlign: "center" }}>You can change cover image, if you click on it.</Text>
-        <View className="flex-row justify-center items-center rounded-full p-1 bg-gray-200 mb-4">
+        <View className="flex-row rounded-full p-1 bg-gray-200 mb-4">
           <TextInput placeholder="Add a name of your trip" className="p-4 flex-1 font-semibold text-gray-700" />
         </View>
-        <View className="flex-row justify-center items-center rounded-full p-1 bg-gray-200 mb-4">
-          <TextInput defaultValue={place} onChangeText={value => setPlace(value)} placeholder="Accommodation name"
-                     className="p-4 flex-1 font-semibold text-gray-700" />
-        </View>
+        {placeList.map((singleHotel, index) => (
+          <View key={index}>
+            <View className="flex-row rounded-full p-1 bg-gray-200 mb-4">
+              <SelectDropdown
+                dropdownStyle={{ borderRadius: 30, backgroundColor: theme.searchInput, width: 350 }}
+                selectedRowStyle={{ backgroundColor: "white" }}
+                buttonStyle={{ borderRadius: 30, backgroundColor: theme.searchInput, width: "100%" }}
+                defaultButtonText={"Accommodation"}
+                data={hotelItems}
+                onSelect={(e) => handleHotel(e, index)}
+                buttonTextAfterSelection={(selectedItem, index) => selectedItem.name}
+                rowTextForSelection={(item, index) => item.name}
+              />
+            </View>
+          </View>
+        ))}
         <View className="p-4">
           <Text className="font-bold text-2xl" style={{ color: theme.text }}>Select date</Text>
         </View>
@@ -117,7 +150,7 @@ export default function AddTripScreen() {
             selectedRowStyle={{ backgroundColor: "white" }}
             buttonStyle={{ borderRadius: 30, backgroundColor: theme.searchInput }}
             dropdownIconPosition="right"
-            defaultButtonText={"27.11."}
+            defaultButtonText={"1. day"}
             data={day}
             onSelect={(selectedItem, index) => {
               console.log(selectedItem, index);
@@ -130,10 +163,16 @@ export default function AddTripScreen() {
         {destinationList.map((singleDestination, index) => (
           <View key={index}>
             <View className="flex-row justify-center items-center rounded-full p-1 bg-gray-200 ml-4 mr-20 mt-4">
-              <TextInput defaultValue={singleDestination.destination}
-                         onChange={(e) => handleDestinationChange(e, index)}
-                         placeholder="Destination"
-                         className="p-4 flex-1 font-semibold text-gray-700" />
+              <SelectDropdown
+                dropdownStyle={{ borderRadius: 30, backgroundColor: theme.searchInput, width: 270, marginLeft: -20 }}
+                selectedRowStyle={{ backgroundColor: "white" }}
+                buttonStyle={{ backgroundColor: theme.searchInput }}
+                data={destinations}
+                onSelect={(e) => handleDestinationChange(e, index)}
+                buttonTextAfterSelection={(selectedItem, index) => selectedItem.name}
+                rowTextForSelection={(item, index) => item.name}
+                defaultButtonText="Destination"
+                className="flex-1 font-semibold text-gray-700" />
               {destinationList.length > 1 &&
                 (<TouchableOpacity style={{ shadowOpacity: 1, end: -60 }}
                                    onPress={() => handleDestinationRemove(index)}>
@@ -166,7 +205,7 @@ export default function AddTripScreen() {
           </View>
         ))}
         <View style={{ paddingLeft: 40, paddingRight: 180, marginTop: 10 }}>
-          <TouchableOpacity onPress={goToBudapest}>
+          <TouchableOpacity onPress={hotelNavigation}>
             <Text style={{
               backgroundColor: theme.button,
               color: "white",

@@ -3,9 +3,11 @@ import { Image, TouchableOpacity, View, ScrollView, Text } from "react-native";
 import { ArrowLeftIcon, MapPinIcon } from "react-native-heroicons/solid";
 import { theme } from "../../theme";
 import { UserContext } from "../../App";
+import { useNavigation } from "@react-navigation/native";
 
-//TODO: item probléma
-export default function EditPostScreen({ navigation }) {
+/*TODO: item probléma*/
+export default function EditPostScreen({ item }) {
+  const navigation = useNavigation();
   const { user } = useContext(UserContext);
   if (user.role !== "ADMIN") {
     navigation.navigate("PlaceSearcher");

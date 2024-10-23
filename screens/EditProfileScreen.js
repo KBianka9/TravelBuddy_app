@@ -9,6 +9,7 @@ import { UserContext } from "../App";
 import { updateUser } from "../contollers/userContoller";
 import axios from "axios";
 import ImagePicker from "react-native-image-crop-picker";
+import Toast from "react-native-toast-message";
 
 export default function EditProfileScreen() {
   const navigation = useNavigation();
@@ -26,12 +27,26 @@ export default function EditProfileScreen() {
         name: updateData.name,
         email: updateData.email,
       });
-      alert("Your data has been successfully saved!");
+      Toast.show({
+        type: "success",
+        text1: "Your data has been successfully saved!",
+        visibilityTime: 5000,
+      });
     } catch (err) {
       if (axios.isAxiosError(err)) {
-        alert(err.response.data.error);
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: err.response.data.error,
+          visibilityTime: 5000,
+        });
       } else {
-        alert(err.message);
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: err.message,
+          visibilityTime: 5000,
+        });
       }
     }
   };

@@ -3,9 +3,9 @@ import { View, Text, Image, TouchableOpacity, ScrollView, Modal, TextInput } fro
 import { SafeAreaView } from "react-native-safe-area-context";
 import { theme } from "../theme";
 import { ArrowLeftIcon, PlusIcon, MinusIcon, ArrowPathIcon } from "react-native-heroicons/solid";
-import { useNavigation } from "@react-navigation/native";
 import SelectDropdown from "react-native-select-dropdown";
 import * as Animatable from "react-native-animatable";
+import Toast from "react-native-toast-message";
 
 const filterOptions = [
   "All",
@@ -207,6 +207,17 @@ export default function PackingListScreen({ navigation }) {
       </Modal>
     );
   }
+
+  useEffect(() => {
+    setTimeout(() => {
+      Toast.show({
+        type: "info",
+        text1: "Info",
+        text2: "Check your packing list, maybe something is missing!",
+        visibilityTime: 10000,
+      });
+    }, 2000);
+  }, []);
 
   return (
     <View className="flex-1 bg-white" style={{ backgroundColor: theme.background }}>

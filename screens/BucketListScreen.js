@@ -7,6 +7,8 @@ import { useNavigation } from "@react-navigation/native";
 import CheckBox from "react-native-check-box";
 import OptionsMenu from "react-native-options-menu";
 import * as Animatable from "react-native-animatable";
+import ImagePicker from "react-native-image-crop-picker";
+import Toast from "react-native-toast-message";
 
 const bucketListItem = [
   {
@@ -83,7 +85,25 @@ export default function BucketListScreen() {
   const [modal, setModal] = useState(false);
   const [status, setStatus] = useState("All");
   const [bucketList, setBucketList] = useState(bucketListItem);
+  const [selectMapImage, setSelectMapImage] = useState("");
 
+  const mapPicker = async () => {
+    try {
+      await ImagePicker.openPicker({
+        cropping: true,
+      }).then(image => {
+        console.log(image, "image");
+        setSelectMapImage(image);
+        Toast.show({
+          type: "success",
+          text1: "Uploaded map!",
+          visibilityTime: 5000,
+        });
+      });
+    } catch (error) {
+      console.log(error, "error");
+    }
+  };
   const setStatusFilter = (status) => {
     if (status !== "All") {
       setBucketList([...bucketListItem.filter(e => e.status === status)]);
@@ -163,10 +183,13 @@ export default function BucketListScreen() {
 
   return (
     <View className="flex-1 bg-white" style={{ backgroundColor: theme.background }}>
-      <Image source={require("../src/assets/MapChart_Map.png")}
-             style={{ height: 390, width: 400 }}
-             className="w-full absolute"
-      />
+      <TouchableOpacity onPress={mapPicker}>
+        <Image
+          source={!selectMapImage ? (require("../src/assets/MapChart_Map.png")) : { uri: selectMapImage?.path }}
+          style={{ height: 390, width: 400 }}
+          className="w-full absolute"
+        />
+      </TouchableOpacity>
       <SafeAreaView className="flex-row justify-start">
         <TouchableOpacity
           onPress={() => navigation.goBack()}

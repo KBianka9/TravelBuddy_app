@@ -8,53 +8,48 @@ import SelectDropdown from "react-native-select-dropdown";
 import openMap from "react-native-open-maps";
 
 /*TODO: idointervallumbol jojjon*/
-const filterOptions = [
-  "09.09.",
-  "10.09.",
-  "11.09.",
-  "12.09.",
-];
+const filterOptions = ["1. day", "2. day", "3. day", "4. day"];
 
 const spectacleItems = [
   {
     spectacleName: "Uluwatu Temple",
-    tags: ["09.09."],
+    tags: ["1. day"],
   },
   {
     spectacleName: "Pura Ulun Danu Beratan",
-    tags: ["09.09."],
+    tags: ["1. day"],
   },
   {
     spectacleName: "Tanah Lot",
-    tags: ["09.09."],
+    tags: ["1. day"],
   },
   {
     spectacleName: "Phool Bagh Park",
-    tags: ["10.09."],
+    tags: ["2. day"],
   },
   {
     spectacleName: "Atal Ghat",
-    tags: ["10.09."],
+    tags: ["2. day"],
   },
   {
     spectacleName: "Nana Rao Restaurant",
-    tags: ["10.09."],
+    tags: ["2. day"],
   },
   {
     spectacleName: "Brahmavart Ghat",
-    tags: ["10.09."],
+    tags: ["2. day"],
   },
   {
     spectacleName: "Moti Jheel",
-    tags: ["11.09."],
+    tags: ["3. day"],
   },
   {
     spectacleName: "Jk Temple",
-    tags: ["11.09."],
+    tags: ["3. day"],
   },
   {
     spectacleName: "Allen Forest Zoo",
-    tags: ["12.09."],
+    tags: ["4. day"],
   },
 ];
 

@@ -51,35 +51,76 @@ const userListItem = [
   },
 ];
 const type = ["id", "name"];
+const permission = [
+  "USER",
+  "ADMIN",
+];
 
 export default function UsersScreen({ navigation }) {
   const [modal, setModal] = useState(false);
+  const [selectedTag, setSelectedTag] = useState(permission[0]);
   const { user } = useContext(UserContext);
+
   if (user.role !== "ADMIN") {
     navigation.navigate("PlaceSearcher");
     return;
   }
 
+  const editMode = () => {
+    setModal(true);
+  };
+
+//TODO: felhasználó adatainak módosítása
   function renderModal() {
     return (
-      <Modal visible={modal} animationType="slide" transparent={true}>
+      <Modal visible={modal} animationType="slide" transparent={true}
+             style={{
+               margin: 20,
+               backgroundColor: "white",
+               borderRadius: 20,
+               padding: 35,
+               alignItems: "center",
+               shadowColor: "#000",
+               shadowOffset: {
+                 width: 0,
+                 height: 2,
+               },
+               shadowOpacity: 0.25,
+               shadowRadius: 4,
+               elevation: 5,
+             }}>
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "rgba(0,0,0,0.5)" }}>
-          <View style={{ backgroundColor: "white", padding: 15, width: "90%", height: 200, borderRadius: 10 }}>
+          <View style={{ backgroundColor: "white", padding: 15, width: "90%", height: 450, borderRadius: 10 }}>
             <Text style={{ color: theme.text, fontSize: 18, fontWeight: "bold" }}>Edit user's data</Text>
+            <Image source={require("../../src/assets/profile.png")}
+                   style={{ height: 70, width: 70, borderRadius: 90, alignSelf: "center" }}
+            />
             <View className="flex-row justify-center items-center rounded-full p-1 bg-gray-200 ml-0 mt-4">
-              <Image source={userListItem.profileImg} />
+              <Text className="p-2 flex-1 font-semibold text-gray-700 ml-2">Kiss Bianka</Text>
             </View>
             <View className="flex-row justify-center items-center rounded-full p-1 bg-gray-200 ml-0 mt-4">
-              <TextInput placeholder={userListItem.name}
-                         className="p-2 flex-1 font-semibold text-gray-700 ml-2"></TextInput>
+              <Text className="p-2 flex-1 font-semibold text-gray-700 ml-2">kiss.bianka@gmail.com</Text>
             </View>
             <View className="flex-row justify-center items-center rounded-full p-1 bg-gray-200 ml-0 mt-4">
-              <TextInput placeholder={userListItem.email}
-                         className="p-2 flex-1 font-semibold text-gray-700 ml-2"></TextInput>
+              <Text className="p-2 flex-1 font-semibold text-gray-700 ml-2">123456789</Text>
             </View>
-            <View className="flex-row justify-center items-center rounded-full p-1 bg-gray-200 ml-0 mt-4">
-              <TextInput placeholder={userListItem.password}
-                         className="p-2 flex-1 font-semibold text-gray-700 ml-2"></TextInput>
+            <View style={{ marginTop: 20, alignItems: "center" }}>
+              <SelectDropdown
+                dropdownStyle={{ borderRadius: 30, backgroundColor: theme.searchInput }}
+                selectedRowStyle={{ backgroundColor: "white" }}
+                selectedRowTextStyle={{ fontSize: 17, fontWeight: "800", color: theme.text }}
+                buttonStyle={{ borderRadius: 30, backgroundColor: theme.searchInput, width: 250 }}
+                buttonTextStyle={{ fontSize: 17, fontWeight: "800", color: theme.text }}
+                rowTextStyle={{ fontSize: 15, fontWeight: "500", color: theme.text }}
+                dropdownIconPosition="right"
+                data={permission}
+                defaultValueByIndex="0"
+                onSelect={(selectedItem, index) => {
+                  setSelectedTag(selectedItem);
+                }}
+                buttonTextAfterSelection={(selectedItem, index) => selectedItem}
+                rowTextForSelection={(item, index) => item}
+              />
             </View>
             <View style={{ flexDirection: "row", marginTop: 25, marginLeft: 130 }}>
               <TouchableOpacity className="py-3 rounded-3xl mx-2"
@@ -107,7 +148,7 @@ export default function UsersScreen({ navigation }) {
         <Image source={item.profileImg}
                style={{ height: 70, width: 70, borderRadius: 90 }}
         />
-        <View style={{ flexDirection: "column" }}>
+        <View style={{ flexDirection: "column", width: 200 }}>
           <Text className="font-bold">{item.name}</Text>
           <Text className="font-bold">{item.email}</Text>
           <Text>Id: {item.id}</Text>
@@ -115,10 +156,10 @@ export default function UsersScreen({ navigation }) {
         </View>
         <OptionsMenu
           button={require("../../src/assets/three-dots.png")}
-          buttonStyle={{ width: 32, height: 20, resizeMode: "contain", marginTop: 10, marginLeft: 20 }}
+          buttonStyle={{ width: 32, height: 20, resizeMode: "contain", marginTop: 10, marginLeft: 10 }}
           destructiveIndex={1}
           options={["Edit", "Delete", "Cancel"]}
-          actions={[renderModal(), null, null]}
+          actions={[editMode, null, null]}
         />
       </View>
     );
@@ -165,6 +206,7 @@ export default function UsersScreen({ navigation }) {
             buttonTextAfterSelection={(selectedItem, index) => selectedItem}
             rowTextForSelection={(item, index) => item}
           />
+          {renderModal()}
           {/*User searcher*/}
           <View className="flex-row items-center rounded-full p-2 bg-gray-200 ml-4">
             <TextInput placeholder="Search user"
@@ -176,7 +218,6 @@ export default function UsersScreen({ navigation }) {
             </TouchableOpacity>
           </View>
         </View>
-        {renderModal()}
         <ScrollView style={{ marginTop: 10 }}>
           <View>
             <FlatList

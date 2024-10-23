@@ -8,12 +8,13 @@ import {
   ClipboardDocumentListIcon,
   UserMinusIcon,
   ArrowRightOnRectangleIcon,
-  HomeModernIcon, DocumentCheckIcon, IdentificationIcon,
+  HomeModernIcon, DocumentCheckIcon, IdentificationIcon, BanknotesIcon, BookOpenIcon,
 } from "react-native-heroicons/outline";
 import storage from "../storage/storage";
 import { UserContext } from "../App";
 import { deleteUser } from "../contollers/userContoller";
 import axios from "axios";
+import Toast from "react-native-toast-message";
 
 export default function ProfileScreen({ navigation }) {
   const { setUser, user } = useContext(UserContext);
@@ -33,13 +34,27 @@ export default function ProfileScreen({ navigation }) {
   )*/
   const handleDelAccount = () => {
     deleteUser(user.userId).then(() => {
-      alert("User deleted successfully");
-      setTimeout(() => handleLogout(), 3000);
+      Toast.show({
+        type: "success",
+        text1: "User deleted successfully",
+        visibilityTime: 3000,
+      });
+      setTimeout(() => handleLogout(), 5000);
     }).catch((err) => {
       if (axios.isAxiosError(err)) {
-        alert(err.response.data.error);
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: err.response.data.error,
+          visibilityTime: 5000,
+        });
       } else {
-        alert(err.message);
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: err.message,
+          visibilityTime: 5000,
+        });
       }
     });
   };
@@ -131,6 +146,36 @@ export default function ProfileScreen({ navigation }) {
               <ClipboardDocumentListIcon size="5" strokeWidth={1}
                                          style={{ color: theme.text, borderRadius: 50, padding: 16 }} />
               <Text style={{ color: theme.iconOff, marginLeft: 16, fontSize: 16 }}>Packing list</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate("SeePassport")}>
+            <View style={{
+              flexDirection: "row",
+              paddingVertical: 10,
+              paddingHorizontal: 30,
+              alignItems: "center",
+              borderBottomWidth: 1,
+              borderColor: theme.button,
+              marginHorizontal: 20,
+            }}>
+              <BookOpenIcon size="5" strokeWidth={1}
+                            style={{ color: theme.text, borderRadius: 50, padding: 16 }} />
+              <Text style={{ color: theme.iconOff, marginLeft: 16, fontSize: 16 }}>Passport</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate("BudgetCalculator")}>
+            <View style={{
+              flexDirection: "row",
+              paddingVertical: 10,
+              paddingHorizontal: 30,
+              alignItems: "center",
+              borderBottomWidth: 1,
+              borderColor: theme.button,
+              marginHorizontal: 20,
+            }}>
+              <BanknotesIcon size="5" strokeWidth={1}
+                             style={{ color: theme.text, borderRadius: 50, padding: 16 }} />
+              <Text style={{ color: theme.iconOff, marginLeft: 16, fontSize: 16 }}>Budget calculator</Text>
             </View>
           </TouchableOpacity>
           {(user.role === "ADMIN") &&

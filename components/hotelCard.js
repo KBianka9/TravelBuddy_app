@@ -39,9 +39,9 @@ export default function HotelCard({ item }) {
           <Text style={{ color: "white", fontWeight: "bold", marginLeft: 6 }}>{item.stars}</Text>
         </View>
         <View style={{ marginLeft: 20, flexDirection: "row" }}>
-          <Text style={{ fontSize: 20, color: "black", fontWeight: "bold" }}>$ {item.price}</Text>
+          <Text style={{ fontSize: 20, color: "black", fontWeight: "bold" }}>{item.price}</Text>
           <View>
-            <TouchableOpacity style={{ shadowOpacity: 1, end: -40 }}
+            <TouchableOpacity style={{ shadowOpacity: 1, end: -30 }}
                               onPress={() => navigation.navigate("Hotel", { ...item })}>
               <Animatable.View animation={"pulse"} easing={"ease-in-out"} iterationCount={"infinite"} duration={1000}
                                style={{ marginTop: -30, backgroundColor: theme.button, borderRadius: 25, padding: 10 }}
