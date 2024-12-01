@@ -18,13 +18,14 @@ export default function HotelCard({ item }) {
         alignItems: "center",
       }}
             className="flex-row justify-center">
-        <Image source={item.image} style={{ height: 220, width: 220, borderRadius: 40, marginTop: 10 }} />
+        <Image source={{ uri: `http://10.0.2.2:3000/accommodationImg/${item.accommodationId}.jpg` }}
+               style={{ height: 220, width: 220, borderRadius: 40, marginTop: 10 }} />
       </View>
       <View className="px-3 space-y-3">
         <View style={{ flexDirection: "row" }}>
           <MapPinIcon style={{ marginTop: 10, marginLeft: 10 }} size="25" color="black" />
           <Text style={{ fontSize: 18, marginTop: 12, color: "black" }}>
-            {item.city}
+            {item.cityCountryName}
           </Text>
         </View>
         <Text style={{ fontSize: 18, marginTop: 5, marginHorizontal: 25, color: "black", fontWeight: "bold" }}
@@ -33,15 +34,15 @@ export default function HotelCard({ item }) {
         </Text>
         <View style={{
           backgroundColor: theme.button, flexDirection: "row", alignItems: "center", borderRadius: 20,
-          marginTop: 10, marginLeft: 20, width: 60, padding: 5,
+          marginTop: 10, marginLeft: 20, width: 50, padding: 5,
         }}>
           <StarIcon style={{ alignItems: "center", padding: 8, marginLeft: 2 }} size="15" color="white" />
-          <Text style={{ color: "white", fontWeight: "bold", marginLeft: 6 }}>{item.stars}</Text>
+          <Text style={{ color: "white", fontWeight: "bold", marginLeft: 6 }}>{item.star}</Text>
         </View>
         <View style={{ marginLeft: 20, flexDirection: "row" }}>
-          <Text style={{ fontSize: 20, color: "black", fontWeight: "bold" }}>{item.price}</Text>
+          <Text style={{ fontSize: 20, color: "black", fontWeight: "bold" }}>{item.nightPrice} €/night</Text>
           <View>
-            <TouchableOpacity style={{ shadowOpacity: 1, end: -30 }}
+            <TouchableOpacity style={{ shadowOpacity: 1, end: -40 }}
                               onPress={() => navigation.navigate("Hotel", { ...item })}>
               <Animatable.View animation={"pulse"} easing={"ease-in-out"} iterationCount={"infinite"} duration={1000}
                                style={{ marginTop: -30, backgroundColor: theme.button, borderRadius: 25, padding: 10 }}

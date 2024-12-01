@@ -8,7 +8,6 @@ import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../App";
 import { updateUser } from "../contollers/userContoller";
 import axios from "axios";
-import ImagePicker from "react-native-image-crop-picker";
 import Toast from "react-native-toast-message";
 
 export default function EditProfileScreen() {
@@ -16,8 +15,6 @@ export default function EditProfileScreen() {
   const [pswVisible, setPswVisible] = useState(true);
   const { user, setUser } = useContext(UserContext);
   const updateData = { ...user };
-  const [selectProfileImage, setSelectProfileImage] = useState("");
-  const [selectCoverImage, setSelectCoverImage] = useState("");
 
   const handleUpdate = async () => {
     try {
@@ -29,7 +26,8 @@ export default function EditProfileScreen() {
       });
       Toast.show({
         type: "success",
-        text1: "Your data has been successfully saved!",
+        text1: "Success",
+        text2: "Your data has been successfully saved!",
         visibilityTime: 5000,
       });
     } catch (err) {
@@ -51,44 +49,13 @@ export default function EditProfileScreen() {
     }
   };
 
-  const ProfileImagePicker = async () => {
-    try {
-      await ImagePicker.openPicker({
-        width: 180,
-        height: 180,
-        cropping: true,
-        cropperCircleOverlay: true,
-      }).then(image => {
-        console.log(image, "image");
-        setSelectProfileImage(image);
-      });
-    } catch (error) {
-      console.log(error, "error");
-    }
-  };
-  const CoverImagePicker = async () => {
-    try {
-      await ImagePicker.openPicker({
-        height: 310,
-        cropping: true,
-      }).then(image => {
-        console.log(image, "image");
-        setSelectCoverImage(image);
-      });
-    } catch (error) {
-      console.log(error, "error");
-    }
-  };
-
   return (
-    <View className="flex-1 bg-white" style={{ backgroundColor: theme.background }}>
-      <TouchableOpacity onPress={() => CoverImagePicker()}>
-        <Image
-          source={!selectCoverImage ? (require("../src/assets/view-toward-sky-forest.jpg")) : { uri: selectCoverImage?.path }}
-          style={{ height: 310 }}
-          className="w-full absolute"
-        />
-      </TouchableOpacity>
+    <View className="flex-1 bg-white">
+      <Image
+        source={{ uri: `http://10.0.2.2:3000/userImg/cover/${user.userId}.jpg` }}
+        style={{ height: 310 }}
+        className="w-full absolute"
+      />
       <SafeAreaView className="flex-row justify-start">
         <TouchableOpacity
           onPress={() => navigation.goBack()}
@@ -99,13 +66,11 @@ export default function EditProfileScreen() {
         <Text style={{ fontSize: 18, paddingTop: 30, paddingLeft: 100, fontWeight: "bold", color: "white" }}>Edit
           profile</Text>
       </SafeAreaView>
-      {/*Change profile picture, full name, email address, password*/}
       <View className="flex-1 bg-white px-8 pt-4"
             style={{ borderTopRightRadius: 50, borderTopLeftRadius: 50, marginTop: 190 }}>
-        <TouchableOpacity onPress={() => ProfileImagePicker()}>
           <View style={{ alignItems: "center", flexDirection: "column" }}>
             <Image
-              source={!selectProfileImage ? (require("../src/assets/profile.png")) : { uri: selectProfileImage?.path }}
+              source={{ uri: `http://10.0.2.2:3000/userImg/profile/${user.userId}.jpg` }}
               style={{
                 width: 180,
                 height: 180,
@@ -114,12 +79,9 @@ export default function EditProfileScreen() {
                 borderWidth: 3,
                 borderColor: "white",
               }}
-              className="justify-center" />
+              className="justify-center mb-4" />
           </View>
-        </TouchableOpacity>
-        <Text style={{ paddingTop: 10, marginHorizontal: -16, marginBottom: 10 }}>You can change profile and cover
-          image, if you click on it.</Text>
-        <ScrollView className="form space-y-2">
+        <View className="form space-y-2">
           <TextInput
             label="Full name"
             className="bg-gray-100 text-gray-700 rounded-2xl mb-3"
@@ -130,10 +92,9 @@ export default function EditProfileScreen() {
           <TextInput
             label="Email address"
             className="bg-gray-100 text-gray-700 rounded-2xl mb-3"
-            autoCorrect={false}
+            editable={false}
             defaultValue={updateData.email}
             onChangeText={newEmail => updateData.email = newEmail}
-            keyboardType={"email-address"}
           />
           <TextInput
             label="Current password"
@@ -167,7 +128,7 @@ export default function EditProfileScreen() {
               <Text className="font-xl font-bold text-center text-white">Save data</Text>
             </TouchableOpacity>
           </View>
-        </ScrollView>
+        </View>
       </View>
     </View>
   );

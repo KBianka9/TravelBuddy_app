@@ -31,12 +31,10 @@ import NewReviewScreen from "../screens/NewReviewScreen";
 import AddTripScreen from "../screens/AddTripScreen";
 import RecentTripScreen from "../screens/RecentTripScreen";
 import BucketListScreen from "../screens/BucketListScreen";
-import MemoriesScreen from "../screens/MemoriesScreen";
 import ReviewScreen from "../screens/ReviewScreen";
 import { UserContext } from "../App";
 import PostScreen from "../screens/admin_screens/PostScreen";
 import UsersScreen from "../screens/admin_screens/UsersScreen";
-import EditPostScreen from "../screens/admin_screens/EditPostScreen";
 import BudgetCalculatorScreen from "../screens/BudgetCalculatorScreen";
 import CategoryDetailScreen from "../screens/CategoryDetailScreen";
 
@@ -61,7 +59,6 @@ export default function AppNavigation() {
           <Stack.Screen name="Profile" options={{ headerShown: false }} component={ProfileScreen} />
           <Stack.Screen name="EditProfile" options={{ headerShown: false }} component={EditProfileScreen} />
           <Stack.Screen name="BucketList" options={{ headerShown: false }} component={BucketListScreen} />
-          <Stack.Screen name="Memories" options={{ headerShown: false }} component={MemoriesScreen} />
           <Stack.Screen name="BudgetCalculator" options={{ headerShown: false }} component={BudgetCalculatorScreen} />
           <Stack.Screen name="CategoryDetail" options={{ headerShown: false }} component={CategoryDetailScreen} />
           <Stack.Screen name="FavoriteHotelsList" options={{ headerShown: false }}
@@ -69,7 +66,6 @@ export default function AppNavigation() {
           <Stack.Screen name="PackingList" options={{ headerShown: false }} component={PackingListScreen} />
           <Stack.Screen name="Users" options={{ headerShown: false }} component={UsersScreen} />
           <Stack.Screen name="Post" options={{ headerShown: false }} component={PostScreen} />
-          <Stack.Screen name="EditPost" options={{ headerShown: false }} component={EditPostScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     );

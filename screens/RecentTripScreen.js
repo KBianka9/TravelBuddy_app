@@ -65,13 +65,14 @@ export default function RecentTripScreen(props) {
   };
   useEffect(() => filter(), [spectacleItems, selectedTag]);
 
-  function goToBudapest() {
+  /*TODO: A kiválasztott napi útiterv nézete a térképen*/
+  function goToDestinations() {
     openMap({ latitude: 47.49715361442786, longitude: 19.057183488380094 });
   }
 
   return (
     <View className="flex-1">
-      <Image source={item.img}
+      <Image source={{ uri: `http://10.0.2.2:3000/accommodationImg/${item.accommodationId}.jpg` }}
              style={{ height: 310 }}
              className="w-full absolute"
       />
@@ -89,12 +90,12 @@ export default function RecentTripScreen(props) {
                   style={{ borderTopRightRadius: 50, borderTopLeftRadius: 50, marginTop: 200 }}>
         <View className="ml-2 space-y-3 mt-5">
           <Text
-            style={{ fontSize: 20, fontStyle: "italic", textAlign: "center", color: "black" }}>{item.tripName}</Text>
+            style={{ fontSize: 20, fontStyle: "italic", textAlign: "center", color: "black" }}>{item.tripTitle}</Text>
           <Text style={{ fontSize: 20, marginTop: 5, color: theme.text, fontWeight: "bold" }}>{item.name}</Text>
           <View style={{ flexDirection: "row", marginLeft: -4 }}>
             <MapPinIcon style={{ marginLeft: 20 }} size="25" color="black" />
             <Text style={{ fontSize: 18, marginTop: 2, color: "black" }}>
-              {item.city}, {item.country}
+              {item.cityCountryName}
             </Text>
           </View>
           {/*TODO:megoldani, hogy a hotel minden adata latszodjon*/}
@@ -102,7 +103,7 @@ export default function RecentTripScreen(props) {
             <Text>About accommodation</Text>
           </TouchableOpacity>
           <Text style={{ fontSize: 20, marginTop: 5, color: theme.text, fontWeight: "bold" }}>
-            {item.date}
+            {item.from} - {item.to}
           </Text>
           <View style={{ flexDirection: "row" }}>
             <Text style={{ fontSize: 24, marginTop: 20, color: "black" }}>Destination(s):</Text>
@@ -132,14 +133,14 @@ export default function RecentTripScreen(props) {
                   borderBottomWidth: 1,
                   borderColor: theme.button,
                   marginHorizontal: 20,
-                }} key={item.spectacleName}>
-                  <Text style={{ color: theme.iconOff, marginLeft: 16, fontSize: 17 }}>{item.spectacleName}</Text>
+                }} key={item.destination}>
+                  <Text style={{ color: theme.iconOff, marginLeft: 16, fontSize: 17 }}>{item.destination}</Text>
                 </View>
               );
             })}
           </View>
           <View style={{ marginRight: 197 }}>
-            <TouchableOpacity onPress={goToBudapest}>
+            <TouchableOpacity onPress={goToDestinations}>
               <Text style={{
                 backgroundColor: theme.background,
                 borderRadius: 50,

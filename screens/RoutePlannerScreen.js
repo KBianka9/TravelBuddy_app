@@ -1,4 +1,4 @@
-import { View, Text, Image, TouchableOpacity, ScrollView, FlatList } from "react-native";
+import { View, Text, Image, TouchableOpacity, ScrollView, FlatList, Alert } from "react-native";
 import { theme } from "../theme";
 import * as React from "react";
 import EmptyList from "../components/emptyList";
@@ -6,49 +6,80 @@ import { useNavigation } from "@react-navigation/native";
 import Video from "react-native-video";
 import * as Animatable from "react-native-animatable";
 import { PlusIcon } from "react-native-heroicons/solid";
+import { useContext, useEffect, useState } from "react";
+import { listWithFav, unFavoriteHotel } from "../contollers/accommodationContoller";
+import Toast from "react-native-toast-message";
+import { listTrip, removeTrip } from "../contollers/tripController";
+import { UserContext } from "../App";
 
-const trip = [
-  {
-    id: 1,
-    tripName: "Indonesian dream",
-    name: "Naya Matahora Island Resort",
-    img: require("../src/assets/indonesia.jpg"),
-    city: "Longa",
-    country: "Indonesia",
-    date: "09.09.2021 - 12.09.2021",
-  },
-  {
-    id: 2,
-    tripName: "Eden in Honolulu",
-    name: "Ala Moana Hotel",
-    img: require("../src/assets/hawaii.jpg"),
-    city: "Honolulu",
-    country: "Hawaii",
-    date: "09.08.2020 - 20.08.2020",
-  },
-  {
-    id: 3,
-    tripName: "The jewel of Italy",
-    name: "Palazzo Tirso Cagliari Mgallery",
-    img: require("../src/assets/sardinia.jpg"),
-    city: "Cagliari",
-    country: "Italy",
-    date: "02.02.2019 - 10.02.2019",
-  },
-  {
-    id: 4,
-    tripName: "Spanish paradise",
-    name: "Villa Station",
-    img: require("../src/assets/SesSalines.jpg"),
-    city: "Ses Salines",
-    country: "Spain",
-    date: "20.12.2018 - 24.12.2018",
-  },
-];
 export default function RoutePlannerScreen() {
   const navigation = useNavigation();
+  const { user } = useContext(UserContext);
+  const [trips, setTrips] = useState([]);
+  const [appKey, setAppKey] = useState(0);
+
+  const reloadApp = () => {
+    setAppKey(prev => prev + 1);
+  };
+
+  useEffect(() => {
+    loadTrips();
+    reloadApp();
+  }, []);
+
+  const loadTrips = async () => {
+    try {
+      const response = await listTrip();
+      setTrips(response.data);
+      console.log(trips);
+    } catch (e) {
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: e.message,
+        visibilityTime: 5000,
+      });
+    }
+  };
+
+  const showAlert = () =>
+    Alert.alert(
+      "Delete trip",
+      "Are you sure you want to delete it?",
+      [
+        {
+          text: "Yes",
+          onPress: () => deleteTrip(),
+        },
+        {
+          text: "No",
+          style: "cancel",
+        },
+      ],
+    );
+  /*TODO: delete trip*/
+  const deleteTrip = async (itemId) => {
+    try {
+      await removeTrip(itemId, user.userId);
+      await loadTrips();
+      Toast.show({
+        type: "success",
+        text1: "Success!",
+        text2: "You can removed the trip from the list!",
+        visibilityTime: 5000,
+      });
+    } catch (e) {
+      Toast.show({
+        type: "error",
+        text1: "Error!",
+        text2: "You can't delete this item from the list!",
+        visibilityTime: 5000,
+      });
+    }
+  };
+
   return (
-    <View className="flex-1 bg-white" style={{ backgroundColor: theme.background }}>
+    <View className="flex-1 bg-white" keyboardShouldPersistTaps={"handled"} key={appKey}>
       <Video
         source={require("../src/assets/video/video.mp4")}
         paused={false}
@@ -79,9 +110,9 @@ export default function RoutePlannerScreen() {
             <Text style={{ color: "black", fontWeight: "bold", fontSize: 24 }}>Recent Trips</Text>
           </View>
           <ScrollView style={{ height: 400 }}>
-            <FlatList data={trip}
+            <FlatList data={trips}
                       numColumns={2}
-                      ListEmptyComponent={<EmptyList message={"You haven't recorded any trips yet"} />}
+                      ListEmptyComponent={<EmptyList />}
                       keyExtractor={trip => trip.id}
                       showsVerticalScrollIndicator={false}
                       columnWrapperStyle={{
@@ -91,14 +122,16 @@ export default function RoutePlannerScreen() {
                       renderItem={({ item }) => {
                         return (
                           <TouchableOpacity onPress={() => navigation.navigate("RecentTrip", { ...item })}
+                                            onLongPress={showAlert}
                                             className="p-3 rotate-2xl mb-3 shadow-sm"
                                             style={{ borderRadius: 25, backgroundColor: theme.background }}>
                             <View>
-                              <Image source={item.img}
-                                     className="w-36 h-36 mb-2 rounded-3xl"
+                              <Image
+                                source={{ uri: `http://10.0.2.2:3000/accommodationImg/${item.accommodationId}.jpg` }}
+                                className="w-36 h-36 mb-2 rounded-3xl"
                               />
-                              <Text style={{ color: "black", fontWeight: "bold" }}>{item.tripName}</Text>
-                              <Text style={{ color: theme.text, fontSize: 12 }}>{item.date}</Text>
+                              <Text style={{ color: "black", fontWeight: "bold" }}>{item.tripTitle}</Text>
+                              <Text style={{ color: theme.text, fontSize: 12 }}>{item.from} - {item.to}</Text>
                             </View>
                           </TouchableOpacity>
                         );

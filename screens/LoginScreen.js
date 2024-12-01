@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 import { TextInput } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { theme } from "../theme";
-import { ArrowLeftcolor } from "react-native-heroicons/solid";
+import { ArrowLeftIcon } from "react-native-heroicons/solid";
 import { login } from "../contollers/userContoller";
 import axios from "axios";
 import { UserContext } from "../App";
@@ -54,7 +54,7 @@ export default function LoginScreen({ navigation }) {
     };
 
     return (
-      <View className="flex-1 bg-white" style={{ backgroundColor: theme.background }}>
+      <View className="flex-1 bg-white">
         <Image source={require("../src/assets/login.jpg")}
                style={{ height: 310 }}
                className="w-full absolute"

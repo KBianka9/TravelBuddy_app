@@ -6,6 +6,7 @@ import { ArrowLeftIcon, PlusIcon, MinusIcon, ArrowPathIcon } from "react-native-
 import SelectDropdown from "react-native-select-dropdown";
 import * as Animatable from "react-native-animatable";
 import Toast from "react-native-toast-message";
+import { listPackingItem } from "../contollers/packinglistController";
 
 const filterOptions = [
   "All",
@@ -24,102 +25,102 @@ const filterOptionsNew = [
 const packingItems = [
   {
     name: "passport",
-    packed: 0,
+    amount: 0,
     tags: ["Essentials"],
   },
   {
     name: "cash",
-    packed: 0,
+    amount: 0,
     tags: ["Essentials"],
   },
   {
     name: "credit card",
-    packed: 0,
+    amount: 0,
     tags: ["Essentials"],
   },
   {
     name: "smart phone and charger",
-    packed: 0,
+    amount: 0,
     tags: ["Essentials"],
   },
   {
     name: "health insurance card",
-    packed: 0,
+    amount: 0,
     tags: ["Essentials"],
   },
   {
     name: "underwear",
-    packed: 0,
+    amount: 0,
     tags: ["Clothes and shoes"],
   },
   {
     name: "pyjamas",
-    packed: 0,
+    amount: 0,
     tags: ["Clothes and shoes"],
   },
   {
     name: "T-shirts",
-    packed: 0,
+    amount: 0,
     tags: ["Clothes and shoes"],
   },
   {
     name: "shorts",
-    packed: 0,
+    amount: 0,
     tags: ["Clothes and shoes"],
   },
   {
     name: "sport shoes",
-    packed: 0,
+    amount: 0,
     tags: ["Clothes and shoes"],
   },
   {
     name: "toothbrush",
-    packed: 0,
+    amount: 0,
     tags: ["Toiletries"],
   },
   {
     name: "tooth pasta",
-    packed: 0,
+    amount: 0,
     tags: ["Toiletries"],
   },
   {
     name: "shower gel",
-    packed: 0,
+    amount: 0,
     tags: ["Toiletries"],
   },
   {
     name: "shampoo and conditioner",
-    packed: 0,
+    amount: 0,
     tags: ["Toiletries"],
   },
   {
     name: "First-aid kit",
-    packed: 0,
+    amount: 0,
     tags: ["Toiletries"],
   },
   {
     name: "painkillers",
-    packed: 0,
+    amount: 0,
     tags: ["Toiletries"],
   },
   {
     name: "sunglasses",
-    packed: 0,
+    amount: 0,
     tags: ["Other"],
   },
   {
     name: "power bank",
-    packed: 0,
+    amount: 0,
     tags: ["Other"],
   },
   {
     name: "books",
-    packed: 0,
+    amount: 0,
     tags: ["Other"],
   },
   {
     name: "tissues",
-    packed: 0,
+    amount: 0,
     tags: ["Other"],
   },
 ];
@@ -130,13 +131,39 @@ export default function PackingListScreen({ navigation }) {
   const [selectedTag, setSelectedTag] = useState(filterOptions[0]);
   const [fullPackingList, setFullPackingList] = useState(packingItems);
   const [filteredPackingList, setFilteredPackingList] = useState(packingItems);
+  const [packingListItems, setPackingListItems] = useState([]);
+  const [appKey, setAppKey] = useState(0);
 
-  useEffect(() => filter(), [fullPackingList, selectedTag]);
+  const reloadApp = () => {
+    setAppKey(prev => prev + 1);
+  };
+
+  useEffect(() => {
+    filter();
+    loadPackingListItems();
+    reloadApp();
+  }, [fullPackingList, selectedTag]);
+
+  const loadPackingListItems = async () => {
+    try {
+      const response = await listPackingItem();
+      setPackingListItems(response.data);
+      console.log(packingListItems);
+    } catch (e) {
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: e.message,
+        visibilityTime: 5000,
+      });
+    }
+  };
+
   const increment = (itemName) => {
     setFullPackingList(prevList =>
       prevList.map(item =>
         item.name === itemName
-          ? { ...item, packed: item.packed + 1 }
+          ? { ...item, amount: item.amount + 1 }
           : item,
       ),
     );
@@ -144,8 +171,8 @@ export default function PackingListScreen({ navigation }) {
   const decrement = (itemName) => {
     setFullPackingList(prevList =>
       prevList.map(item =>
-        item.name === itemName && item.packed !== 0
-          ? { ...item, packed: item.packed - 1 }
+        item.name === itemName && item.amount !== 0
+          ? { ...item, amount: item.amount - 1 }
           : item,
       ),
     );
@@ -220,7 +247,7 @@ export default function PackingListScreen({ navigation }) {
   }, []);
 
   return (
-    <View className="flex-1 bg-white" style={{ backgroundColor: theme.background }}>
+    <View className="flex-1 bg-white" key={appKey}>
       <Image source={require("../src/assets/packinglist.jpg")}
              style={{ height: 310 }}
              className="w-full absolute"
@@ -295,23 +322,23 @@ export default function PackingListScreen({ navigation }) {
                   <Text style={{ fontSize: 18, paddingBottom: 15, paddingLeft: 10 }}
                         className="max-w-[60%]">{item.name}</Text>
                   <View className="flex-row gap-3 items-center" style={{ paddingBottom: 15 }}>
-                    <TouchableOpacity onPress={() => decrement(item.name)} disabled={item.packed === 0}>
-                      <MinusIcon size="2" strokeWidth={1} color={theme.iconOn}
+                    <TouchableOpacity onPress={() => decrement(item.name)} disabled={item.amount === 0}>
+                      <MinusIcon size="2" strokeWidth={2} color={theme.iconOn}
                                  style={{
                                    backgroundColor: theme.decrementButton,
                                    borderRadius: 20,
-                                   padding: 12,
+                                   padding: 14,
                                  }}
                       />
                     </TouchableOpacity>
                     <Text
-                      style={{ fontSize: 22 }}>{item.packed}</Text>
+                      style={{ fontSize: 22 }}>{item.amount}</Text>
                     <TouchableOpacity onPress={() => increment(item.name)}>
                       <PlusIcon size="2" strokeWidth={2} color={theme.iconOn}
                                 style={{
                                   backgroundColor: theme.iconOnG,
                                   borderRadius: 20,
-                                  padding: 12,
+                                  padding: 14,
                                 }}
                       />
                     </TouchableOpacity>

@@ -1,71 +1,29 @@
-import React, { useState } from "react";
-import { View, Text, Image, TouchableOpacity, ScrollView, Modal, TextInput, FlatList, Linking } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  Modal,
+  TextInput,
+  FlatList,
+  Linking,
+  Alert,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { styles, theme } from "../theme";
 import { ArrowLeftIcon, PlusIcon } from "react-native-heroicons/solid";
 import { useNavigation } from "@react-navigation/native";
 import CheckBox from "react-native-check-box";
-import OptionsMenu from "react-native-options-menu";
 import * as Animatable from "react-native-animatable";
 import ImagePicker from "react-native-image-crop-picker";
 import Toast from "react-native-toast-message";
-
-const bucketListItem = [
-  {
-    name: "Big Ben, England",
-    alfa3: "GBR",
-    status: "checked",
-    checked: true,
-  },
-  {
-    name: "Eiffel Tower, France",
-    alfa3: "FRA",
-    status: "unchecked",
-    checked: false,
-  },
-  {
-    name: "Machu Picchu, Peru",
-    alfa3: "PER",
-    status: "checked",
-    checked: true,
-  },
-  {
-    name: "Colosseum, Italy",
-    alfa3: "ITA",
-    status: "unchecked",
-    checked: false,
-  },
-  {
-    name: "Taj Mahal, India",
-    alfa3: "IND",
-    status: "unchecked",
-    checked: true,
-  },
-  {
-    name: "Pyramids of Giza, Egypt",
-    alfa3: "EGY",
-    status: "unchecked",
-    checked: true,
-  },
-  {
-    name: "Statue of Liberty, USA",
-    alfa3: "USA",
-    status: "unchecked",
-    checked: false,
-  },
-  {
-    name: "Sydney Opera House, Australia",
-    alfa3: "AUS",
-    status: "unchecked",
-    checked: true,
-  },
-  {
-    name: "Great Wall of China, China",
-    alfa3: "CHN",
-    status: "unchecked",
-    checked: false,
-  },
-];
+import EmptyList from "../components/emptyList";
+import { addItem, completedItem, listItems, removeItem } from "../contollers/bucketListController";
+import { removeTrip } from "../contollers/tripController";
+import { completedHotel } from "../contollers/accommodationContoller";
+import { UserContext } from "../App";
 
 const listTab = [
   {
@@ -80,16 +38,57 @@ const listTab = [
 ];
 
 export default function BucketListScreen() {
-
   const navigation = useNavigation();
   const [modal, setModal] = useState(false);
   const [status, setStatus] = useState("All");
-  const [bucketList, setBucketList] = useState(bucketListItem);
+  const [bucketList, setBucketList] = useState([]);
   const [selectMapImage, setSelectMapImage] = useState("");
+  const [bucketItem, setBucketItem] = useState([]);
+  const [spectacle, setSpectacle] = useState("");
+  const { user } = useContext(UserContext);
+  const [appKey, setAppKey] = useState(0);
+
+  const reloadApp = () => {
+    setAppKey(prev => prev + 1);
+  };
+
+  useEffect(() => {
+    loadItems();
+    reloadApp();
+  }, []);
+
+  useEffect(() => {
+    setStatusFilter(status);
+  }, [bucketItem]);
+
+  const setStatusFilter = (newStatus) => {
+    if (newStatus === "All") {
+      setBucketList([...bucketItem]);
+    } else {
+      const isCompleted = newStatus === "checked";
+      setBucketList([...bucketItem.filter(item => item.completed === isCompleted)]);
+    }
+    setStatus(newStatus);
+  };
+  const loadItems = async () => {
+    try {
+      const response = await listItems(user.userId);
+      setBucketItem(response.data);
+    } catch (e) {
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: e.message,
+        visibilityTime: 5000,
+      });
+    }
+  };
 
   const mapPicker = async () => {
     try {
       await ImagePicker.openPicker({
+        height: 390,
+        width: 400,
         cropping: true,
       }).then(image => {
         console.log(image, "image");
@@ -104,50 +103,106 @@ export default function BucketListScreen() {
       console.log(error, "error");
     }
   };
-  const setStatusFilter = (status) => {
-    if (status !== "All") {
-      setBucketList([...bucketListItem.filter(e => e.status === status)]);
-    } else {
-      setBucketList(bucketListItem);
+
+  const showAlert = () =>
+    Alert.alert(
+      "Delete bucket item",
+      "Are you sure you want to delete it?",
+      [
+        {
+          text: "Yes",
+          onPress: () => deleteBucketItem(),
+        },
+        {
+          text: "No",
+          style: "cancel",
+        },
+      ],
+    );
+
+  const deleteBucketItem = async (itemId) => {
+    try {
+      await removeItem(itemId, user.userId);
+      await loadItems();
+      Toast.show({
+        type: "success",
+        text1: "Success!",
+        text2: "You can removed the item from the list!",
+        visibilityTime: 5000,
+      });
+    } catch (e) {
+      Toast.show({
+        type: "error",
+        text1: "Error!",
+        text2: "You can't delete this item from the list!",
+        visibilityTime: 5000,
+      });
     }
-    setStatus(status);
   };
-  /*TODO: nem a megfelelo indexu elemet torli ki, a tobbi oldalon nem frissul a valtozas*/
-  const handleItemRemove = (index) => {
-    const list = [...bucketList];
-    list.splice(index, 1);
-    setBucketList(list);
+  /*TODO: checkbox nem működik*/
+  const checkBoxBucket = async (item) => {
+    try {
+      await completedItem(item.bucketListId, user.userId, item.spectacleId, !item.completed);
+      await loadItems();
+    } catch (e) {
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "You can't check the box!",
+        visibilityTime: 5000,
+      });
+    }
+  };
+  /*TODO: új elem hozzáadása*/
+  const saveNewItem = async () => {
+    try {
+      await addItem(spectacle);
+      await loadItems();
+      Toast.show({
+        type: "success",
+        text1: "Success!",
+        text2: "You can save the new item!",
+        visibilityTime: 5000,
+      });
+    } catch (e) {
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "You can't save the new item!",
+        visibilityTime: 5000,
+      });
+    }
   };
 
   const renderItem = ({ item, index }) => {
     return (
-      <View key={index} style={{ borderBottomWidth: 1, borderColor: theme.button, paddingBottom: 15, paddingTop: 20 }}>
-        <CheckBox isChecked={bucketList.checked}
-                  onClick={() => setBucketList({ ...bucketList, checked: !bucketList.checked })}
+      <View key={index} style={{
+        flexDirection: "column",
+        borderBottomWidth: 1,
+        borderColor: theme.button,
+        paddingBottom: 15,
+        paddingTop: 20,
+      }}>
+        <CheckBox isChecked={item.completed}
+                  onClick={() => checkBoxBucket(item)}
                   checkedCheckBoxColor={theme.iconOnG}
                   uncheckedCheckBoxColor={theme.iconOff}
-                  leftText={item.name}
+                  leftText={item.spectacle.name}
                   leftTextStyle={{
-                    marginLeft: 30,
-                    color: bucketList.checked ? theme.iconOnG : theme.iconOff,
+                    marginLeft: 20,
+                    color: item.completed ? theme.iconOnG : theme.iconOff,
                     fontSize: 17,
                     fontWeight: "bold",
                   }}
-                  style={{ paddingRight: 40 }}
-        />
-        <OptionsMenu
-          button={require("../src/assets/three-dots.png")}
-          buttonStyle={{ width: 32, height: 17, resizeMode: "contain", marginTop: -20, marginLeft: 290 }}
-          destructiveIndex={1}
-          options={["Memories", "Delete", "Cancel"]}
-          actions={[memories, handleItemRemove, null]}
+                  rightTextView={
+                    <TouchableOpacity onPress={showAlert}>
+                      <Image source={require("../src/assets/bin.jpg")}
+                             style={{ width: 35, height: 25, resizeMode: "contain", marginLeft: 5 }} />
+                    </TouchableOpacity>
+                  }
         />
       </View>
     );
-  };
-
-  const memories = () => {
-    navigation.navigate("Memories");
   };
 
   function renderModal() {
@@ -160,13 +215,16 @@ export default function BucketListScreen() {
             </Text>
             <View className="flex-row justify-center items-center rounded-full p-1 bg-gray-200 ml-0 mt-4">
               <TextInput placeholder="Spectacle, Country"
-                         className="p-2 flex-1 font-semibold text-gray-700 ml-2"></TextInput>
+                         className="p-2 flex-1 font-semibold text-gray-700 ml-2"
+                         value={spectacle}
+                         onChangeText={value => setSpectacle(value)}
+                         require={true}
+              />
             </View>
             <View style={{ flexDirection: "row", marginTop: 25, marginLeft: 130 }}>
               <TouchableOpacity className="py-3 rounded-3xl mx-2"
                                 style={{ backgroundColor: theme.iconOnG }}
-                                onPress={() => {
-                                }}>
+                                onPress={saveNewItem}>
                 <Text className="font-xl text-center text-white px-6">Save</Text>
               </TouchableOpacity>
               <TouchableOpacity className="py-3 rounded-3xl mx-2"
@@ -182,12 +240,12 @@ export default function BucketListScreen() {
   }
 
   return (
-    <View className="flex-1 bg-white" style={{ backgroundColor: theme.background }}>
+    <View className="flex-1 bg-white" key={appKey}>
       <TouchableOpacity onPress={mapPicker}>
         <Image
-          source={!selectMapImage ? (require("../src/assets/MapChart_Map.png")) : { uri: selectMapImage?.path }}
+          source={!selectMapImage ? (require("../src/assets/MapChart_Map.jpg")) : { uri: selectMapImage?.path }}
           style={{ height: 390, width: 400 }}
-          className="w-full absolute"
+          className="absolute"
         />
       </TouchableOpacity>
       <SafeAreaView className="flex-row justify-start">
@@ -207,7 +265,7 @@ export default function BucketListScreen() {
           >
             <Animatable.View animation={"pulse"} easing={"ease-in-out"} iterationCount={"infinite"} duration={1000}
                              style={{
-                               marginTop: -45,
+                               marginTop: -60,
                                backgroundColor: theme.button,
                                borderRadius: 50,
                                padding: 10,
@@ -218,28 +276,33 @@ export default function BucketListScreen() {
             </Animatable.View>
           </TouchableOpacity>
         </View>
-        <ScrollView style={{ marginTop: 15 }}>
-          <View style={{ flexDirection: "row", marginBottom: 25 }}>
-            {listTab.map(e => (
-              <TouchableOpacity className="ml-3"
-                                onPress={() => setStatusFilter(e.status)}
-                                style={[styles.backgroundButton, status === e.status && styles.backgroundActiveButton]}
-              >
-                <Text style={{
-                  fontWeight: "bold", textAlign: "center", paddingHorizontal: 22,
-                  paddingVertical: 10,
-                }}>{e.status}</Text>
-              </TouchableOpacity>
-            ))}
-            {renderModal()}
-          </View>
+        <View style={{ flexDirection: "row", marginTop: 15 }}>
+          {listTab.map(e => (
+            <TouchableOpacity className="ml-3"
+                              onPress={() => setStatusFilter(e.status)}
+                              style={[styles.backgroundButton, status === e.status && styles.backgroundActiveButton]}
+            >
+              <Text style={{
+                fontWeight: "bold", textAlign: "center", paddingHorizontal: 22,
+                paddingVertical: 10,
+              }}>{e.status}</Text>
+            </TouchableOpacity>
+          ))}
+          {renderModal()}
+        </View>
+        <ScrollView>
           <FlatList
             data={bucketList}
-            keyExtractor={(e, i) => i.toString()}
+            ListEmptyComponent={
+              <View>
+                <EmptyList />
+              </View>
+            }
+            keyExtractor={(e, i) => e.bucketListId + e.completed.toString()}
             renderItem={renderItem}
           />
         </ScrollView>
-        <View style={{ paddingTop: 10 }}>
+        <View style={{ paddingTop: 5, marginBottom: -15 }}>
           <TouchableOpacity className="py-3 rounded-full mb-5 mx-4" style={{ backgroundColor: theme.button }}
                             onPress={() => Linking.openURL("https://www.mapchart.net/world.html")}>
             <Text className="font-xl font-bold text-center text-white">Show as map</Text>

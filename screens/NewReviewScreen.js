@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Image, TouchableOpacity, View, ScrollView, Text, TextInput } from "react-native";
 import { ArrowLeftIcon, CameraIcon } from "react-native-heroicons/solid";
 import { theme } from "../theme";
@@ -7,11 +7,21 @@ import { useNavigation } from "@react-navigation/native";
 import * as Animatable from "react-native-animatable";
 import ImagePicker from "react-native-image-crop-picker";
 import Carousel from "react-native-snap-carousel";
+import SearchableDropDown from "react-native-searchable-dropdown";
+import { hotelItems, reviewItems } from "../constants";
+import Toast from "react-native-toast-message";
+import { search } from "../contollers/accommodationContoller";
+import { addReview } from "../contollers/reviewController";
 
 export default function NewReviewScreen() {
   const navigation = useNavigation();
   const [reviewImages, setReviewImages] = useState([]);
+  const [cityCountryName, setCityCountryName] = useState(null);
+  const [cityCountryNameList, setCityCountryNameList] = useState(null);
 
+  useEffect(() => {
+    setCityCountryNameList(getDropDownCityCountryNames());
+  }, []);
   const _renderItem = ({ item, index }) => {
     return (
       <View key={index}>
@@ -50,6 +60,43 @@ export default function NewReviewScreen() {
       setReviewImages(imageList);
     }).catch(error => console.log("Error: ", error.message));
   };
+  /*TODO: megosztás fgv*/
+  const shareReview = async () => {
+    if (cityCountryName === null || revText === null) {
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "City or text is missing!",
+        visibilityTime: 5000,
+      });
+    }
+    try {
+      console.log(cityCountryName.name, revText);
+      await addReview(cityCountryName.name, revText);
+      Toast.show({
+        type: "success",
+        text1: "Success",
+        text2: "Your review has been successfully shared!",
+        visibilityTime: 5000,
+      });
+    } catch (e) {
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: e.message,
+        visibilityTime: 5000,
+      });
+    }
+  };
+  /*TODO: ne a reviewItems, hanem az review adatbázisból jöjjön --- keresés után a szem ikon nem nyitja meg a hotelt*/
+  const getDropDownCityCountryNames = () => {
+    const values = [...new Set(reviewItems.map(review => review.cityCountry))].map((cityCountryName, index) => ({
+      id: index,
+      name: cityCountryName,
+    }));
+    console.log(values);
+    return values;
+  };
 
   return (
     <View className="flex-1">
@@ -86,12 +133,45 @@ export default function NewReviewScreen() {
           </TouchableOpacity>
         </View>
         <ScrollView>
-          <View className="rounded-full p-1 bg-gray-200 mb-2 mt-4 mx-4">
-            <TextInput placeholder="city, country name" className="p-4 flex-1 font-semibold text-gray-700" />
+          {/*TODO: kereső, listázza ki a városokat és a kereső ikonra kattintva keressen*/}
+          <View className="flex-row justify-center items-center my-2">
+            <SearchableDropDown
+              onItemSelect={(item) => {
+                setCityCountryName(item);
+              }}
+              containerStyle={{
+                padding: 10,
+                marginTop: 2,
+                backgroundColor: "#e3e5e9",
+                borderRadius: 30,
+                width: 335,
+              }}
+              itemStyle={{
+                padding: 10,
+                marginTop: 10,
+                backgroundColor: "#f8f9fa",
+                borderRadius: 30,
+              }}
+              itemTextStyle={{ color: "#222" }}
+              itemsContainerStyle={{ maxHeight: 150 }}
+              items={cityCountryNameList}
+              resetValue={false}
+              textInputProps={
+                {
+                  underlineColorAndroid: "transparent",
+                  value: cityCountryName ? cityCountryName.name : "Enter the city",
+                }
+              }
+              listProps={
+                {
+                  nestedScrollEnabled: true,
+                }
+              }
+            />
           </View>
           {/*Review box*/}
           <View className="p-1 bg-gray-200 mx-6 mb-6 mt-2" style={{ height: 200, borderRadius: 25 }}>
-            <TextInput placeholder="Write your expression about 250-300 word" multiline={true} numberoflines={10}
+            <TextInput placeholder="Write your expression about 1024 characters" multiline={true} numberoflines={10}
                        className="p-4 flex-1 font-semibold text-gray-700"
             />
           </View>
@@ -118,8 +198,7 @@ export default function NewReviewScreen() {
           <View style={{ marginVertical: 20, marginHorizontal: 50 }}>
             <TouchableOpacity className="py-3 rounded-xl"
                               style={{ backgroundColor: theme.button }}
-                              onPress={() => {
-                              }}>
+                              onPress={shareReview}>
               <Text className="font-xl font-bold text-center text-white">Share</Text>
             </TouchableOpacity>
           </View>

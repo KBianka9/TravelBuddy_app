@@ -95,6 +95,7 @@ export default function App() {
   }).then(ret => {
     setUser(ret.user);
   }).catch(_ => setUser(null));
+
   return (
     <UserContext.Provider value={{ user, setUser }}>
       <AppNavigation></AppNavigation>

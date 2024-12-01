@@ -23,4 +23,5 @@ export const styles = {
   iconOff: { color: theme.iconOff },
   searchInput: { backgroundColor: theme.searchInput },
   decrementButton: { backgroundColor: theme.decrementButton },
+  selectedDate: { backgroundColor: theme.selectedDate },
 };

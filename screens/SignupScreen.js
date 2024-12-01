@@ -46,7 +46,7 @@ export default function SignupScreen() {
   };
 
   return (
-    <View className="flex-1 bg-white" style={{ backgroundColor: theme.background }}>
+    <View className="flex-1 bg-white">
       <Image source={require("../src/assets/signup.jpg")}
              style={{ height: 310 }}
              className="w-full absolute"

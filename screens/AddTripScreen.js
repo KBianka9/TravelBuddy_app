@@ -8,23 +8,33 @@ import SelectDropdown from "react-native-select-dropdown";
 import * as Animatable from "react-native-animatable";
 import openMap from "react-native-open-maps";
 import CalendarPicker from "react-native-calendar-picker";
-import ImagePicker from "react-native-image-crop-picker";
 import { destinations, hotelItems } from "../constants";
+import Toast from "react-native-toast-message";
 
 export default function AddTripScreen() {
   const navigation = useNavigation();
   const [placeList, setPlaceList] = useState([{}]);
   const [date, setDate] = useState("");
   const [destinationList, setDestinationList] = useState([{}]);
-  const [selectCoverImage, setSelectCoverImage] = useState("");
 
   const day = ["1. day", "2. day", "3. day", "4. day"];
 
   const handleAddTrip = () => {
     if (placeList && date) {
+      Toast.show({
+        type: "success",
+        text1: "Success",
+        text2: "Your trip has been saved!",
+        visibilityTime: 5000,
+      });
       navigation.navigate("RoutePlanner");
     } else {
-
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Your trip has not been saved!",
+        visibilityTime: 5000,
+      });
     }
   };
 
@@ -69,29 +79,13 @@ export default function AddTripScreen() {
     openMap(mapOptions);
   }
 
-  const CoverImagePicker = async () => {
-    try {
-      await ImagePicker.openPicker({
-        height: 310,
-        cropping: true,
-      }).then(image => {
-        console.log(image, "image");
-        setSelectCoverImage(image);
-      });
-    } catch (error) {
-      console.log(error, "error");
-    }
-  };
-
   return (
-    <View className="flex-1 bg-white" style={{ backgroundColor: theme.background }}>
-      <TouchableOpacity onPress={() => CoverImagePicker()}>
-        <Image
-          source={!selectCoverImage ? (require("../src/assets/flat-lay-hands-holding-photos.jpg")) : { uri: selectCoverImage?.path }}
-               style={{ height: 310 }}
-               className="w-full absolute"
-        />
-      </TouchableOpacity>
+    <View className="flex-1 bg-white">
+      <Image
+        source={require("../src/assets/flat-lay-hands-holding-photos.jpg")}
+        style={{ height: 310 }}
+        className="w-full absolute"
+      />
       <SafeAreaView className="flex-row justify-between items-center mr-2 mt-3">
         <TouchableOpacity
           onPress={() => navigation.goBack()}
@@ -102,7 +96,6 @@ export default function AddTripScreen() {
       </SafeAreaView>
       <ScrollView className="flex-col flex-1 bg-white px-4 pt-6"
                   style={{ borderTopRightRadius: 50, borderTopLeftRadius: 50, marginTop: 215 }}>
-        <Text style={{ marginBottom: 10, textAlign: "center" }}>You can change cover image, if you click on it.</Text>
         <View className="flex-row rounded-full p-1 bg-gray-200 mb-4">
           <TextInput placeholder="Add a name of your trip" className="p-4 flex-1 font-semibold text-gray-700" />
         </View>
@@ -216,7 +209,7 @@ export default function AddTripScreen() {
           </TouchableOpacity>
         </View>
         <View style={{ paddingTop: 40 }}>
-          <TouchableOpacity className="py-3 rounded-full mb-20 mx-4" style={{ backgroundColor: theme.button }}
+          <TouchableOpacity className="py-3 rounded-full mb-10 mx-4" style={{ backgroundColor: theme.button }}
                             onPress={handleAddTrip}>
             <Text className="font-xl font-bold text-center text-white">Save trip</Text>
           </TouchableOpacity>

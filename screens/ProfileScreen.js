@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import { View, Text, Image, TouchableOpacity, ScrollView, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { theme } from "../theme";
 import {
@@ -8,7 +8,7 @@ import {
   ClipboardDocumentListIcon,
   UserMinusIcon,
   ArrowRightOnRectangleIcon,
-  HomeModernIcon, DocumentCheckIcon, IdentificationIcon, BanknotesIcon, BookOpenIcon,
+  HomeModernIcon, DocumentCheckIcon, IdentificationIcon, BanknotesIcon,
 } from "react-native-heroicons/outline";
 import storage from "../storage/storage";
 import { UserContext } from "../App";
@@ -17,21 +17,33 @@ import axios from "axios";
 import Toast from "react-native-toast-message";
 
 export default function ProfileScreen({ navigation }) {
-  const { setUser, user } = useContext(UserContext);
-  console.log({ user });
-  /*TODO: felhasználó törlése->felugró ablak*/
-  /*Alert.alert(
+  const { user, setUser } = useContext(UserContext);
+  const [appKey, setAppKey] = useState(0);
+
+  const reloadApp = () => {
+    setAppKey(prev => prev + 1);
+  };
+
+  useEffect(() => {
+    reloadApp();
+  }, []);
+
+  const showAlert = () =>
+    Alert.alert(
       "Delete Account",
       "Are you sure you want to delete your account?",
       [
-          {
-              text: "Cancel"
-          },
-          {
-              text: "Continue", onPress: {handleDelAccount}
-          },
-      ]
-  )*/
+        {
+          text: "Yes",
+          onPress: () => handleDelAccount(),
+        },
+        {
+          text: "No",
+          style: "cancel",
+        },
+      ],
+    );
+
   const handleDelAccount = () => {
     deleteUser(user.userId).then(() => {
       Toast.show({
@@ -66,16 +78,17 @@ export default function ProfileScreen({ navigation }) {
     setUser(null);
     navigation.navigate("Login");
   };
+
   return (
-    <View className="flex-1" style={{ backgroundColor: theme.background }}>
+    <View className="flex-1" key={appKey}>
       <SafeAreaView>
-        <Image source={require("../src/assets/view-toward-sky-forest.jpg")}
+        <Image source={{ uri: `http://10.0.2.2:3000/userImg/cover/${user.userId}.jpg` }}
                style={{ height: 370, width: 393 }} />
       </SafeAreaView>
       <View className="flex-col flex-1 bg-white px-4"
             style={{ borderTopRightRadius: 50, borderTopLeftRadius: 50, marginTop: -110 }}>
         <View style={{ alignItems: "center" }}>
-          <Image source={require("../src/assets/corgi.webp")}
+          <Image source={{ uri: `http://10.0.2.2:3000/userImg/profile/${user.userId}.jpg` }}
                  style={{
                    width: 180,
                    height: 180,
@@ -148,21 +161,6 @@ export default function ProfileScreen({ navigation }) {
               <Text style={{ color: theme.iconOff, marginLeft: 16, fontSize: 16 }}>Packing list</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate("SeePassport")}>
-            <View style={{
-              flexDirection: "row",
-              paddingVertical: 10,
-              paddingHorizontal: 30,
-              alignItems: "center",
-              borderBottomWidth: 1,
-              borderColor: theme.button,
-              marginHorizontal: 20,
-            }}>
-              <BookOpenIcon size="5" strokeWidth={1}
-                            style={{ color: theme.text, borderRadius: 50, padding: 16 }} />
-              <Text style={{ color: theme.iconOff, marginLeft: 16, fontSize: 16 }}>Passport</Text>
-            </View>
-          </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate("BudgetCalculator")}>
             <View style={{
               flexDirection: "row",
@@ -212,7 +210,7 @@ export default function ProfileScreen({ navigation }) {
               </View>
             </TouchableOpacity>
           }
-          <TouchableOpacity onPress={handleDelAccount}>
+          <TouchableOpacity onPress={showAlert}>
             <View style={{
               flexDirection: "row",
               paddingVertical: 10,
@@ -230,11 +228,10 @@ export default function ProfileScreen({ navigation }) {
           <TouchableOpacity onPress={handleLogout}>
             <View style={{
               flexDirection: "row",
-              paddingVertical: 10,
+              paddingTop: 10,
               paddingHorizontal: 30,
               alignItems: "center",
               marginHorizontal: 20,
-              marginBottom: 10,
             }}>
               <ArrowRightOnRectangleIcon size="5" strokeWidth={1}
                                          style={{ color: theme.text, borderRadius: 50, padding: 16 }} />
