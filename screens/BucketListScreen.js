@@ -17,12 +17,9 @@ import { ArrowLeftIcon, PlusIcon } from "react-native-heroicons/solid";
 import { useNavigation } from "@react-navigation/native";
 import CheckBox from "react-native-check-box";
 import * as Animatable from "react-native-animatable";
-import ImagePicker from "react-native-image-crop-picker";
 import Toast from "react-native-toast-message";
 import EmptyList from "../components/emptyList";
 import { addItem, completedItem, listItems, removeItem } from "../contollers/bucketListController";
-import { removeTrip } from "../contollers/tripController";
-import { completedHotel } from "../contollers/accommodationContoller";
 import { UserContext } from "../App";
 
 const listTab = [
@@ -42,7 +39,6 @@ export default function BucketListScreen() {
   const [modal, setModal] = useState(false);
   const [status, setStatus] = useState("All");
   const [bucketList, setBucketList] = useState([]);
-  const [selectMapImage, setSelectMapImage] = useState("");
   const [bucketItem, setBucketItem] = useState([]);
   const [spectacle, setSpectacle] = useState("");
   const { user } = useContext(UserContext);
@@ -74,6 +70,7 @@ export default function BucketListScreen() {
     try {
       const response = await listItems(user.userId);
       setBucketItem(response.data);
+      console.log(bucketItem);
     } catch (e) {
       Toast.show({
         type: "error",
@@ -81,26 +78,6 @@ export default function BucketListScreen() {
         text2: e.message,
         visibilityTime: 5000,
       });
-    }
-  };
-
-  const mapPicker = async () => {
-    try {
-      await ImagePicker.openPicker({
-        height: 390,
-        width: 400,
-        cropping: true,
-      }).then(image => {
-        console.log(image, "image");
-        setSelectMapImage(image);
-        Toast.show({
-          type: "success",
-          text1: "Uploaded map!",
-          visibilityTime: 5000,
-        });
-      });
-    } catch (error) {
-      console.log(error, "error");
     }
   };
 
@@ -119,7 +96,7 @@ export default function BucketListScreen() {
         },
       ],
     );
-
+  /*TODO: elem törlése*/
   const deleteBucketItem = async (itemId) => {
     try {
       await removeItem(itemId, user.userId);
@@ -241,13 +218,11 @@ export default function BucketListScreen() {
 
   return (
     <View className="flex-1 bg-white" key={appKey}>
-      <TouchableOpacity onPress={mapPicker}>
-        <Image
-          source={!selectMapImage ? (require("../src/assets/MapChart_Map.jpg")) : { uri: selectMapImage?.path }}
-          style={{ height: 390, width: 400 }}
-          className="absolute"
-        />
-      </TouchableOpacity>
+      <Image
+        source={require("../src/assets/MapChart_Map.jpg")}
+        style={{ height: 390, width: 400 }}
+        className="absolute"
+      />
       <SafeAreaView className="flex-row justify-start">
         <TouchableOpacity
           onPress={() => navigation.goBack()}

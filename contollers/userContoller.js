@@ -16,6 +16,9 @@ export function updateUser({ userId, name, email, currentPassword, newPassword }
   return customAxios.put("/user/update", { userId, name, email, currentPassword, newPassword });
 }
 
+export function searchByNameReview(name) {
+  return customAxios.get("/user/searchUserReview", { params: { name } });
+}
 export function searchByName(name) {
   return customAxios.get("/user/search", { params: { name } });
 }
@@ -25,7 +28,7 @@ export function roleUser({ userId }) {
 }
 
 export function list() {
-  return customAxios.get(`/user/list/`);
+  return customAxios.get("/user/list/");
 }
 
 export function listByName(name) {

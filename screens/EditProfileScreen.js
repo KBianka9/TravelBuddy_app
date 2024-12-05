@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { theme } from "../theme";
@@ -15,6 +15,15 @@ export default function EditProfileScreen() {
   const [pswVisible, setPswVisible] = useState(true);
   const { user, setUser } = useContext(UserContext);
   const updateData = { ...user };
+  const [appKey, setAppKey] = useState(0);
+
+  const reloadApp = () => {
+    setAppKey(prev => prev + 1);
+  };
+
+  useEffect(() => {
+    reloadApp();
+  }, []);
 
   const handleUpdate = async () => {
     try {
@@ -50,7 +59,7 @@ export default function EditProfileScreen() {
   };
 
   return (
-    <View className="flex-1 bg-white">
+    <View key={appKey} className="flex-1 bg-white">
       <Image
         source={{ uri: `http://10.0.2.2:3000/userImg/cover/${user.userId}.jpg` }}
         style={{ height: 310 }}
@@ -92,7 +101,8 @@ export default function EditProfileScreen() {
           <TextInput
             label="Email address"
             className="bg-gray-100 text-gray-700 rounded-2xl mb-3"
-            editable={false}
+            autoCorrect={false}
+            keyboardType={"email-address"}
             defaultValue={updateData.email}
             onChangeText={newEmail => updateData.email = newEmail}
           />

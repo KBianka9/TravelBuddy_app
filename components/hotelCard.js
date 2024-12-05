@@ -8,6 +8,7 @@ import * as Animatable from "react-native-animatable";
 
 export default function HotelCard({ item }) {
   const navigation = useNavigation();
+
   return (
     <View style={{ borderRadius: 50, backgroundColor: theme.background, height: 400, width: 250, marginBottom: 20 }}>
       <View style={{

@@ -1,5 +1,5 @@
 import { View, Image } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 export default function EmptyList() {
   return (

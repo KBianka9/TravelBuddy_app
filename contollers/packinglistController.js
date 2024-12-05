@@ -4,8 +4,8 @@ export function addPackingItem(category, name) {
   return customAxios.post("/packingItem/add", { category, name });
 }
 
-export function listPackingItem() {
-  return customAxios.get(`/packingItem/listItems`);
+export function listPackingItem(userId) {
+  return customAxios.get(`/packingItem/listItems${userId}`);
 }
 
 export function resetPackingList(packingItemId) {
@@ -13,5 +13,5 @@ export function resetPackingList(packingItemId) {
 }
 
 export function amountPackingItem(packingItem, amount) {
-  return customAxios.post("/packingItemOnUser/add", { packingItem, amount });
+  return customAxios.post("/packingItemOnUser/update", { packingItem, amount });
 }

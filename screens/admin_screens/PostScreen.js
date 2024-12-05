@@ -8,7 +8,7 @@ import { reviewItems } from "../../constants";
 import { UserContext } from "../../App";
 import { useNavigation } from "@react-navigation/native";
 import SearchableDropDown from "react-native-searchable-dropdown";
-import { searchByName } from "../../contollers/userContoller";
+import { searchByName, searchByNameReview } from "../../contollers/userContoller";
 import Toast from "react-native-toast-message";
 import EmptyList from "../../components/emptyList";
 import { deleteReview, list } from "../../contollers/reviewController";
@@ -64,10 +64,11 @@ export default function PostScreen() {
       });
     }
     try {
-      const response = await searchByName(username);
+      const response = await searchByNameReview(username.name);
       const postList = response.data;
       console.log(postList);
-      if (postList.length === 0) {
+      /*TODO: nem jeleníti meg a találato(ka)t*/
+      if (postList.report === false) {
         Toast.show({
           type: "error",
           text1: "Sorry",
@@ -135,35 +136,38 @@ export default function PostScreen() {
 
   const renderItem = ({ item, index }) => {
     if (item.report === true) {
-      return (<View key={index} className="flex-row gap-x-3 items-center"
-                    style={{ borderBottomWidth: 1, borderColor: theme.button, paddingVertical: 15 }}>
-        <View style={{ flexDirection: "row" }}>
-          <Image source={{ uri: `http://10.0.2.2:3000/userImg/profile/${item.authorId}.jpg` }}
-                 style={{ height: 70, width: 70, borderRadius: 90, marginRight: 10 }}
-          />
-          <View style={{ flexDirection: "column" }}>
-            <View style={{ flexDirection: "row" }}>
-              <View style={{ flexDirection: "column" }}>
-                {/*TODO: nem jelenik meg a név (item.author.name)*/}
-                <Text className="font-bold">{item.name}</Text>
-                <Text className="font-bold">{item.email}</Text>
-                <Text>Id: {item.reviewId}</Text>
-                <Text> {formatDate(item.createdAt)}</Text>
-                <Text className="font-bold">{item.cityCountryName}</Text>
+      return (
+        <View key={index} className="flex-row gap-x-3 items-center"
+              style={{ borderBottomWidth: 1, borderColor: theme.button, paddingVertical: 15 }}>
+          <View style={{ flexDirection: "row" }}>
+            <Image source={{ uri: `http://10.0.2.2:3000/userImg/profile/${item.authorId}.jpg` }}
+                   style={{ height: 70, width: 70, borderRadius: 90, marginRight: 10 }}
+            />
+            <View style={{ flexDirection: "column" }}>
+              <View style={{ flexDirection: "row" }}>
+                <View style={{ flexDirection: "column" }}>
+                  {/*TODO: nem jelenik meg a név, email (item.author.name)*/}
+                  <Text className="font-bold">{item.name}Hiányzik Név</Text>
+                  <Text className="font-bold">{item.email}hiányzik@gmail.com</Text>
+                  <Text>Id: {item.reviewId}</Text>
+                  <Text> {formatDate(item.createdAt)}</Text>
+                  <Text className="font-bold">{item.cityCountryName}</Text>
+                </View>
+                <View style={{ flexDirection: "column", end: -60, marginTop: 5 }}>
+                  <Image source={require("../../src/assets/report.jpg")}
+                         style={{ height: 35, width: 35, marginBottom: 25 }} />
+                  <TouchableOpacity onPress={showAlert}>
+                    <Image source={require("../../src/assets/bin.jpg")}
+                           style={{ width: 35, height: 25, resizeMode: "contain" }} />
+                  </TouchableOpacity>
+                </View>
               </View>
-              <View style={{ flexDirection: "column", end: -100, marginTop: 5 }}>
-                <Image source={require("../../src/assets/report.jpg")}
-                       style={{ height: 35, width: 35, marginBottom: 25 }} />
-                <TouchableOpacity onPress={showAlert}>
-                  <Image source={require("../../src/assets/bin.jpg")}
-                         style={{ width: 35, height: 25, resizeMode: "contain" }} />
-                </TouchableOpacity>
+              <View>
+                <Text style={{ width: 300, marginTop: 20, marginLeft: -60 }}>{item.revText}</Text>
               </View>
             </View>
-            <Text style={{ width: 200, marginTop: 20 }}>{item.revText}</Text>
           </View>
-        </View>
-      </View>);
+        </View>);
     }
   };
 

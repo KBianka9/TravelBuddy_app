@@ -5,7 +5,7 @@ export function search(cityCountryName) {
 }
 
 export function list() {
-  return customAxios.get(`/review/list/`);
+  return customAxios.get(`/review/list`);
 }
 
 export function addReview(cityCountryName, revText) {

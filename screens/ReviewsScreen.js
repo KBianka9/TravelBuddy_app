@@ -12,6 +12,7 @@ import { PlusIcon } from "react-native-heroicons/solid";
 import SearchableDropDown from "react-native-searchable-dropdown";
 import { list, search } from "../contollers/reviewController";
 import Toast from "react-native-toast-message";
+import ReportedReviewCard from "../components/reportedReviewCard";
 
 export default function ReviewsScreen() {
   const navigation = useNavigation();
@@ -54,7 +55,7 @@ export default function ReviewsScreen() {
     }
     try {
       console.log(cityCountryName.cityCountryName);
-      const response = await search(cityCountryName.cityCountryName);
+      const response = await search(cityCountryName.name);
       const reviewList = response.data;
       console.log(reviewList);
       if (reviewList.length === 0) {
@@ -134,7 +135,6 @@ export default function ReviewsScreen() {
           </View>
         </SafeAreaView>
         {/*Review cards*/}
-        {/*TODO: csak azokat jelenítse meg, aminek a report értéke false*/}
         <View className="py-2">
           <Carousel containerCustomStyle={{ overflow: "visible", borderRadius: 50 }}
                     data={reviews}
@@ -142,6 +142,8 @@ export default function ReviewsScreen() {
                     renderItem={({ item }) => {
                       if (item.report === false) {
                         return <ReviewCard item={item} />;
+                      } else {
+                        return <ReportedReviewCard item={item} />;
                       }
                     }}
                     firstItem={1}

@@ -3,15 +3,17 @@ import { Image, TouchableOpacity, View, ScrollView, Text, Alert } from "react-na
 import { ArrowLeftIcon, MapPinIcon } from "react-native-heroicons/solid";
 import { styles, theme } from "../theme";
 import { useNavigation } from "@react-navigation/native";
-import { SliderBox } from "react-native-image-slider-box";
 
-export default function ReviewScreen({ props }) {
+export default function ReviewScreen(props) {
   const item = props.route.params;
   const navigation = useNavigation();
   const [yesActive, setYesActive] = useState(false);
   const [noActive, setNoActive] = useState(false);
 
-  const [images, setImages] = useState([]);
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toISOString().split("T")[0]; // Az "YYYY-MM-DD" rész kivétele
+  };
 
   /*TODO: useful countert megcsinalni*/
   const usefulCounter = (item) => {
@@ -57,14 +59,11 @@ export default function ReviewScreen({ props }) {
         </TouchableOpacity>
       </View>
       <View style={{ marginTop: -55 }}>
-        <SliderBox images={images}
-                   dotStyle={{ marginBottom: 25, height: 10, width: 10, borderRadius: 50 }}
-                   sliderBoxHeight={380}
-                   dotColor={theme.iconOnG}
-                   imageLoadingColor={theme.iconOnG}
-                   autoplay={true}
-                   autoplayInterval={5000}
-                   loop={true}
+        {/*TODO: sémába reviewImaget létre kell hozni?
+        source={!item.reviewImage ? (require("../src/assets/reviewCoverImg.jpg")) : { uri: `http://10.0.2.2:3000/reviewImg/${item.reviewId}.jpg`}}
+        */}
+        <Image source={{ uri: `http://10.0.2.2:3000/reviewImg/${item.reviewId}.jpg` }}
+               style={{ height: 300 }}
         />
       </View>
       <ScrollView className="flex-1 bg-white px-2"
@@ -80,15 +79,16 @@ export default function ReviewScreen({ props }) {
           <View style={{ flexDirection: "row" }}>
             <Image source={{ uri: `http://10.0.2.2:3000/userImg/profile/${item.authorId}.jpg` }}
                    style={{ width: 90, height: 90, marginLeft: 10, borderRadius: 50 }} />
-            <Text style={{ paddingTop: 10, paddingLeft: 90 }}>{item.createdAt}</Text>
+            <Text style={{ paddingTop: 10, paddingLeft: 90 }}>{formatDate(item.createdAt)}</Text>
           </View>
+          {/*TODO: nevet nem jeleníti meg (item.author.name)*/}
           <Text style={{
             paddingVertical: 10,
             paddingLeft: 15,
             fontSize: 15,
             fontWeight: "bold",
             marginBottom: 10,
-          }}>{item.author}</Text>
+          }}>{item.author}Hiányzik Név</Text>
           <View style={{ flexDirection: "row", marginLeft: -4 }}>
             <MapPinIcon style={{ marginLeft: 20, color: theme.text }} size="22" />
             <Text style={{ fontSize: 16, marginTop: 2, color: theme.text }}>

@@ -6,63 +6,49 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import * as Animatable from "react-native-animatable";
 import ImagePicker from "react-native-image-crop-picker";
-import Carousel from "react-native-snap-carousel";
 import SearchableDropDown from "react-native-searchable-dropdown";
-import { hotelItems, reviewItems } from "../constants";
+import { reviewItems } from "../constants";
 import Toast from "react-native-toast-message";
 import { search } from "../contollers/accommodationContoller";
-import { addReview } from "../contollers/reviewController";
+import { addReview, list } from "../contollers/reviewController";
 
 export default function NewReviewScreen() {
   const navigation = useNavigation();
-  const [reviewImages, setReviewImages] = useState([]);
-  const [cityCountryName, setCityCountryName] = useState(null);
-  const [cityCountryNameList, setCityCountryNameList] = useState(null);
+  const [reviewImage, setReviewImage] = useState("");
+  const [cityCountry, setCityCountry] = useState(null);
+  const [cityCountryList, setCityCountryList] = useState(null);
+  const [appKey, setAppKey] = useState(0);
+
+  const reloadApp = () => {
+    setAppKey(prev => prev + 1);
+  };
 
   useEffect(() => {
-    setCityCountryNameList(getDropDownCityCountryNames());
+    setCityCountryList(getDropDownCityCountryNames());
+    reloadApp();
   }, []);
-  const _renderItem = ({ item, index }) => {
-    return (
-      <View key={index}>
-        <Image
-          source={{ uri: item.path }}
-          style={{
-            width: 240,
-            height: 150,
-            borderRadius: 20,
-          }}
-        />
-      </View>
-    );
-  };
 
   const openGallery = async () => {
-    let imageList = [];
-    ImagePicker.openPicker({
-      multiple: true,
-      waitAnimationEnd: false,
-      includeExif: true,
-      forceJpg: true,
-      compressImageQuality: 0.8,
-      maxFiles: 10,
-      mediaType: "any",
-      includeBase64: true,
-    }).then(response => {
-      console.log("Response: ", response);
-      response.map(image => {
-        imageList.push({
-          filename: image.filename,
-          path: image.path,
-          data: image.data,
+    try {
+      await ImagePicker.openPicker({
+        cropping: true,
+      }).then(image => {
+        console.log(image, "image");
+        setReviewImage(image);
+        Toast.show({
+          type: "success",
+          text1: "Uploaded photo!",
+          visibilityTime: 5000,
         });
       });
-      setReviewImages(imageList);
-    }).catch(error => console.log("Error: ", error.message));
+    } catch (error) {
+      console.log(error, "error");
+    }
   };
+
   /*TODO: megosztás fgv*/
   const shareReview = async () => {
-    if (cityCountryName === null || revText === null) {
+    if (cityCountry === null || revText === null) {
       Toast.show({
         type: "error",
         text1: "Error",
@@ -71,8 +57,8 @@ export default function NewReviewScreen() {
       });
     }
     try {
-      console.log(cityCountryName.name, revText);
-      await addReview(cityCountryName.name, revText);
+      console.log(cityCountry.name, cityCountry.revText);
+      await addReview(cityCountry.name, cityCountry.revText);
       Toast.show({
         type: "success",
         text1: "Success",
@@ -88,18 +74,18 @@ export default function NewReviewScreen() {
       });
     }
   };
-  /*TODO: ne a reviewItems, hanem az review adatbázisból jöjjön --- keresés után a szem ikon nem nyitja meg a hotelt*/
+  /*TODO: ne a reviewItems, hanem az review adatbázisból jöjjön*/
   const getDropDownCityCountryNames = () => {
-    const values = [...new Set(reviewItems.map(review => review.cityCountry))].map((cityCountryName, index) => ({
+    const values = [...new Set(reviewItems.map(review => review.cityCountry))].map((cityCountry, index) => ({
       id: index,
-      name: cityCountryName,
+      name: cityCountry,
     }));
     console.log(values);
     return values;
   };
 
   return (
-    <View className="flex-1">
+    <View className="flex-1" key={appKey} keyboardShouldPersistTaps={"handled"}>
       <SafeAreaView className="flex-row justify-between items-center mr-2 mt-3">
         <TouchableOpacity
           onPress={() => navigation.goBack()}
@@ -109,8 +95,8 @@ export default function NewReviewScreen() {
         </TouchableOpacity>
       </SafeAreaView>
       <View style={{ marginBottom: 310, marginTop: -60, zIndex: -1 }}>
-        <Image source={require("../src/assets/top-view-hands-holding-photos.jpg")}
-               style={{ height: 310 }}
+        <Image source={!reviewImage ? (require("../src/assets/reviewCoverImg.jpg")) : { uri: reviewImage?.path }}
+               style={{ height: 300 }}
                className="w-full absolute" />
       </View>
       <View className="flex-col flex-1 bg-white"
@@ -133,11 +119,11 @@ export default function NewReviewScreen() {
           </TouchableOpacity>
         </View>
         <ScrollView>
-          {/*TODO: kereső, listázza ki a városokat és a kereső ikonra kattintva keressen*/}
+          {/*TODO: a kiválasztott várost nem állítja be*/}
           <View className="flex-row justify-center items-center my-2">
             <SearchableDropDown
               onItemSelect={(item) => {
-                setCityCountryName(item);
+                setCityCountry(item);
               }}
               containerStyle={{
                 padding: 10,
@@ -154,12 +140,12 @@ export default function NewReviewScreen() {
               }}
               itemTextStyle={{ color: "#222" }}
               itemsContainerStyle={{ maxHeight: 150 }}
-              items={cityCountryNameList}
+              items={cityCountryList}
               resetValue={false}
               textInputProps={
                 {
                   underlineColorAndroid: "transparent",
-                  value: cityCountryName ? cityCountryName.name : "Enter the city",
+                  value: cityCountry ? cityCountry.name : "Enter the city",
                 }
               }
               listProps={
@@ -170,30 +156,10 @@ export default function NewReviewScreen() {
             />
           </View>
           {/*Review box*/}
-          <View className="p-1 bg-gray-200 mx-6 mb-6 mt-2" style={{ height: 200, borderRadius: 25 }}>
+          <View className="p-1 bg-gray-200 mx-6 mb-2 mt-3" style={{ height: 250, borderRadius: 25 }}>
             <TextInput placeholder="Write your expression about 1024 characters" multiline={true} numberoflines={10}
                        className="p-4 flex-1 font-semibold text-gray-700"
             />
-          </View>
-          <Text style={{ marginLeft: 15, fontStyle: "italic", fontSize: 18, marginBottom: 20 }}>Uploaded photos:</Text>
-          <View>
-            {reviewImages?.length > 0 ? (
-              <Carousel
-                data={reviewImages}
-                renderItem={_renderItem}
-                onSnapToItem={(index) => console.log(index)}
-                slideStyle={{ display: "flex", alignItems: "center" }}
-                inactiveSlideOpacity={0.75}
-                inactiveSlideScale={0.77}
-                containerCustomStyle={{ overflow: "visible", borderRadius: 50 }}
-                loop={true}
-                sliderWidth={380}
-                itemWidth={240}
-              />
-            ) : (
-              <Text style={{ color: theme.decrementButton, fontSize: 15, marginLeft: 65, fontWeight: "bold" }}>You
-                didn't select pictures! Try it again!</Text>
-            )}
           </View>
           <View style={{ marginVertical: 20, marginHorizontal: 50 }}>
             <TouchableOpacity className="py-3 rounded-xl"

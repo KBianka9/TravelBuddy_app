@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { View, Text, Image, TouchableOpacity, ScrollView, Modal, TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { theme } from "../theme";
@@ -7,6 +7,7 @@ import SelectDropdown from "react-native-select-dropdown";
 import * as Animatable from "react-native-animatable";
 import Toast from "react-native-toast-message";
 import { listPackingItem } from "../contollers/packinglistController";
+import { UserContext } from "../App";
 
 const filterOptions = [
   "All",
@@ -132,6 +133,7 @@ export default function PackingListScreen({ navigation }) {
   const [fullPackingList, setFullPackingList] = useState(packingItems);
   const [filteredPackingList, setFilteredPackingList] = useState(packingItems);
   const [packingListItems, setPackingListItems] = useState([]);
+  const { user } = useContext(UserContext);
   const [appKey, setAppKey] = useState(0);
 
   const reloadApp = () => {
@@ -146,7 +148,7 @@ export default function PackingListScreen({ navigation }) {
 
   const loadPackingListItems = async () => {
     try {
-      const response = await listPackingItem();
+      const response = await listPackingItem(user.userId);
       setPackingListItems(response.data);
       console.log(packingListItems);
     } catch (e) {
@@ -158,7 +160,7 @@ export default function PackingListScreen({ navigation }) {
       });
     }
   };
-
+  /*TODO: amountPackingItem kell*/
   const increment = (itemName) => {
     setFullPackingList(prevList =>
       prevList.map(item =>
