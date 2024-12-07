@@ -90,7 +90,7 @@ export default function EditProfileScreen() {
               }}
               className="justify-center mb-4" />
           </View>
-        <View className="form space-y-2">
+        <ScrollView className="form space-y-2">
           <TextInput
             label="Full name"
             className="bg-gray-100 text-gray-700 rounded-2xl mb-3"
@@ -138,7 +138,7 @@ export default function EditProfileScreen() {
               <Text className="font-xl font-bold text-center text-white">Save data</Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </ScrollView>
       </View>
     </View>
   );

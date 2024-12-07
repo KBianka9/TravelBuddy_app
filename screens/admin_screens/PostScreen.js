@@ -3,12 +3,8 @@ import { View, Text, Image, TouchableOpacity, ScrollView, FlatList, Alert } from
 import { SafeAreaView } from "react-native-safe-area-context";
 import { theme } from "../../theme";
 import { ArrowLeftIcon } from "react-native-heroicons/solid";
-import { MagnifyingGlassIcon } from "react-native-heroicons/outline";
-import { reviewItems } from "../../constants";
 import { UserContext } from "../../App";
 import { useNavigation } from "@react-navigation/native";
-import SearchableDropDown from "react-native-searchable-dropdown";
-import { searchByName, searchByNameReview } from "../../contollers/userContoller";
 import Toast from "react-native-toast-message";
 import EmptyList from "../../components/emptyList";
 import { deleteReview, list } from "../../contollers/reviewController";
@@ -20,9 +16,6 @@ export default function PostScreen() {
     navigation.navigate("PlaceSearcher");
     return;
   }
-
-  const [username, setUsername] = useState(null);
-  const [usernameList, setUsernameList] = useState(null);
   const [posts, setPosts] = useState([]);
   const [appKey, setAppKey] = useState(0);
   const formatDate = (dateString) => {
@@ -35,7 +28,6 @@ export default function PostScreen() {
   };
 
   useEffect(() => {
-    setUsernameList(getDropDownUsernames());
     loadReportedPosts();
     reloadApp();
   }, []);
@@ -44,7 +36,6 @@ export default function PostScreen() {
     try {
       const response = await list();
       setPosts(response.data);
-      console.log(posts);
     } catch (e) {
       Toast.show({
         type: "error",
@@ -54,58 +45,15 @@ export default function PostScreen() {
       });
     }
   };
-  const handleSubmit = async () => {
-    if (username === null) {
-      Toast.show({
-        type: "error",
-        text1: "Error",
-        text2: "Username is missing!",
-        visibilityTime: 5000,
-      });
-    }
-    try {
-      const response = await searchByNameReview(username.name);
-      const postList = response.data;
-      console.log(postList);
-      /*TODO: nem jeleníti meg a találato(ka)t*/
-      if (postList.report === false) {
-        Toast.show({
-          type: "error",
-          text1: "Sorry",
-          text2: "But we couldn't find review on the selected name!",
-          visibilityTime: 5000,
-        });
-      } else {
-        setPosts(postList);
-      }
-    } catch (e) {
-      Toast.show({
-        type: "error",
-        text1: "Error",
-        text2: e.message,
-        visibilityTime: 5000,
-      });
-    }
-  };
-  /*TODO: username szerinti keresés*/
-  const getDropDownUsernames = () => {
-    const values = [...new Set(reviewItems.map(username => username.userName))].map((userName, index) => ({
-      id: index,
-      name: userName,
-    }));
-    console.log(values);
-    return values;
-  };
 
-
-  const showAlert = () =>
+  const showAlert = (itemId) =>
     Alert.alert(
       "Delete post",
       "Are you sure you want to delete it?",
       [
         {
           text: "Yes",
-          onPress: () => deletePost(),
+          onPress: () => deletePost(itemId),
         },
         {
           text: "No",
@@ -114,10 +62,10 @@ export default function PostScreen() {
       ],
     );
 
-  /*TODO: post delete*/
   const deletePost = async (reviewId) => {
     try {
       await deleteReview(reviewId);
+      await loadReportedPosts();
       Toast.show({
         type: "success",
         text1: "Success!",
@@ -146,9 +94,8 @@ export default function PostScreen() {
             <View style={{ flexDirection: "column" }}>
               <View style={{ flexDirection: "row" }}>
                 <View style={{ flexDirection: "column" }}>
-                  {/*TODO: nem jelenik meg a név, email (item.author.name)*/}
-                  <Text className="font-bold">{item.name}Hiányzik Név</Text>
-                  <Text className="font-bold">{item.email}hiányzik@gmail.com</Text>
+                  <Text className="font-bold">{item.author?.name}</Text>
+                  <Text className="font-bold">{item.author?.email}</Text>
                   <Text>Id: {item.reviewId}</Text>
                   <Text> {formatDate(item.createdAt)}</Text>
                   <Text className="font-bold">{item.cityCountryName}</Text>
@@ -156,7 +103,7 @@ export default function PostScreen() {
                 <View style={{ flexDirection: "column", end: -60, marginTop: 5 }}>
                   <Image source={require("../../src/assets/report.jpg")}
                          style={{ height: 35, width: 35, marginBottom: 25 }} />
-                  <TouchableOpacity onPress={showAlert}>
+                  <TouchableOpacity onPress={() => showAlert(item.reviewId)}>
                     <Image source={require("../../src/assets/bin.jpg")}
                            style={{ width: 35, height: 25, resizeMode: "contain" }} />
                   </TouchableOpacity>
@@ -184,53 +131,11 @@ export default function PostScreen() {
           style={{ backgroundColor: theme.button }}>
           <ArrowLeftIcon size="25" color="white" />
         </TouchableOpacity>
+        <Text style={{ fontSize: 18, paddingTop: 25, paddingLeft: 70, fontWeight: "bold", color: "white" }}>Reported
+          review list</Text>
       </SafeAreaView>
       <View className="flex-1 bg-white"
             style={{ borderTopRightRadius: 20, borderTopLeftRadius: 20, marginTop: 180 }}>
-        <View className="flex-row px-2 pt-4">
-          <View className="flex-row justify-center items-center mx-4">
-            <SearchableDropDown
-              onItemSelect={(item) => {
-                setUsername(item);
-              }}
-              containerStyle={{
-                padding: 5,
-                paddingLeft: 10,
-                backgroundColor: "#e3e5e9",
-                borderRadius: 30,
-                width: 280,
-              }}
-              itemStyle={{
-                paddingVertical: 10,
-                paddingLeft: 20,
-                marginTop: 10,
-                backgroundColor: "#f8f9fa",
-                borderRadius: 30,
-              }}
-              itemTextStyle={{ color: "#222", fontWeight: "bold" }}
-              itemsContainerStyle={{ maxHeight: 150 }}
-              items={usernameList}
-              resetValue={false}
-              textInputProps={
-                {
-                  underlineColorAndroid: "transparent",
-                  value: username ? username.name : "Search review by author",
-                }
-              }
-              listProps={
-                {
-                  nestedScrollEnabled: true,
-                }
-              }
-            />
-            <TouchableOpacity className="rounded-full p-3 mr-2"
-                              style={{ backgroundColor: theme.button, end: -15 }}
-                              onPress={handleSubmit}
-            >
-              <MagnifyingGlassIcon size="25" strokeWidth={2} color="white"></MagnifyingGlassIcon>
-            </TouchableOpacity>
-          </View>
-        </View>
         <ScrollView style={{ marginTop: 10 }} className="px-8">
           <View>
             <FlatList

@@ -26,8 +26,8 @@ export default function ReviewsScreen() {
   };
 
   useEffect(() => {
-    setCityCountryNameList(getDropDownCityCountryNames());
     loadReviews();
+    setCityCountryNameList(getDropDownCityCountryNames());
     reloadApp();
   }, []);
   const loadReviews = async () => {
@@ -77,7 +77,6 @@ export default function ReviewsScreen() {
       });
     }
   };
-  /*TODO: ne a reviewItemsből jöjjön*/
   const getDropDownCityCountryNames = () => {
     const values = [...new Set(reviewItems.map(review => review.cityCountry))].map((cityCountryName, index) => ({
       id: index,

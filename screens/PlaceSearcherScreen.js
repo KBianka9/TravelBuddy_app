@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { View, Text, Image, TouchableOpacity, ScrollView, SafeAreaView } from "react-native";
 import SelectDropdown from "react-native-select-dropdown";
 import { theme } from "../theme";
@@ -108,7 +108,6 @@ export default function PlaceSearcherScreen() {
       });
     }
   };
-  /*TODO: ne a hotelItems, hanem az accommodation adatbázisból jöjjön*/
   const getDropDownCityCountryNames = () => {
     const values = [...new Set(hotelItems.map(hotel => hotel.cityCountryName))].map((cityCountryName, index) => ({
       id: index,

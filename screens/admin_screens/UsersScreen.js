@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FlatList, Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { theme } from "../../theme";
@@ -9,12 +9,10 @@ import { UserContext } from "../../App";
 import SearchableDropDown from "react-native-searchable-dropdown";
 import { deleteUser, list, roleUser, searchByName } from "../../contollers/userContoller";
 import Toast from "react-native-toast-message";
-import { userListItem } from "../../constants";
 import axios from "axios";
 
 export default function UsersScreen({ navigation }) {
-  const { user, setUser } = useContext(UserContext);
-  const updateData = { ...user };
+  const { user } = useContext(UserContext);
   if (user.role !== "ADMIN") {
     navigation.navigate("PlaceSearcher");
     return;
@@ -29,8 +27,8 @@ export default function UsersScreen({ navigation }) {
   };
 
   useEffect(() => {
-    setUsernameList(getDropDownUsernames());
     loadUsers();
+    setUsernameList(getDropDownUsernames());
     reloadApp();
   }, []);
 
@@ -47,7 +45,6 @@ export default function UsersScreen({ navigation }) {
       });
     }
   };
-  /*TODO: nem jeleníti meg a találatot*/
   const handleSubmit = async () => {
     if (username === null) {
       Toast.show({
@@ -59,7 +56,7 @@ export default function UsersScreen({ navigation }) {
     }
     try {
       const response = await searchByName(username.name);
-      const usernameList = response.data;
+      const usernameList = [response.data];
       console.log(usernameList);
       if (usernameList.length === 0) {
         Toast.show({
@@ -107,22 +104,21 @@ export default function UsersScreen({ navigation }) {
       }
     });
   };
-  /*TODO: ne a userListItem-ből jöjjön*/
   const getDropDownUsernames = () => {
-    return [...new Set(userListItem.map(user => user.name))].map((name, index) => ({
-      id: index,
-      name: name,
+    return users.map(user => ({
+      name: user.name,
+      id: user.userId,
     }));
   };
 
-  /*TODO: felhasználó jogosultságának módosítása*/
-  const saveRole = async () => {
+  const saveRole = async (userId) => {
     try {
-      await roleUser(updateData);
-      setUser({
-        ...user,
-        role: updateData.role,
-      });
+      const response = await roleUser(userId);
+      const user = response.data.user;
+      const userIndex = users.findIndex(u => u.userId === user.userId);
+      users[userIndex] = user;
+      setUsers([...users]);
+      console.log({ user, userIndex });
       Toast.show({
         type: "success",
         text1: "Success!",
@@ -166,7 +162,7 @@ export default function UsersScreen({ navigation }) {
           buttonStyle={{ width: 32, height: 20, resizeMode: "contain", marginTop: 10, marginLeft: 10 }}
           destructiveIndex={1}
           options={["Change role", "Delete", "Cancel"]}
-          actions={[saveRole, () => removeUserAccount(item.userId), null]}
+          actions={[() => saveRole(item.userId), () => removeUserAccount(item.userId), null]}
         />
       </View>
     );
@@ -235,7 +231,6 @@ export default function UsersScreen({ navigation }) {
         </View>
         <ScrollView style={{ marginTop: 10 }} className="px-8">
           <View>
-            {/*TODO: nem listázza ki a kiválasztott elemet*/}
             <FlatList
               data={users}
               keyExtractor={(e, i) => e.userId}

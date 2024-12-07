@@ -1,7 +1,7 @@
 import customAxios from "../src/customAxios";
 
-export function addPackingItem(category, name) {
-  return customAxios.post("/packingItem/add", { category, name });
+export function addPackingItem(category, name, userId) {
+  return customAxios.post("/packingItem/add", { category, name, userId });
 }
 
 export function listPackingItem(userId) {

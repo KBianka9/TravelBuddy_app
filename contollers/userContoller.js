@@ -23,7 +23,7 @@ export function searchByName(name) {
   return customAxios.get("/user/search", { params: { name } });
 }
 
-export function roleUser({ userId }) {
+export function roleUser(userId) {
   return customAxios.put("/user/role", { userId });
 }
 

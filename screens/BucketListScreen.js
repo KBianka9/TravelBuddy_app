@@ -19,7 +19,8 @@ import CheckBox from "react-native-check-box";
 import * as Animatable from "react-native-animatable";
 import Toast from "react-native-toast-message";
 import EmptyList from "../components/emptyList";
-import { addItem, completedItem, listItems, removeItem } from "../contollers/bucketListController";
+import { completedItem, listItems, removeItem } from "../contollers/bucketListController";
+import { addItem } from "../contollers/spectacleController";
 import { UserContext } from "../App";
 
 const listTab = [
@@ -81,14 +82,14 @@ export default function BucketListScreen() {
     }
   };
 
-  const showAlert = () =>
+  const showAlert = (itemId) =>
     Alert.alert(
       "Delete bucket item",
       "Are you sure you want to delete it?",
       [
         {
           text: "Yes",
-          onPress: () => deleteBucketItem(),
+          onPress: () => deleteBucketItem(itemId),
         },
         {
           text: "No",
@@ -96,10 +97,10 @@ export default function BucketListScreen() {
         },
       ],
     );
-  /*TODO: elem törlése*/
+
   const deleteBucketItem = async (itemId) => {
     try {
-      await removeItem(itemId, user.userId);
+      await removeItem(itemId);
       await loadItems();
       Toast.show({
         type: "success",
@@ -116,7 +117,6 @@ export default function BucketListScreen() {
       });
     }
   };
-  /*TODO: checkbox nem működik*/
   const checkBoxBucket = async (item) => {
     try {
       await completedItem(item.bucketListId, user.userId, item.spectacleId, !item.completed);
@@ -130,11 +130,11 @@ export default function BucketListScreen() {
       });
     }
   };
-  /*TODO: új elem hozzáadása*/
   const saveNewItem = async () => {
     try {
-      await addItem(spectacle);
+      await addItem(spectacle, user.userId);
       await loadItems();
+      setModal(false);
       Toast.show({
         type: "success",
         text1: "Success!",
@@ -172,7 +172,7 @@ export default function BucketListScreen() {
                     fontWeight: "bold",
                   }}
                   rightTextView={
-                    <TouchableOpacity onPress={showAlert}>
+                    <TouchableOpacity onPress={() => showAlert(item.bucketListId)}>
                       <Image source={require("../src/assets/bin.jpg")}
                              style={{ width: 35, height: 25, resizeMode: "contain", marginLeft: 5 }} />
                     </TouchableOpacity>

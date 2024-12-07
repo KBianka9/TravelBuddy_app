@@ -4,6 +4,6 @@ export function listTrip() {
   return customAxios.get(`/trip/list/`);
 }
 
-export function removeTrip(tripId, travellerId) {
-  return customAxios.delete(`/trip/delete/${tripId}/${travellerId}`);
+export function removeTrip(tripId) {
+  return customAxios.delete(`/trip/delete/${tripId}`);
 }

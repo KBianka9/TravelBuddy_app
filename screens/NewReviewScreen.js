@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Image, TouchableOpacity, View, ScrollView, Text, TextInput } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import { Image, TouchableOpacity, View, Text, TextInput } from "react-native";
 import { ArrowLeftIcon, CameraIcon } from "react-native-heroicons/solid";
 import { theme } from "../theme";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -9,14 +9,16 @@ import ImagePicker from "react-native-image-crop-picker";
 import SearchableDropDown from "react-native-searchable-dropdown";
 import { reviewItems } from "../constants";
 import Toast from "react-native-toast-message";
-import { search } from "../contollers/accommodationContoller";
-import { addReview, list } from "../contollers/reviewController";
+import { addReview } from "../contollers/reviewController";
+import { UserContext } from "../App";
 
 export default function NewReviewScreen() {
   const navigation = useNavigation();
   const [reviewImage, setReviewImage] = useState("");
   const [cityCountry, setCityCountry] = useState(null);
+  const [revText, setRevText] = useState("");
   const [cityCountryList, setCityCountryList] = useState(null);
+  const { user } = useContext(UserContext);
   const [appKey, setAppKey] = useState(0);
 
   const reloadApp = () => {
@@ -33,7 +35,6 @@ export default function NewReviewScreen() {
       await ImagePicker.openPicker({
         cropping: true,
       }).then(image => {
-        console.log(image, "image");
         setReviewImage(image);
         Toast.show({
           type: "success",
@@ -46,9 +47,8 @@ export default function NewReviewScreen() {
     }
   };
 
-  /*TODO: megosztás fgv*/
   const shareReview = async () => {
-    if (cityCountry === null || revText === null) {
+    if (cityCountry === null || revText === "") {
       Toast.show({
         type: "error",
         text1: "Error",
@@ -57,8 +57,7 @@ export default function NewReviewScreen() {
       });
     }
     try {
-      console.log(cityCountry.name, cityCountry.revText);
-      await addReview(cityCountry.name, cityCountry.revText);
+      await addReview(user.userId, cityCountry.name, revText, reviewImage);
       Toast.show({
         type: "success",
         text1: "Success",
@@ -74,13 +73,11 @@ export default function NewReviewScreen() {
       });
     }
   };
-  /*TODO: ne a reviewItems, hanem az review adatbázisból jöjjön*/
   const getDropDownCityCountryNames = () => {
     const values = [...new Set(reviewItems.map(review => review.cityCountry))].map((cityCountry, index) => ({
       id: index,
       name: cityCountry,
     }));
-    console.log(values);
     return values;
   };
 
@@ -118,57 +115,55 @@ export default function NewReviewScreen() {
             </Animatable.View>
           </TouchableOpacity>
         </View>
-        <ScrollView>
-          {/*TODO: a kiválasztott várost nem állítja be*/}
-          <View className="flex-row justify-center items-center my-2">
-            <SearchableDropDown
-              onItemSelect={(item) => {
-                setCityCountry(item);
-              }}
-              containerStyle={{
-                padding: 10,
-                marginTop: 2,
-                backgroundColor: "#e3e5e9",
-                borderRadius: 30,
-                width: 335,
-              }}
-              itemStyle={{
-                padding: 10,
-                marginTop: 10,
-                backgroundColor: "#f8f9fa",
-                borderRadius: 30,
-              }}
-              itemTextStyle={{ color: "#222" }}
-              itemsContainerStyle={{ maxHeight: 150 }}
-              items={cityCountryList}
-              resetValue={false}
-              textInputProps={
-                {
-                  underlineColorAndroid: "transparent",
-                  value: cityCountry ? cityCountry.name : "Enter the city",
-                }
+        <View className="flex-row justify-center items-center my-2">
+          <SearchableDropDown
+            onItemSelect={(item) => {
+              setCityCountry(item);
+            }}
+            containerStyle={{
+              padding: 10,
+              marginTop: 2,
+              backgroundColor: "#e3e5e9",
+              borderRadius: 30,
+              width: 335,
+            }}
+            itemStyle={{
+              padding: 10,
+              marginTop: 10,
+              backgroundColor: "#f8f9fa",
+              borderRadius: 30,
+            }}
+            itemTextStyle={{ color: "#222" }}
+            itemsContainerStyle={{ maxHeight: 150 }}
+            items={cityCountryList}
+            resetValue={false}
+            textInputProps={
+              {
+                underlineColorAndroid: "transparent",
+                value: cityCountry ? cityCountry.name : "Enter the city",
               }
-              listProps={
-                {
-                  nestedScrollEnabled: true,
-                }
+            }
+            listProps={
+              {
+                nestedScrollEnabled: true,
               }
-            />
-          </View>
-          {/*Review box*/}
-          <View className="p-1 bg-gray-200 mx-6 mb-2 mt-3" style={{ height: 250, borderRadius: 25 }}>
-            <TextInput placeholder="Write your expression about 1024 characters" multiline={true} numberoflines={10}
-                       className="p-4 flex-1 font-semibold text-gray-700"
-            />
-          </View>
-          <View style={{ marginVertical: 20, marginHorizontal: 50 }}>
-            <TouchableOpacity className="py-3 rounded-xl"
-                              style={{ backgroundColor: theme.button }}
-                              onPress={shareReview}>
-              <Text className="font-xl font-bold text-center text-white">Share</Text>
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
+            }
+          />
+        </View>
+        {/*Review box*/}
+        <View className="p-1 bg-gray-200 mx-6 mb-2 mt-3" style={{ height: 250, borderRadius: 25 }}>
+          <TextInput placeholder="Write your expression about 1024 characters" multiline={true} numberoflines={10}
+                     className="p-4 flex-1 font-semibold text-gray-700"
+                     onChangeText={setRevText}
+          />
+        </View>
+        <View style={{ marginVertical: 20, marginHorizontal: 50 }}>
+          <TouchableOpacity className="py-3 rounded-xl"
+                            style={{ backgroundColor: theme.button }}
+                            onPress={shareReview}>
+            <Text className="font-xl font-bold text-center text-white">Share</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );

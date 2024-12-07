@@ -8,15 +8,20 @@ export function list() {
   return customAxios.get(`/review/list`);
 }
 
-export function addReview(cityCountryName, revText) {
-  return customAxios.post("/review/add", { cityCountryName, revText });
+export function addReview(userId, cityCountryName, revText, image) {
+  const data = new FormData();
+  data.append("userId", userId);
+  data.append("cityCountryName", cityCountryName);
+  data.append("revText", revText);
+  data.append("image", { uri: image.path, name: "img.jpg", type: image.mime });
+  return customAxios.post("/review/add", data);
 }
 
 export function evaluateReview(reviewId, usefulnessCount, uselessnessCount) {
   return customAxios.post("/review/evaluate", { reviewId, usefulnessCount, uselessnessCount });
 }
 
-export function reportReview(reviewId, report) {
+export function reportPost(reviewId, report) {
   return customAxios.post("/review/report", { reviewId, report });
 }
 

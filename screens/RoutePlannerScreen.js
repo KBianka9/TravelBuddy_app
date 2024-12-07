@@ -7,14 +7,13 @@ import Video from "react-native-video";
 import * as Animatable from "react-native-animatable";
 import { PlusIcon } from "react-native-heroicons/solid";
 import { useContext, useEffect, useState } from "react";
-import { listWithFav, unFavoriteHotel } from "../contollers/accommodationContoller";
 import Toast from "react-native-toast-message";
 import { listTrip, removeTrip } from "../contollers/tripController";
 import { UserContext } from "../App";
 
 export default function RoutePlannerScreen() {
   const navigation = useNavigation();
-  const { user } = useContext(UserContext);
+  //const { user } = useContext(UserContext);
   const [trips, setTrips] = useState([]);
   const [appKey, setAppKey] = useState(0);
 
@@ -42,14 +41,14 @@ export default function RoutePlannerScreen() {
     }
   };
 
-  const showAlert = () =>
+  const showAlert = (itemId) =>
     Alert.alert(
       "Delete trip",
       "Are you sure you want to delete it?",
       [
         {
           text: "Yes",
-          onPress: () => deleteTrip(),
+          onPress: () => deleteTrip(itemId),
         },
         {
           text: "No",
@@ -57,10 +56,10 @@ export default function RoutePlannerScreen() {
         },
       ],
     );
-  /*TODO: delete trip*/
+
   const deleteTrip = async (itemId) => {
     try {
-      await removeTrip(itemId, user.userId);
+      await removeTrip(itemId);
       await loadTrips();
       Toast.show({
         type: "success",
@@ -122,7 +121,7 @@ export default function RoutePlannerScreen() {
                       renderItem={({ item }) => {
                         return (
                           <TouchableOpacity onPress={() => navigation.navigate("RecentTrip", { ...item })}
-                                            onLongPress={showAlert}
+                                            onLongPress={() => showAlert(item.tripId)}
                                             className="p-3 rotate-2xl mb-3 shadow-sm"
                                             style={{ borderRadius: 25, backgroundColor: theme.background }}>
                             <View>

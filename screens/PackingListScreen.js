@@ -6,7 +6,7 @@ import { ArrowLeftIcon, PlusIcon, MinusIcon, ArrowPathIcon } from "react-native-
 import SelectDropdown from "react-native-select-dropdown";
 import * as Animatable from "react-native-animatable";
 import Toast from "react-native-toast-message";
-import { listPackingItem } from "../contollers/packinglistController";
+import { addPackingItem, listPackingItem } from "../contollers/packinglistController";
 import { UserContext } from "../App";
 
 const filterOptions = [
@@ -133,6 +133,8 @@ export default function PackingListScreen({ navigation }) {
   const [fullPackingList, setFullPackingList] = useState(packingItems);
   const [filteredPackingList, setFilteredPackingList] = useState(packingItems);
   const [packingListItems, setPackingListItems] = useState([]);
+  const [packCat, setPackCat] = useState("");
+  const [packItem, setPackItem] = useState("");
   const { user } = useContext(UserContext);
   const [appKey, setAppKey] = useState(0);
 
@@ -188,7 +190,27 @@ export default function PackingListScreen({ navigation }) {
     else
       setFilteredPackingList(fullPackingList.filter(item => item.tags.includes(selectedTag)));
   };
-
+  /*TODO: új elem létrehozása*/
+  const saveNewPackingItem = async () => {
+    try {
+      await addPackingItem(packCat, packItem, user.userId);
+      await loadPackingListItems();
+      setModal(false);
+      Toast.show({
+        type: "success",
+        text1: "Success!",
+        text2: "You can save the new item!",
+        visibilityTime: 5000,
+      });
+    } catch (e) {
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "You can't save the new item!",
+        visibilityTime: 5000,
+      });
+    }
+  };
   function renderModal() {
     return (
       <Modal visible={modal} animationType="slide" transparent={true}>
@@ -216,13 +238,17 @@ export default function PackingListScreen({ navigation }) {
               />
             </View>
             <View className="flex-row justify-center items-center rounded-full p-1 bg-gray-200 ml-0 mt-4">
-              <TextInput placeholder="Item name" className="p-2 flex-1 font-semibold text-gray-700 ml-2"></TextInput>
+              <TextInput placeholder="Item name"
+                         className="p-2 flex-1 font-semibold text-gray-700 ml-2"
+                         value={packItem}
+                         onChangeText={value => setPackItem(value)}
+                         require={true}
+              />
             </View>
             <View style={{ flexDirection: "row", marginTop: 25, marginLeft: 130 }}>
               <TouchableOpacity className="py-3 rounded-3xl mx-2"
                                 style={{ backgroundColor: theme.iconOnG }}
-                                onPress={() => {
-                                }}>
+                                onPress={saveNewPackingItem}>
                 <Text className="font-xl text-center text-white px-6">Save</Text>
               </TouchableOpacity>
               <TouchableOpacity className="py-3 rounded-3xl mx-2"

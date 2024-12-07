@@ -3,6 +3,8 @@ import { Image, TouchableOpacity, View, ScrollView, Text, Alert } from "react-na
 import { ArrowLeftIcon, MapPinIcon } from "react-native-heroicons/solid";
 import { styles, theme } from "../theme";
 import { useNavigation } from "@react-navigation/native";
+import { evaluateReview, reportPost } from "../contollers/reviewController";
+import Toast from "react-native-toast-message";
 
 export default function ReviewScreen(props) {
   const item = props.route.params;
@@ -15,26 +17,42 @@ export default function ReviewScreen(props) {
     return date.toISOString().split("T")[0]; // Az "YYYY-MM-DD" rész kivétele
   };
 
-  /*TODO: useful countert megcsinalni*/
-  const usefulCounter = (item) => {
+  /*TODO: useful countert megcsinalni-->összedobáltam pár dolgot*/
+  const usefulCounter = async (item) => {
     setYesActive(!yesActive);
     setNoActive(noActive);
-    /*if (onclick(item.usefulSum)) {
-      item.usefulSum += 1;
+    try {
+      if (onclick(usefulnessCount) % 2 === 1 && onclick(uselessnessCount)) {
+        item.usefulnessCount += 1;
+      }
+      if (onclick(usefulnessCount) % 2 === 0 && usefulnessCount > 0) {
+        item.usefulnessCount -= 1;
+      }
+      if (onclick(uselessnessCount) % 2 === 1) {
+        item.uselessnessCount += 1;
+      }
+      if (onclick(uselessnessCount) % 2 === 0 && uselessnessCount > 0) {
+        item.uselessnessCount -= 1;
+      }
+      await evaluateReview(item.reviewId, item.usefulnessCount, item.uselessnessCount);
+    } catch (e) {
+      Toast.show({
+        type: "error",
+        text1: "Error!",
+        text2: "You can't evaluate this review!",
+        visibilityTime: 5000,
+      });
     }
-    if (onclick(item.uselessSum)) {
-      item.uselessSum += 1;
-    }*/
   };
 
-  const showAlert = () =>
+  const showAlert = (item) =>
     Alert.alert(
       "Report review",
       "Are you sure you want to report it?",
       [
         {
           text: "Yes",
-          onPress: () => reportReview(),
+          onPress: () => reportReview(item),
         },
         {
           text: "No",
@@ -43,9 +61,24 @@ export default function ReviewScreen(props) {
       ],
     );
 
-  /*TODO: report review*/
-  const reportReview = () => {
-
+  const reportReview = async (item) => {
+    try {
+      await reportPost(item.reviewId, !item.report);
+      Toast.show({
+        type: "success",
+        text1: "Success!",
+        text2: "You can reported the review!",
+        visibilityTime: 5000,
+      });
+      navigation.goBack();
+    } catch (e) {
+      Toast.show({
+        type: "error",
+        text1: "Error!",
+        text2: "You can't reported this review!",
+        visibilityTime: 5000,
+      });
+    }
   };
 
   return (
@@ -59,9 +92,6 @@ export default function ReviewScreen(props) {
         </TouchableOpacity>
       </View>
       <View style={{ marginTop: -55 }}>
-        {/*TODO: sémába reviewImaget létre kell hozni?
-        source={!item.reviewImage ? (require("../src/assets/reviewCoverImg.jpg")) : { uri: `http://10.0.2.2:3000/reviewImg/${item.reviewId}.jpg`}}
-        */}
         <Image source={{ uri: `http://10.0.2.2:3000/reviewImg/${item.reviewId}.jpg` }}
                style={{ height: 300 }}
         />
@@ -81,14 +111,13 @@ export default function ReviewScreen(props) {
                    style={{ width: 90, height: 90, marginLeft: 10, borderRadius: 50 }} />
             <Text style={{ paddingTop: 10, paddingLeft: 90 }}>{formatDate(item.createdAt)}</Text>
           </View>
-          {/*TODO: nevet nem jeleníti meg (item.author.name)*/}
           <Text style={{
             paddingVertical: 10,
             paddingLeft: 15,
             fontSize: 15,
             fontWeight: "bold",
             marginBottom: 10,
-          }}>{item.author}Hiányzik Név</Text>
+          }}>{item.author.name}</Text>
           <View style={{ flexDirection: "row", marginLeft: -4 }}>
             <MapPinIcon style={{ marginLeft: 20, color: theme.text }} size="22" />
             <Text style={{ fontSize: 16, marginTop: 2, color: theme.text }}>
@@ -114,7 +143,7 @@ export default function ReviewScreen(props) {
               </TouchableOpacity>
               <TouchableOpacity className="py-3 px-4 rounded-3xl mx-2"
                                 style={{ backgroundColor: theme.decrementButton }}
-                                onPress={showAlert}>
+                                onPress={() => showAlert(item)}>
                 <Text className="font-xl font-bold text-center text-white px-2">Report</Text>
               </TouchableOpacity>
             </View>

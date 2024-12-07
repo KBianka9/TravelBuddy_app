@@ -17,14 +17,13 @@ export default function ReportedReviewCard({ item }) {
                style={{ width: 90, height: 90, marginLeft: 10, borderRadius: 50 }} />
         <Text style={{ paddingTop: 10, paddingLeft: 90 }}>{formatDate(item.createdAt)}</Text>
       </View>
-      {/*TODO: nevet nem jeleníti meg (item.author.name)*/}
       <Text style={{
         paddingVertical: 10,
         paddingLeft: 15,
         fontSize: 15,
         fontWeight: "bold",
         marginBottom: 10,
-      }}>{item.name}Hiányzik Név</Text>
+      }}>{item.author?.name}</Text>
       <View style={{ flexDirection: "row", marginLeft: -4 }}>
         <MapPinIcon style={{ marginLeft: 20, color: theme.text }} size="22" />
         <Text style={{ fontSize: 16, marginTop: 2, color: theme.text }}>
