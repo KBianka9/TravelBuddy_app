@@ -6,68 +6,48 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import SelectDropdown from "react-native-select-dropdown";
 import openMap from "react-native-open-maps";
-
-/*TODO: idointervallumbol jojjon*/
-const filterOptions = ["1. day", "2. day", "3. day", "4. day"];
-
-const spectacleItems = [
-  {
-    spectacleName: "Uluwatu Temple",
-    tags: ["1. day"],
-  },
-  {
-    spectacleName: "Pura Ulun Danu Beratan",
-    tags: ["1. day"],
-  },
-  {
-    spectacleName: "Tanah Lot",
-    tags: ["1. day"],
-  },
-  {
-    spectacleName: "Phool Bagh Park",
-    tags: ["2. day"],
-  },
-  {
-    spectacleName: "Atal Ghat",
-    tags: ["2. day"],
-  },
-  {
-    spectacleName: "Nana Rao Restaurant",
-    tags: ["2. day"],
-  },
-  {
-    spectacleName: "Brahmavart Ghat",
-    tags: ["2. day"],
-  },
-  {
-    spectacleName: "Moti Jheel",
-    tags: ["3. day"],
-  },
-  {
-    spectacleName: "Jk Temple",
-    tags: ["3. day"],
-  },
-  {
-    spectacleName: "Allen Forest Zoo",
-    tags: ["4. day"],
-  },
-];
-
+import { destinations } from "../constants";
 
 export default function RecentTripScreen(props) {
   const item = props.route.params;
   const navigation = useNavigation();
-  const [selectedTag, setSelectedTag] = useState(filterOptions[0]);
-  const [filteredSpectacleItems, setFilteredSpectacleItems] = useState(spectacleItems);
+  const [selectedDay, setSelectedDay] = useState(1);
+  const [filteredDestinations, setFilteredDestinations] = useState([]);
+  const [days, setDays] = useState([]);
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toISOString().split("T")[0]; // Az "YYYY-MM-DD" rész kivétele
+  };
 
   const filter = () => {
-    setFilteredSpectacleItems(spectacleItems.filter(item => item.tags.includes(selectedTag)));
+    setFilteredDestinations(item.destinations
+      .filter(item => item.day === selectedDay)
+      .sort((a, b) => a.order - b.order));
   };
-  useEffect(() => filter(), [spectacleItems, selectedTag]);
+  useEffect(() => {
+    filter();
+  }, [selectedDay]);
 
-  /*TODO: A kiválasztott napi útiterv nézete a térképen*/
+  useEffect(() => {
+    setDays([...new Set(item.destinations.map(destination => destination.day))]);
+    filter();
+  }, []);
+
   function goToDestinations() {
-    openMap({ latitude: 47.49715361442786, longitude: 19.057183488380094 });
+    const mapOptions = {};
+    if (filteredDestinations.length !== 0) {
+      mapOptions.start = item.accommodation.latitude + ", " + item.accommodation.longitude;
+      mapOptions.end = filteredDestinations[filteredDestinations.length - 1].destination.latitude + ", " + filteredDestinations[filteredDestinations.length - 1].destination.longitude;
+      mapOptions.waypoints = filteredDestinations.slice(0, -1).map(destination => destination.destination.latitude + ", " + destination.destination.longitude);
+      mapOptions.navigate = true;
+      mapOptions.mapType = "transit";
+      mapOptions.travelType = "drive";
+    } else {
+      mapOptions.latitude = item.accommodation.latitude;
+      mapOptions.longitude = item.accommodation.longitude;
+    }
+    openMap(mapOptions);
   }
 
   return (
@@ -91,19 +71,23 @@ export default function RecentTripScreen(props) {
         <View className="ml-2 space-y-3 mt-5">
           <Text
             style={{ fontSize: 20, fontStyle: "italic", textAlign: "center", color: "black" }}>{item.tripTitle}</Text>
-          <Text style={{ fontSize: 20, marginTop: 5, color: theme.text, fontWeight: "bold" }}>{item.name}</Text>
+          <Text style={{
+            fontSize: 20,
+            marginTop: 5,
+            color: theme.text,
+            fontWeight: "bold",
+          }}>{item.accommodation.name}</Text>
           <View style={{ flexDirection: "row", marginLeft: -4 }}>
             <MapPinIcon style={{ marginLeft: 20 }} size="25" color="black" />
             <Text style={{ fontSize: 18, marginTop: 2, color: "black" }}>
-              {item.cityCountryName}
+              {item.accommodation.cityCountryName}
             </Text>
           </View>
-          {/*TODO:megoldani, hogy a hotel minden adata latszodjon*/}
-          <TouchableOpacity onPress={() => navigation.navigate("Hotel", { ...item })}>
+          <TouchableOpacity onPress={() => navigation.navigate("Hotels")}>
             <Text>About accommodation</Text>
           </TouchableOpacity>
           <Text style={{ fontSize: 20, marginTop: 5, color: theme.text, fontWeight: "bold" }}>
-            {item.from} - {item.to}
+            {formatDate(item.from)} - {formatDate(item.to)}
           </Text>
           <View style={{ flexDirection: "row" }}>
             <Text style={{ fontSize: 24, marginTop: 20, color: "black" }}>Destination(s):</Text>
@@ -114,18 +98,18 @@ export default function RecentTripScreen(props) {
                 selectedRowStyle={{ backgroundColor: "white" }}
                 buttonStyle={{ borderRadius: 50, backgroundColor: theme.searchInput, width: 140, height: 45 }}
                 dropdownIconPosition="right"
-                data={filterOptions}
-                defaultValueByIndex="0"
+                data={days}
+                defaultButtonText="1. day"
                 onSelect={(selectedItem, index) => {
-                  setSelectedTag(selectedItem);
+                  setSelectedDay(selectedItem);
                 }}
-                buttonTextAfterSelection={(selectedItem, index) => selectedItem}
-                rowTextForSelection={(item, index) => item}
+                buttonTextAfterSelection={(selectedItem, index) => selectedItem + ". day"}
+                rowTextForSelection={(item, index) => item + ". day"}
               />
             </View>
           </View>
           <View>
-            {filteredSpectacleItems.map(function(item, index) {
+            {filteredDestinations.map(function(destination, index) {
               return (
                 <View style={{
                   flexDirection: "row",
@@ -133,13 +117,14 @@ export default function RecentTripScreen(props) {
                   borderBottomWidth: 1,
                   borderColor: theme.button,
                   marginHorizontal: 20,
-                }} key={item.destination}>
-                  <Text style={{ color: theme.iconOff, marginLeft: 16, fontSize: 17 }}>{item.destination}</Text>
+                }} key={destination.destination.name}>
+                  <Text
+                    style={{ color: theme.iconOff, marginLeft: 16, fontSize: 17 }}>{destination.destination.name}</Text>
                 </View>
               );
             })}
           </View>
-          <View style={{ marginRight: 197 }}>
+          <View style={{ width: 105 }}>
             <TouchableOpacity onPress={goToDestinations}>
               <Text style={{
                 backgroundColor: theme.background,
@@ -148,7 +133,7 @@ export default function RecentTripScreen(props) {
                 fontWeight: "bold",
                 marginBottom: 50,
                 marginTop: 20,
-              }}>Look at the map</Text>
+              }}>View on map</Text>
             </TouchableOpacity>
           </View>
         </View>

@@ -54,19 +54,6 @@ export default function BucketListScreen() {
     reloadApp();
   }, []);
 
-  useEffect(() => {
-    setStatusFilter(status);
-  }, [bucketItem]);
-
-  const setStatusFilter = (newStatus) => {
-    if (newStatus === "All") {
-      setBucketList([...bucketItem]);
-    } else {
-      const isCompleted = newStatus === "checked";
-      setBucketList([...bucketItem.filter(item => item.completed === isCompleted)]);
-    }
-    setStatus(newStatus);
-  };
   const loadItems = async () => {
     try {
       const response = await listItems(user.userId);
@@ -80,6 +67,20 @@ export default function BucketListScreen() {
         visibilityTime: 5000,
       });
     }
+  };
+
+  useEffect(() => {
+    setStatusFilter(status);
+  }, [bucketItem]);
+
+  const setStatusFilter = (newStatus) => {
+    if (newStatus === "All") {
+      setBucketList([...bucketItem]);
+    } else {
+      const isCompleted = newStatus === "checked";
+      setBucketList([...bucketItem.filter(item => item.completed === isCompleted)]);
+    }
+    setStatus(newStatus);
   };
 
   const showAlert = (itemId) =>
@@ -273,7 +274,7 @@ export default function BucketListScreen() {
                 <EmptyList />
               </View>
             }
-            keyExtractor={(e, i) => e.bucketListId + e.completed.toString()}
+            keyExtractor={(e) => e.bucketListId + e.completed.toString()}
             renderItem={renderItem}
           />
         </ScrollView>

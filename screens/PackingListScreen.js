@@ -6,153 +6,54 @@ import { ArrowLeftIcon, PlusIcon, MinusIcon, ArrowPathIcon } from "react-native-
 import SelectDropdown from "react-native-select-dropdown";
 import * as Animatable from "react-native-animatable";
 import Toast from "react-native-toast-message";
-import { addPackingItem, listPackingItem } from "../contollers/packinglistController";
+import { addPackingItem, amountPackingItem, listPackingItem } from "../contollers/packinglistController";
 import { UserContext } from "../App";
 
 const filterOptions = [
-  "All",
-  "Essentials",
-  "Clothes and shoes",
-  "Toiletries",
-  "Other",
-];
-const filterOptionsNew = [
-  "Essentials",
-  "Clothes and shoes",
-  "Toiletries",
-  "Other",
-];
-
-const packingItems = [
   {
-    name: "passport",
-    amount: 0,
-    tags: ["Essentials"],
+    name: "All",
+    type: "ALL",
   },
   {
-    name: "cash",
-    amount: 0,
-    tags: ["Essentials"],
+    name: "Essentials",
+    type: "ESSENTIALS",
   },
   {
-    name: "credit card",
-    amount: 0,
-    tags: ["Essentials"],
+    name: "Clothes and shoes",
+    type: "CLOTHESANDSHOES",
   },
   {
-    name: "smart phone and charger",
-    amount: 0,
-    tags: ["Essentials"],
+    name: "Toiletries",
+    type: "TOILETRIES",
   },
   {
-    name: "health insurance card",
-    amount: 0,
-    tags: ["Essentials"],
-  },
-  {
-    name: "underwear",
-    amount: 0,
-    tags: ["Clothes and shoes"],
-  },
-  {
-    name: "pyjamas",
-    amount: 0,
-    tags: ["Clothes and shoes"],
-  },
-  {
-    name: "T-shirts",
-    amount: 0,
-    tags: ["Clothes and shoes"],
-  },
-  {
-    name: "shorts",
-    amount: 0,
-    tags: ["Clothes and shoes"],
-  },
-  {
-    name: "sport shoes",
-    amount: 0,
-    tags: ["Clothes and shoes"],
-  },
-  {
-    name: "toothbrush",
-    amount: 0,
-    tags: ["Toiletries"],
-  },
-  {
-    name: "tooth pasta",
-    amount: 0,
-    tags: ["Toiletries"],
-  },
-  {
-    name: "shower gel",
-    amount: 0,
-    tags: ["Toiletries"],
-  },
-  {
-    name: "shampoo and conditioner",
-    amount: 0,
-    tags: ["Toiletries"],
-  },
-  {
-    name: "First-aid kit",
-    amount: 0,
-    tags: ["Toiletries"],
-  },
-  {
-    name: "painkillers",
-    amount: 0,
-    tags: ["Toiletries"],
-  },
-  {
-    name: "sunglasses",
-    amount: 0,
-    tags: ["Other"],
-  },
-  {
-    name: "power bank",
-    amount: 0,
-    tags: ["Other"],
-  },
-  {
-    name: "books",
-    amount: 0,
-    tags: ["Other"],
-  },
-  {
-    name: "tissues",
-    amount: 0,
-    tags: ["Other"],
+    name: "Other",
+    type: "OTHER",
   },
 ];
-
 
 export default function PackingListScreen({ navigation }) {
   const [modal, setModal] = useState(false);
   const [selectedTag, setSelectedTag] = useState(filterOptions[0]);
-  const [fullPackingList, setFullPackingList] = useState(packingItems);
-  const [filteredPackingList, setFilteredPackingList] = useState(packingItems);
+  const [filteredPackingList, setFilteredPackingList] = useState([]);
   const [packingListItems, setPackingListItems] = useState([]);
-  const [packCat, setPackCat] = useState("");
+  const [packCat, setPackCat] = useState(filterOptions[0]);
   const [packItem, setPackItem] = useState("");
   const { user } = useContext(UserContext);
-  const [appKey, setAppKey] = useState(0);
-
-  const reloadApp = () => {
-    setAppKey(prev => prev + 1);
-  };
 
   useEffect(() => {
     filter();
+  }, [selectedTag]);
+
+  useEffect(() => {
     loadPackingListItems();
-    reloadApp();
-  }, [fullPackingList, selectedTag]);
+  }, []);
 
   const loadPackingListItems = async () => {
     try {
       const response = await listPackingItem(user.userId);
       setPackingListItems(response.data);
-      console.log(packingListItems);
+      setFilteredPackingList(response.data);
     } catch (e) {
       Toast.show({
         type: "error",
@@ -162,38 +63,47 @@ export default function PackingListScreen({ navigation }) {
       });
     }
   };
-  /*TODO: amountPackingItem kell*/
-  const increment = (itemName) => {
-    setFullPackingList(prevList =>
-      prevList.map(item =>
-        item.name === itemName
-          ? { ...item, amount: item.amount + 1 }
-          : item,
-      ),
-    );
+
+  const packingItemAmount = async (itemId, amount) => {
+    try {
+      await amountPackingItem(user.userId, itemId, amount);
+      Toast.show({
+        type: "success",
+        text1: "Success!",
+        text2: "You can save the new item!",
+        visibilityTime: 5000,
+      });
+    } catch (e) {
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: e.message,
+        visibilityTime: 5000,
+      });
+      throw e;
+    }
   };
-  const decrement = (itemName) => {
-    setFullPackingList(prevList =>
-      prevList.map(item =>
-        item.name === itemName && item.amount !== 0
-          ? { ...item, amount: item.amount - 1 }
-          : item,
-      ),
-    );
+  const increment = async (item) => {
+    await packingItemAmount(item.packingItemId, item.amount + 1);
+    item.amount++;
+    setFilteredPackingList([...filteredPackingList]);
   };
-  const reset = () => {
-    setFullPackingList(packingItems);
+  const decrement = async (item) => {
+    await packingItemAmount(item.packingItemId, item.amount - 1);
+    item.amount--;
+    setFilteredPackingList([...filteredPackingList]);
   };
+
   const filter = () => {
-    if (selectedTag === "All")
-      setFilteredPackingList(fullPackingList);
+    if (selectedTag.name === "All")
+      setFilteredPackingList(packingListItems);
     else
-      setFilteredPackingList(fullPackingList.filter(item => item.tags.includes(selectedTag)));
+      setFilteredPackingList(packingListItems.filter(item => item.packingItem.category === selectedTag.type));
   };
-  /*TODO: új elem létrehozása*/
+
   const saveNewPackingItem = async () => {
     try {
-      await addPackingItem(packCat, packItem, user.userId);
+      await addPackingItem(packCat.type, packItem, user.userId);
       await loadPackingListItems();
       setModal(false);
       Toast.show({
@@ -211,6 +121,13 @@ export default function PackingListScreen({ navigation }) {
       });
     }
   };
+
+  const cancelAddNewItem = () => {
+    setModal(false);
+    setPackItem("");
+    setPackCat(filterOptions[0]);
+  };
+
   function renderModal() {
     return (
       <Modal visible={modal} animationType="slide" transparent={true}>
@@ -228,13 +145,13 @@ export default function PackingListScreen({ navigation }) {
                 buttonTextStyle={{ fontSize: 17, fontWeight: "800", color: theme.text }}
                 rowTextStyle={{ fontSize: 15, fontWeight: "500", color: theme.text }}
                 dropdownIconPosition="right"
-                data={filterOptionsNew}
+                data={filterOptions}
                 defaultValueByIndex="0"
                 onSelect={(selectedItem, index) => {
-                  setSelectedTag(selectedItem);
+                  setPackCat(selectedItem);
                 }}
-                buttonTextAfterSelection={(selectedItem, index) => selectedItem}
-                rowTextForSelection={(item, index) => item}
+                buttonTextAfterSelection={(selectedItem, index) => selectedItem.name}
+                rowTextForSelection={(item, index) => item.name}
               />
             </View>
             <View className="flex-row justify-center items-center rounded-full p-1 bg-gray-200 ml-0 mt-4">
@@ -253,7 +170,7 @@ export default function PackingListScreen({ navigation }) {
               </TouchableOpacity>
               <TouchableOpacity className="py-3 rounded-3xl mx-2"
                                 style={{ backgroundColor: theme.iconOff }}
-                                onPress={() => setModal(false)}>
+                                onPress={() => cancelAddNewItem}>
                 <Text className="font-l text-center text-white px-6">Close</Text>
               </TouchableOpacity>
             </View>
@@ -275,7 +192,7 @@ export default function PackingListScreen({ navigation }) {
   }, []);
 
   return (
-    <View className="flex-1 bg-white" key={appKey}>
+    <View className="flex-1 bg-white">
       <Image source={require("../src/assets/packinglist.jpg")}
              style={{ height: 310 }}
              className="w-full absolute"
@@ -289,14 +206,6 @@ export default function PackingListScreen({ navigation }) {
         </TouchableOpacity>
         <Text style={{ fontSize: 18, paddingTop: 25, paddingLeft: 90, fontWeight: "bold", color: "white" }}>Packing
           list</Text>
-        <TouchableOpacity style={{ shadowOpacity: 1, end: -90, marginTop: 15 }}
-                          onPress={() => reset()}
-        >
-          <Animatable.View animation={"pulse"} easing={"ease-in-out"} iterationCount={"infinite"}
-                           duration={1000} style={{ backgroundColor: theme.button, borderRadius: 50, padding: 10 }}>
-            <ArrowPathIcon size={25} color="white" strokeWidth={1} />
-          </Animatable.View>
-        </TouchableOpacity>
       </SafeAreaView>
       <View className="flex-1 bg-white px-8 pt-4"
             style={{ borderTopRightRadius: 20, borderTopLeftRadius: 20, marginTop: 225 }}>
@@ -334,8 +243,8 @@ export default function PackingListScreen({ navigation }) {
               onSelect={(selectedItem, index) => {
                 setSelectedTag(selectedItem);
               }}
-              buttonTextAfterSelection={(selectedItem, index) => selectedItem}
-              rowTextForSelection={(item, index) => item}
+              buttonTextAfterSelection={(selectedItem, index) => selectedItem.name}
+              rowTextForSelection={(item, index) => item.name}
             />
           </View>
           {/*List of packing items*/}
@@ -345,12 +254,12 @@ export default function PackingListScreen({ navigation }) {
                 <View
                   style={{ borderBottomWidth: 2, borderColor: theme.button, marginTop: 20 }}
                   className="flex-row justify-between"
-                  key={item.name}
+                  key={item}
                 >
                   <Text style={{ fontSize: 18, paddingBottom: 15, paddingLeft: 10 }}
-                        className="max-w-[60%]">{item.name}</Text>
+                        className="max-w-[60%]">{item.packingItem.name}</Text>
                   <View className="flex-row gap-3 items-center" style={{ paddingBottom: 15 }}>
-                    <TouchableOpacity onPress={() => decrement(item.name)} disabled={item.amount === 0}>
+                    <TouchableOpacity onPress={() => decrement(item)} disabled={item.amount === 0}>
                       <MinusIcon size="2" strokeWidth={2} color={theme.iconOn}
                                  style={{
                                    backgroundColor: theme.decrementButton,
@@ -361,7 +270,7 @@ export default function PackingListScreen({ navigation }) {
                     </TouchableOpacity>
                     <Text
                       style={{ fontSize: 22 }}>{item.amount}</Text>
-                    <TouchableOpacity onPress={() => increment(item.name)}>
+                    <TouchableOpacity onPress={() => increment(item)}>
                       <PlusIcon size="2" strokeWidth={2} color={theme.iconOn}
                                 style={{
                                   backgroundColor: theme.iconOnG,
@@ -378,5 +287,5 @@ export default function PackingListScreen({ navigation }) {
         </ScrollView>
       </View>
     </View>
-    );
+  );
 }

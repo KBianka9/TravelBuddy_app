@@ -77,19 +77,19 @@ export default function EditProfileScreen() {
       </SafeAreaView>
       <View className="flex-1 bg-white px-8 pt-4"
             style={{ borderTopRightRadius: 50, borderTopLeftRadius: 50, marginTop: 190 }}>
-          <View style={{ alignItems: "center", flexDirection: "column" }}>
-            <Image
-              source={{ uri: `http://10.0.2.2:3000/userImg/profile/${user.userId}.jpg` }}
-              style={{
-                width: 180,
-                height: 180,
-                borderRadius: 90,
-                marginTop: -100,
-                borderWidth: 3,
-                borderColor: "white",
-              }}
-              className="justify-center mb-4" />
-          </View>
+        <View style={{ alignItems: "center", flexDirection: "column" }}>
+          <Image
+            source={{ uri: `http://10.0.2.2:3000/userImg/profile/${user.userId}.jpg` }}
+            style={{
+              width: 180,
+              height: 180,
+              borderRadius: 90,
+              marginTop: -100,
+              borderWidth: 3,
+              borderColor: "white",
+            }}
+            className="justify-center mb-4" />
+        </View>
         <ScrollView className="form space-y-2">
           <TextInput
             label="Full name"

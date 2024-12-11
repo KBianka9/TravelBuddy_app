@@ -17,8 +17,8 @@ export function addReview(userId, cityCountryName, revText, image) {
   return customAxios.post("/review/add", data);
 }
 
-export function evaluateReview(reviewId, usefulnessCount, uselessnessCount) {
-  return customAxios.post("/review/evaluate", { reviewId, usefulnessCount, uselessnessCount });
+export function evaluateReview(reviewId, isUseful) {
+  return customAxios.post(`/review/evaluate/${reviewId}`, { reviewId, isUseful });
 }
 
 export function reportPost(reviewId, report) {

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, Image, TouchableOpacity, ScrollView, SafeAreaView } from "react-native";
 import SelectDropdown from "react-native-select-dropdown";
 import { theme } from "../theme";
@@ -11,7 +11,6 @@ import * as Animatable from "react-native-animatable";
 import SearchableDropDown from "react-native-searchable-dropdown";
 import { listWithFav, search } from "../contollers/accommodationContoller";
 import Toast from "react-native-toast-message";
-import { UserContext } from "../App";
 
 const prices = [
   {
@@ -49,7 +48,6 @@ export default function PlaceSearcherScreen() {
   const [cityCountryNameList, setCityCountryNameList] = useState(null);
   const [nightPrice, setNightPrice] = useState(null);
   const [accommodations, setAccommodations] = useState([]);
-  const { user } = useContext(UserContext);
   const [appKey, setAppKey] = useState(0);
 
   const reloadApp = () => {
@@ -64,7 +62,7 @@ export default function PlaceSearcherScreen() {
 
   const loadAccommodations = async () => {
     try {
-      const response = await listWithFav(user.userId);
+      const response = await listWithFav();
       setAccommodations(response.data);
     } catch (e) {
       Toast.show({

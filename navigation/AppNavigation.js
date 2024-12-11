@@ -85,6 +85,7 @@ export default function AppNavigation() {
 function NavBar() {
   return (
     <Tab.Navigator
+      name="tabNavigator"
       screenOptions={({ route }) => ({
         tabBarActiveTintColor: theme.iconOn,
         headerShown: false,

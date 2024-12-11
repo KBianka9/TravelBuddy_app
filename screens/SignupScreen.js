@@ -18,31 +18,31 @@ export default function SignupScreen() {
   const [confPassword, setConfPassword] = useState("");
 
   const handleSubmit = async () => {
-      try {
-        await signup(username, email, password, confPassword);
+    try {
+      await signup(username, email, password, confPassword);
+      Toast.show({
+        type: "success",
+        text1: "Thanks for registering!",
+        text2: "Your registration has been successful.",
+        visibilityTime: 5000,
+      });
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
         Toast.show({
-          type: "success",
-          text1: "Thanks for registering!",
-          text2: "Your registration has been successful.",
+          type: "error",
+          text1: "Error",
+          text2: err.response.data.error,
           visibilityTime: 5000,
         });
-      } catch (err) {
-        if (axios.isAxiosError(err)) {
-          Toast.show({
-            type: "error",
-            text1: "Error",
-            text2: err.response.data.error,
-            visibilityTime: 5000,
-          });
-        } else {
-          Toast.show({
-            type: "error",
-            text1: "Error",
-            text2: err.message,
-            visibilityTime: 5000,
-          });
-        }
+      } else {
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: err.message,
+          visibilityTime: 5000,
+        });
       }
+    }
   };
 
   return (

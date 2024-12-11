@@ -64,6 +64,7 @@ export default function NewReviewScreen() {
         text2: "Your review has been successfully shared!",
         visibilityTime: 5000,
       });
+      navigation.goBack();
     } catch (e) {
       Toast.show({
         type: "error",
@@ -78,6 +79,7 @@ export default function NewReviewScreen() {
       id: index,
       name: cityCountry,
     }));
+    console.log(values);
     return values;
   };
 

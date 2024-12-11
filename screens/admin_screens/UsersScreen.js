@@ -77,9 +77,8 @@ export default function UsersScreen({ navigation }) {
       });
     }
   };
-  /*TODO: felhasználó törlése*/
-  const removeUserAccount = async (item) => {
-    deleteUser(item.userId).then(async () => {
+  const removeUserAccount = async (userId) => {
+    deleteUser(userId).then(async () => {
       Toast.show({
         type: "success",
         text1: "User deleted successfully",

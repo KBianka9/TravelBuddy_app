@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { theme } from "../theme";
 import ReviewCard from "../components/reviewCard";
 import { MagnifyingGlassIcon } from "react-native-heroicons/outline";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import * as Animatable from "react-native-animatable";
 import Carousel from "react-native-snap-carousel";
 import { reviewItems } from "../constants";
@@ -20,6 +20,7 @@ export default function ReviewsScreen() {
   const [cityCountryNameList, setCityCountryNameList] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [appKey, setAppKey] = useState(0);
+  const isFocused = useIsFocused();
 
   const reloadApp = () => {
     setAppKey(prev => prev + 1);
@@ -30,6 +31,12 @@ export default function ReviewsScreen() {
     setCityCountryNameList(getDropDownCityCountryNames());
     reloadApp();
   }, []);
+
+  useEffect(() => {
+    if (isFocused) {
+      loadReviews();
+    }
+  }, [isFocused]);
   const loadReviews = async () => {
     try {
       const response = await list();

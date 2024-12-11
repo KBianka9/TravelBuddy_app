@@ -40,6 +40,21 @@ export default function FavoriteHotelsListScreen() {
     reloadApp();
   }, []);
 
+  const loadFavorites = async () => {
+    try {
+      const response = await listByFav(user.userId);
+      setFavItem(response.data);
+      console.log(response.data);
+    } catch (e) {
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: e.message,
+        visibilityTime: 5000,
+      });
+    }
+  };
+
   useEffect(() => {
     setStatusFilter(status);
   }, [favItem]);
@@ -52,19 +67,6 @@ export default function FavoriteHotelsListScreen() {
       setCurrentList([...favItem.filter(item => item.completed === isCompleted)]);
     }
     setStatus(newStatus);
-  };
-  const loadFavorites = async () => {
-    try {
-      const response = await listByFav(user.userId);
-      setFavItem(response.data);
-    } catch (e) {
-      Toast.show({
-        type: "error",
-        text1: "Error",
-        text2: e.message,
-        visibilityTime: 5000,
-      });
-    }
   };
 
   const handleFavHotelRemove = async (itemId) => {
@@ -165,7 +167,7 @@ export default function FavoriteHotelsListScreen() {
           <FlatList
             data={currentList}
             ListEmptyComponent={<EmptyList />}
-            keyExtractor={(e, i) => e.accommodationId + e.completed.toString()}
+            keyExtractor={(e) => e.accommodationId + e.completed.toString()}
             renderItem={renderItem}
           />
         </View>

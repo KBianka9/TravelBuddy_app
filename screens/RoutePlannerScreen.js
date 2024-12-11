@@ -2,7 +2,7 @@ import { View, Text, Image, TouchableOpacity, ScrollView, FlatList, Alert } from
 import { theme } from "../theme";
 import * as React from "react";
 import EmptyList from "../components/emptyList";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import Video from "react-native-video";
 import * as Animatable from "react-native-animatable";
 import { PlusIcon } from "react-native-heroicons/solid";
@@ -13,24 +13,24 @@ import { UserContext } from "../App";
 
 export default function RoutePlannerScreen() {
   const navigation = useNavigation();
-  //const { user } = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const [trips, setTrips] = useState([]);
-  const [appKey, setAppKey] = useState(0);
-
-  const reloadApp = () => {
-    setAppKey(prev => prev + 1);
-  };
+  const isFocused = useIsFocused();
 
   useEffect(() => {
-    loadTrips();
-    reloadApp();
-  }, []);
+    if (isFocused) {
+      loadTrips();
+    }
+  }, [isFocused]);
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toISOString().split("T")[0]; // Az "YYYY-MM-DD" rész kivétele
+  };
 
   const loadTrips = async () => {
     try {
-      const response = await listTrip();
+      const response = await listTrip(user.userId);
       setTrips(response.data);
-      console.log(trips);
     } catch (e) {
       Toast.show({
         type: "error",
@@ -78,7 +78,7 @@ export default function RoutePlannerScreen() {
   };
 
   return (
-    <View className="flex-1 bg-white" keyboardShouldPersistTaps={"handled"} key={appKey}>
+    <View className="flex-1 bg-white" keyboardShouldPersistTaps={"handled"}>
       <Video
         source={require("../src/assets/video/video.mp4")}
         paused={false}
@@ -130,7 +130,10 @@ export default function RoutePlannerScreen() {
                                 className="w-36 h-36 mb-2 rounded-3xl"
                               />
                               <Text style={{ color: "black", fontWeight: "bold" }}>{item.tripTitle}</Text>
-                              <Text style={{ color: theme.text, fontSize: 12 }}>{item.from} - {item.to}</Text>
+                              <Text style={{
+                                color: theme.text,
+                                fontSize: 12,
+                              }}>{formatDate(item.from)} - {formatDate(item.to)}</Text>
                             </View>
                           </TouchableOpacity>
                         );

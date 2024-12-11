@@ -11,7 +11,7 @@ export function search(cityCountryName, nightPrice) {
 }
 
 export function listWithFav() {
-  return customAxios.get(`/accommodation/listWithFav/`);
+  return customAxios.get(`/accommodation/listWithFav`);
 }
 
 export function listByFav(userId) {
