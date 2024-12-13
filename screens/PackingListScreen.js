@@ -106,12 +106,6 @@ export default function PackingListScreen({ navigation }) {
       await addPackingItem(packCat.type, packItem, user.userId);
       await loadPackingListItems();
       setModal(false);
-      Toast.show({
-        type: "success",
-        text1: "Success!",
-        text2: "You can save the new item!",
-        visibilityTime: 5000,
-      });
     } catch (e) {
       Toast.show({
         type: "error",
@@ -120,12 +114,6 @@ export default function PackingListScreen({ navigation }) {
         visibilityTime: 5000,
       });
     }
-  };
-
-  const cancelAddNewItem = () => {
-    setModal(false);
-    setPackItem("");
-    setPackCat(filterOptions[0]);
   };
 
   function renderModal() {
@@ -170,7 +158,7 @@ export default function PackingListScreen({ navigation }) {
               </TouchableOpacity>
               <TouchableOpacity className="py-3 rounded-3xl mx-2"
                                 style={{ backgroundColor: theme.iconOff }}
-                                onPress={() => cancelAddNewItem}>
+                                onPress={() => setModal(false)}>
                 <Text className="font-l text-center text-white px-6">Close</Text>
               </TouchableOpacity>
             </View>

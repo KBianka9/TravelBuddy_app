@@ -1,16 +1,14 @@
-import React, { useContext, useState } from "react";
+import React from "react";
 import { Image, TouchableOpacity, View, ScrollView, Text, Alert } from "react-native";
 import { ArrowLeftIcon, MapPinIcon } from "react-native-heroicons/solid";
 import { styles, theme } from "../theme";
 import { useNavigation } from "@react-navigation/native";
 import { evaluateReview, reportPost } from "../contollers/reviewController";
 import Toast from "react-native-toast-message";
-import { UserContext } from "../App";
 
 export default function ReviewScreen(props) {
   const item = props.route.params;
   const navigation = useNavigation();
-  const [noActive, setNoActive] = useState(false);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -126,13 +124,13 @@ export default function ReviewScreen(props) {
             <Text className="pt-3 mr-2 font-bold">It was useful for you?</Text>
             <View className="flex-row pb-2 my-4">
               <TouchableOpacity className="py-3 rounded-3xl mr-2"
-                                style={[styles.iconOnG, !noActive && styles.selectedDate]}
+                                style={{ backgroundColor: theme.iconOnG }}
                                 onPress={() => evaluatePost(true)}
               >
                 <Text className="font-xl font-bold text-center text-white px-4">Yes - {item.usefulnessCount}</Text>
               </TouchableOpacity>
               <TouchableOpacity className="py-3 rounded-3xl mx-2"
-                                style={[styles.button, noActive && styles.iconOff]}
+                                style={{ backgroundColor: theme.button }}
                                 onPress={() => evaluatePost(false)}
               >
                 <Text className="font-l font-bold text-center text-white px-4">No - {item.uselessnessCount}</Text>
